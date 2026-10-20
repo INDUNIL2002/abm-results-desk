@@ -122,12 +122,23 @@ async function autoSyncToBatch() {
   try {
     const semesterData = s.semesters
       .filter(sem => sem.gradedCount > 0)
-      .map(sem => ({
-        semester: sem.semester,
-        gpa: sem.gpa != null ? Math.round(sem.gpa * 10000) / 10000 : null,
-        credits: sem.credits,
-        gradedCount: sem.gradedCount,
-      }));
+      .map(sem => {
+        const semCourses = s.rows
+          .filter(r => r.semester === sem.semester && r.grade && r.grade !== 'Pending')
+          .map(r => ({
+            code: r.code,
+            title: r.title,
+            credits: r.credits,
+            grade: r.grade,
+          }));
+        return {
+          semester: sem.semester,
+          gpa: sem.gpa != null ? Math.round(sem.gpa * 10000) / 10000 : null,
+          credits: sem.credits,
+          gradedCount: sem.gradedCount,
+          courses: semCourses,
+        };
+      });
 
     const payload = {
       name:           state.profile.name,

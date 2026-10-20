@@ -68,14 +68,14 @@
     /* Podium */
     .podium-section { margin-bottom:32px; }
     .podium-grid { display:flex; gap:16px; align-items:flex-end; flex-wrap:wrap; }
-    .podium-card { flex:1; min-width:180px; max-width:280px; background:var(--white); border:1px solid var(--line); border-radius:12px; padding:20px; text-align:center; transition:transform .15s; }
+    .podium-card { flex:1; min-width:180px; max-width:280px; background:var(--white); border:1px solid var(--line); border-radius:12px; padding:20px; text-align:center; transition:transform .15s; cursor:pointer; }
     .podium-card:hover { transform:translateY(-3px); }
     .podium-1 { border-color:#f9c74f; box-shadow:0 4px 20px rgba(249,199,79,.2); }
     .podium-2 { border-color:#c9d6df; box-shadow:0 4px 16px rgba(0,0,0,.06); }
     .podium-3 { border-color:#e8b49a; box-shadow:0 4px 16px rgba(0,0,0,.06); }
     .podium-medal { font-size:36px; line-height:1; margin-bottom:8px; }
     .podium-rank  { font-size:10px; font-weight:700; letter-spacing:1px; color:var(--muted); margin-bottom:6px; }
-    .podium-name  { font-size:15px; font-weight:700; margin-bottom:2px; }
+    .podium-name  { font-size:15px; font-weight:700; margin-bottom:2px; color:#183f32; text-decoration:underline; }
     .podium-reg   { font-size:11px; color:var(--muted); margin-bottom:12px; }
     .podium-gpa   { font-size:32px; font-weight:500; letter-spacing:-1px; font-variant-numeric:tabular-nums; margin-bottom:10px; color:#183f32; }
 
@@ -97,12 +97,14 @@
     .search-input { flex:1; min-width:200px; max-width:340px; height:38px; border:1px solid var(--line); border-radius:6px; padding:8px 12px; font:inherit; font-size:13px; background:var(--white); }
     .filter-select { height:38px; border:1px solid var(--line); border-radius:6px; padding:0 10px; font:inherit; font-size:13px; background:var(--white); }
     .table-wrap { overflow-x:auto; border-radius:9px; border:1px solid var(--line); }
-    table { width:100%; border-collapse:collapse; background:var(--white); min-width:960px; }
+    table { width:100%; border-collapse:collapse; background:var(--white); min-width:1000px; }
     thead th { background:var(--mint); text-align:left; padding:11px 13px; font-size:10px; font-weight:700; letter-spacing:.5px; color:#3a5c44; white-space:nowrap; position:sticky; top:0; }
     td { padding:10px 13px; border-top:1px solid var(--line); vertical-align:middle; font-size:13px; }
     .data-row:hover td { background:#f5f9f3; }
     .rank-cell { font-size:16px; width:48px; text-align:center; font-weight:bold; }
-    .name-cell .name { font-weight:600; font-size:13px; }
+    .name-cell { cursor:pointer; }
+    .name-cell .name { font-weight:600; font-size:13px; color:#183f32; text-decoration:underline; }
+    .name-cell .name:hover { color:#2e7d32; }
     .name-cell .reg  { font-size:11px; color:var(--muted); }
     .sem-cell { text-align:center; font-size:12px; line-height:1.3; white-space:nowrap; }
     .sem-cell small { color:var(--muted); font-size:10px; }
@@ -111,6 +113,8 @@
     /* Action Buttons */
     .actions-cell { white-space:nowrap; display:flex; gap:6px; align-items:center; }
     .act-btn { border:0; padding:5px 9px; border-radius:5px; font-size:11px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:3px; }
+    .act-btn.view { background:#ecfdf5; color:#047857; }
+    .act-btn.view:hover { background:#d1fae5; }
     .act-btn.edit { background:#e0f2fe; color:#0369a1; }
     .act-btn.edit:hover { background:#bae6fd; }
     .act-btn.del  { background:#fee2e2; color:#b91c1c; }
@@ -123,9 +127,10 @@
     .modal-card {
       background:#fffefa; border-radius:14px; max-width:620px; width:100%; max-height:90vh; overflow-y:auto; padding:28px 32px; box-shadow:0 24px 80px rgba(0,0,0,0.25); border:1px solid var(--line);
     }
+    .modal-card.wide { max-width:880px; }
     .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
     .modal-header h3 { margin:0; font-size:20px; color:var(--green); font-family:Georgia,serif; font-weight:bold; }
-    .btn-close-x { background:transparent; border:0; font-size:20px; cursor:pointer; color:var(--muted); }
+    .btn-close-x { background:transparent; border:0; font-size:20px; cursor:pointer; color:var(--muted); line-height:1; }
     .form-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
     .form-group { display:flex; flex-direction:column; gap:4px; margin-bottom:12px; }
     .form-group label { font-size:11px; font-weight:600; color:#4a554a; }
@@ -142,12 +147,48 @@
     .btn-cancel { background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; padding:10px 16px; border-radius:6px; font-weight:600; cursor:pointer; font-size:13px; }
     .btn-cancel:hover { background:#e2e8f0; }
 
+    /* Student Full Results Viewer Modal Styles */
+    .view-hero-card {
+      background:#f8fafc; border:1px solid var(--line); border-radius:10px; padding:16px 20px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;
+    }
+    .view-kpi-group { display:flex; gap:20px; align-items:center; }
+    .view-kpi-item { text-align:center; }
+    .view-kpi-val { font-size:24px; font-weight:700; color:var(--green); font-variant-numeric:tabular-nums; line-height:1; }
+    .view-kpi-lbl { font-size:10px; color:var(--muted); font-weight:700; text-transform:uppercase; margin-top:4px; letter-spacing:0.5px; }
+
+    .result-sheet-preview-wrap {
+      background:#fff; border:1px solid #000; padding:20px; border-radius:4px; font-family:Arial,sans-serif; color:#000; margin-bottom:16px; box-shadow:0 4px 14px rgba(0,0,0,0.06);
+    }
+    .rsp-header { text-align:center; border-bottom:2px solid #000; padding-bottom:6px; margin-bottom:12px; }
+    .rsp-header h2 { margin:0; font-size:15px; font-weight:800; letter-spacing:1px; }
+    .rsp-header h3 { margin:2px 0; font-size:12px; font-weight:700; }
+    .rsp-header p  { margin:0; font-size:11px; font-style:italic; }
+    .rsp-meta { width:100%; border-collapse:collapse; border:1px solid #000; margin-bottom:12px; font-size:11px; }
+    .rsp-meta td { border:1px solid #ccc; padding:4px 8px; }
+    .rsp-meta td.label { font-weight:700; background:#fafafa; width:22%; }
+    .rsp-cols { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+    .rsp-sem-card { border:1px solid #000; font-size:10px; margin-bottom:8px; }
+    .rsp-sem-head { background:#f1f5f9; border-bottom:1px solid #000; padding:4px 6px; font-weight:700; display:flex; justify-content:space-between; }
+    .rsp-sem-table { width:100%; border-collapse:collapse; font-size:9.5px; }
+    .rsp-sem-table th, .rsp-sem-table td { border-bottom:1px solid #e2e8f0; padding:3px 5px; }
+    .rsp-sem-table th { background:#f8fafc; font-weight:700; text-align:left; }
+    .rsp-sig-block { border-top:1px solid #000; padding-top:8px; margin-top:12px; font-size:10px; font-style:italic; }
+
+    @media print {
+      body * { visibility:hidden !important; }
+      #admin-print-root, #admin-print-root * { visibility:visible !important; }
+      #admin-print-root {
+        position:absolute !important; left:0 !important; top:0 !important; width:100% !important; margin:0 !important; padding:15mm !important; background:#fff !important;
+      }
+    }
+
     @media(max-width:900px) {
       .stats-row { grid-template-columns:repeat(2,1fr); }
       .class-grid { grid-template-columns:repeat(2,1fr); }
       .shell { padding:20px 16px; }
       .sems-input-grid { grid-template-columns:repeat(2,1fr); }
       .form-grid-2 { grid-template-columns:1fr; }
+      .rsp-cols { grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -269,7 +310,7 @@
   </footer>
 </div>
 
-<!-- Add / Edit Student Modal -->
+<!-- Modal 1: Add / Edit Student Record -->
 <div id="student-modal" class="modal-backdrop" hidden>
   <div class="modal-card">
     <div class="modal-header">
@@ -352,6 +393,36 @@
   </div>
 </div>
 
+<!-- Modal 2: Complete Student Result Sheet Viewer -->
+<div id="view-student-modal" class="modal-backdrop" hidden>
+  <div class="modal-card wide">
+    <div class="modal-header">
+      <div>
+        <h3 id="view-student-title">Academic Record</h3>
+        <div id="view-student-subtitle" style="font-size:12px;color:var(--muted)">Official Student Breakdown</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button type="button" id="btn-print-student" class="act-btn" style="background:#183f32;color:#fff;padding:6px 12px;font-size:12px">🖨️ Print Sheet</button>
+        <button type="button" id="btn-edit-from-view" class="act-btn edit" style="padding:6px 12px;font-size:12px">✏️ Edit</button>
+        <button type="button" class="btn-close-x" id="btn-close-view">&times;</button>
+      </div>
+    </div>
+
+    <!-- Student Hero Card -->
+    <div id="view-hero" class="view-hero-card"></div>
+
+    <!-- Official Result Sheet Preview -->
+    <div id="view-sheet-content"></div>
+
+    <div class="modal-actions" style="margin-top:16px">
+      <button type="button" class="btn-cancel" id="btn-close-view-2">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden container for printing student result sheet -->
+<div id="admin-print-root" hidden></div>
+
 <script type="module">
 import {
   fetchSubmissionsFromSupabase,
@@ -377,6 +448,16 @@ function classify(cgpa) {
 
 const SEMESTERS_ORDERED = ['1-I','1-II','2-I','2-II','3-I','3-II','4-I','4-II'];
 const SEM_LABELS = {
+  '1-I': 'Year 1 · Semester I',
+  '1-II': 'Year 1 · Semester II',
+  '2-I': 'Year 2 · Semester I',
+  '2-II': 'Year 2 · Semester II',
+  '3-I': 'Year 3 · Semester I',
+  '3-II': 'Year 3 · Semester II',
+  '4-I': 'Year 4 · Semester I',
+  '4-II': 'Year 4 · Semester II',
+};
+const SEM_SHORT = {
   '1-I': 'Y1·S1', '1-II': 'Y1·S2', '2-I': 'Y2·S1', '2-II': 'Y2·S2',
   '3-I': 'Y3·S1', '3-II': 'Y3·S2', '4-I': 'Y4·S1', '4-II': 'Y4·S2',
 };
@@ -386,6 +467,7 @@ const fmt = (n, d = 2) => n == null || n === '' ? '—' : Number(n).toFixed(d);
 
 let allRows = [];
 let editingReg = null;
+let currentViewStudent = null;
 
 async function loadDashboard() {
   try {
@@ -432,7 +514,7 @@ function renderDashboardView() {
     document.getElementById('podium-grid').innerHTML = podium.map((r, i) => {
       const c = classify(r.cgpa);
       return `
-        <div class="podium-card podium-${i + 1}">
+        <div class="podium-card podium-${i + 1}" data-action="view" data-reg="${esc(r.registration)}" title="Click to view full record">
           <div class="podium-medal">${medal(i)}</div>
           <div class="podium-rank">${['1st Place', '2nd Place', '3rd Place'][i]}</div>
           <div class="podium-name">${esc(r.name)}</div>
@@ -477,7 +559,7 @@ function renderDashboardView() {
       <th>Student</th>
       <th>CGPA</th>
       <th>Class</th>
-      ${activeSems.map(s => `<th>${SEM_LABELS[s]}</th>`).join('')}
+      ${activeSems.map(s => `<th>${SEM_SHORT[s]}</th>`).join('')}
       <th>Credits</th>
       <th>Batch</th>
       <th>Submitted</th>
@@ -499,7 +581,7 @@ function renderDashboardView() {
     return `
       <tr class="data-row">
         <td class="rank-cell">${medal(i) || (i + 1)}</td>
-        <td class="name-cell">
+        <td class="name-cell" data-action="view" data-reg="${esc(r.registration)}" title="Click to view full results">
           <div class="name">${esc(r.name)}</div>
           <div class="reg">${esc(r.registration)}</div>
         </td>
@@ -514,8 +596,9 @@ function renderDashboardView() {
         <td><small style="color:var(--muted)">${date}</small></td>
         <td style="text-align:center">
           <div class="actions-cell">
-            <button type="button" class="act-btn edit" data-action="edit" data-reg="${esc(r.registration)}">✏️ Edit</button>
-            <button type="button" class="act-btn del" data-action="delete" data-reg="${esc(r.registration)}">🗑️ Delete</button>
+            <button type="button" class="act-btn view" data-action="view" data-reg="${esc(r.registration)}" title="View complete academic results">👁️ View</button>
+            <button type="button" class="act-btn edit" data-action="edit" data-reg="${esc(r.registration)}" title="Edit student">✏️ Edit</button>
+            <button type="button" class="act-btn del" data-action="delete" data-reg="${esc(r.registration)}" title="Delete student">🗑️ Delete</button>
           </div>
         </td>
       </tr>
@@ -541,6 +624,163 @@ function filterTable() {
   const countEl = document.getElementById('row-count');
   if (countEl) countEl.textContent = q || cls ? `Showing ${visible} of ${rows.length}` : `${rows.length} students`;
 }
+
+// ── View Full Student Academic Results Modal ──────────────────────────────────
+function openViewStudentModal(reg) {
+  const r = allRows.find(x => String(x.registration).trim() === String(reg).trim());
+  if (!r) return alert('Student record not found.');
+  currentViewStudent = r;
+
+  const cls = classify(r.cgpa);
+  document.getElementById('view-student-title').textContent = r.name || 'Student Record';
+  document.getElementById('view-student-subtitle').textContent = `${r.registration} · Batch ${r.batch || '2021/2022'}`;
+
+  // Hero KPI Card
+  document.getElementById('view-hero').innerHTML = `
+    <div>
+      <div style="font-size:17px;font-weight:700;color:var(--green)">${esc(r.name)}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">Reg No: <strong>${esc(r.registration)}</strong> · Batch: <strong>${esc(r.batch || '2021/2022')}</strong></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">Results up to: <strong>${esc(r.results_through || r.resultsThrough || 'Latest')}</strong></div>
+    </div>
+    <div class="view-kpi-group">
+      <div class="view-kpi-item">
+        <div class="view-kpi-val" style="color:${cls?.color || '#183f32'}">${fmt(r.cgpa)}</div>
+        <div class="view-kpi-lbl">CGPA</div>
+      </div>
+      <div class="view-kpi-item">
+        <span class="badge" style="background:${cls?.bg || '#eee'};color:${cls?.color || '#333'};border-color:${cls?.border || '#ccc'};font-size:11px;padding:5px 11px">
+          ${cls ? cls.label : 'Incomplete'}
+        </span>
+        <div class="view-kpi-lbl">Class</div>
+      </div>
+      <div class="view-kpi-item">
+        <div class="view-kpi-val" style="color:#334155">${r.credits ?? '—'}</div>
+        <div class="view-kpi-lbl">Credits</div>
+      </div>
+    </div>
+  `;
+
+  // Filter semesters that have results
+  const semsWithData = (r.semesters || []).filter(s => s.gpa != null || (s.courses && s.courses.length));
+
+  // Build Result Sheet HTML
+  const resultSheetHTML = `
+    <div class="result-sheet-preview-wrap">
+      <div class="rsp-header">
+        <h2>RESULT SHEET</h2>
+        <h3>UNIVERSITY OF RUHUNA</h3>
+        <h3>FACULTY OF AGRICULTURE</h3>
+        <p>BSc. Hons Agribusiness Management</p>
+      </div>
+
+      <table class="rsp-meta">
+        <tr>
+          <td class="label">Name of Student:</td>
+          <td colspan="3" style="font-weight:700">${esc(r.name || '—')}</td>
+        </tr>
+        <tr>
+          <td class="label">Index / Reg. No:</td>
+          <td>${esc(r.registration || '—')}</td>
+          <td class="label">Academic Year / Intake:</td>
+          <td>${esc(r.batch || '2021/2022')}</td>
+        </tr>
+        <tr>
+          <td class="label">Result up to:</td>
+          <td>${esc(r.results_through || r.resultsThrough || 'Latest Completed Semester')}</td>
+          <td class="label">Cumulative GPA (CGPA):</td>
+          <td style="font-weight:700;color:${cls?.color || '#000'}">${fmt(r.cgpa)} / 4.00</td>
+        </tr>
+        <tr>
+          <td class="label">Degree Classification:</td>
+          <td style="font-weight:700;color:${cls?.color || '#000'}">${cls ? cls.label : 'Incomplete'}</td>
+          <td class="label">Total GPA Credits:</td>
+          <td>${r.credits ?? 0}</td>
+        </tr>
+      </table>
+
+      ${semsWithData.length ? `
+        <div class="rsp-cols">
+          ${semsWithData.map(sem => `
+            <div class="rsp-sem-card">
+              <div class="rsp-sem-head">
+                <span>${SEM_LABELS[sem.semester] || sem.semester}</span>
+                <span>SGPA: ${sem.gpa != null ? Number(sem.gpa).toFixed(2) : '—'} | ${sem.credits || 0} cr</span>
+              </div>
+              ${sem.courses && sem.courses.length ? `
+                <table class="rsp-sem-table">
+                  <thead>
+                    <tr><th style="width:25%">Code</th><th>Course Title</th><th style="width:12%;text-align:center">Cr</th><th style="width:14%;text-align:center">Grade</th></tr>
+                  </thead>
+                  <tbody>
+                    ${sem.courses.map(c => `
+                      <tr>
+                        <td><b>${esc(c.code)}</b></td>
+                        <td>${esc(c.title)}</td>
+                        <td style="text-align:center">${c.credits ?? '—'}</td>
+                        <td style="text-align:center;font-weight:700">${esc(c.grade)}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              ` : `
+                <div style="padding:10px 8px;color:#666;font-style:italic">
+                  Semester GPA recorded: <strong>${sem.gpa != null ? Number(sem.gpa).toFixed(2) : '—'}</strong> (${sem.credits || 0} credits).
+                </div>
+              `}
+            </div>
+          `).join('')}
+        </div>
+      ` : `
+        <div style="text-align:center;padding:24px;color:#777;background:#fafafa;border:1px dashed #ccc;border-radius:4px">
+          No semester breakdown found for this student.
+        </div>
+      `}
+
+      <div class="rsp-sig-block">
+        <p>I hereby certify that the examination results and grades recorded above are a true and accurate record of the student's academic performance at the Faculty of Agriculture, University of Ruhuna.</p>
+        <div style="display:flex;justify-content:flex-end;margin-top:30px">
+          <div style="min-width:220px;text-align:center;border-top:1px dotted #000;padding-top:4px">
+            Student's Signature &amp; Date
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('view-sheet-content').innerHTML = resultSheetHTML;
+  document.getElementById('view-student-modal').hidden = false;
+}
+
+function closeViewModal() {
+  document.getElementById('view-student-modal').hidden = true;
+  currentViewStudent = null;
+}
+
+document.getElementById('btn-close-view').addEventListener('click', closeViewModal);
+document.getElementById('btn-close-view-2').addEventListener('click', closeViewModal);
+
+// Edit from view
+document.getElementById('btn-edit-from-view').addEventListener('click', () => {
+  if (!currentViewStudent) return;
+  const reg = currentViewStudent.registration;
+  closeViewModal();
+  openEditStudentModal(reg);
+});
+
+// Print student result sheet
+document.getElementById('btn-print-student').addEventListener('click', () => {
+  if (!currentViewStudent) return;
+  const sheetHTML = document.getElementById('view-sheet-content').innerHTML;
+  const printRoot = document.getElementById('admin-print-root');
+  printRoot.innerHTML = sheetHTML;
+  printRoot.hidden = false;
+  const oldTitle = document.title;
+  document.title = `ResultSheet-${currentViewStudent.registration}`.replace(/[^a-zA-Z0-9_-]/g, '-');
+  window.print();
+  document.title = oldTitle;
+  printRoot.hidden = true;
+  printRoot.innerHTML = '';
+});
 
 // ── Modal & CRUD Management ───────────────────────────────────────────────────
 function openAddStudentModal() {
@@ -604,7 +844,10 @@ document.getElementById('student-form').addEventListener('submit', async (e) => 
     const cgpaVal = document.getElementById('m-cgpa').value;
     const creditsVal = document.getElementById('m-credits').value;
 
-    // Build semesters array
+    // Build semesters array (preserving existing courses if editing)
+    const existingStudent = allRows.find(x => String(x.registration).trim() === registration);
+    const existingSemMap = Object.fromEntries((existingStudent?.semesters || []).map(s => [s.semester, s]));
+
     const semesters = [];
     SEMESTERS_ORDERED.forEach(sem => {
       const gpa = document.getElementById(`m-sem-${sem}`)?.value;
@@ -612,7 +855,9 @@ document.getElementById('student-form').addEventListener('submit', async (e) => 
         semesters.push({
           semester: sem,
           gpa: Number(gpa),
-          credits: 18 // standard RUHUNA credit baseline
+          credits: existingSemMap[sem]?.credits || 18,
+          gradedCount: existingSemMap[sem]?.gradedCount || 6,
+          courses: existingSemMap[sem]?.courses || []
         });
       }
     });
@@ -641,14 +886,16 @@ document.getElementById('student-form').addEventListener('submit', async (e) => 
   }
 });
 
-// Table action clicks (Edit / Delete)
+// Table action clicks (View / Edit / Delete)
 document.getElementById('table-body').addEventListener('click', async (e) => {
-  const btn = e.target.closest('button[data-action]');
-  if (!btn) return;
-  const action = btn.dataset.action;
-  const reg = btn.dataset.reg;
+  const trigger = e.target.closest('[data-action]');
+  if (!trigger) return;
+  const action = trigger.dataset.action;
+  const reg = trigger.dataset.reg;
 
-  if (action === 'edit') {
+  if (action === 'view') {
+    openViewStudentModal(reg);
+  } else if (action === 'edit') {
     openEditStudentModal(reg);
   } else if (action === 'delete') {
     const r = allRows.find(x => String(x.registration).trim() === String(reg).trim());
@@ -656,8 +903,8 @@ document.getElementById('table-body').addEventListener('click', async (e) => {
     if (!confirm(`Are you sure you want to permanently delete student:\n\n${name} (${reg})\n\nThis will remove the record from the Supabase database.`)) {
       return;
     }
-    btn.disabled = true;
-    btn.textContent = 'Deleting…';
+    trigger.disabled = true;
+    trigger.textContent = 'Deleting…';
     try {
       await deleteSubmissionFromSupabase(reg);
       await loadDashboard();
@@ -665,9 +912,17 @@ document.getElementById('table-body').addEventListener('click', async (e) => {
     } catch (err) {
       console.error('Delete failed:', err);
       alert('Delete failed: ' + err.message);
-      btn.disabled = false;
-      btn.textContent = '🗑️ Delete';
+      trigger.disabled = false;
+      trigger.textContent = '🗑️ Delete';
     }
+  }
+});
+
+// Podium click to view
+document.getElementById('podium-grid').addEventListener('click', (e) => {
+  const card = e.target.closest('[data-action="view"]');
+  if (card && card.dataset.reg) {
+    openViewStudentModal(card.dataset.reg);
   }
 });
 
