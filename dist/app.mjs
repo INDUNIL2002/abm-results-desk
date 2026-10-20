@@ -4,7 +4,14 @@
  * University of Ruhuna · Faculty of Agriculture.
  */
 import { GRADE_POINTS, SEMESTERS, calculate } from './gpa.mjs';
-import { upsertSubmissionToSupabase } from './supabase.mjs';
+import { upsertSubmissionToSupabase, fetchSubmissionByRegistration, cleanReg, cleanName } from './supabase.mjs';
+
+// Register Service Worker for PWA Offline & Install support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW reg error:', err));
+  });
+}
 
 const $ = (s) => document.querySelector(s);
 const escape = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
@@ -208,6 +215,70 @@ async function autoSyncToBatch() {
     if (syncText) syncText.textContent = 'Saved locally';
   } finally {
     if (syncIndicator) syncIndicator.classList.remove('syncing');
+  }
+}
+
+// ── Cross-device Cloud Restore: seamlessly sync results from other device ─────
+async function syncFromCloudIfAvailable(reg) {
+  try {
+    const cloud = await fetchSubmissionByRegistration(reg);
+    if (!cloud || !Array.isArray(cloud.semesters) || cloud.semesters.length === 0) return;
+
+    let restoredCount = 0;
+    // Restore profile name if empty
+    if (!state.profile.name && cloud.name) {
+      state.profile.name = cloud.name;
+      if ($('#student-name')) $('#student-name').value = cloud.name;
+    }
+    // Restore batch / degree
+    if (cloud.batch) {
+      if (cloud.batch.includes('·')) {
+        const parts = cloud.batch.split('·').map(s => s.trim());
+        if (!state.profile.batch) state.profile.batch = parts[0];
+        if (!state.profile.degree && parts[1]) {
+          state.profile.degree = parts[1];
+          switchDegreeProgramme(parts[1]);
+        }
+      } else if (!state.profile.batch) {
+        state.profile.batch = cloud.batch;
+      }
+      renderProfile();
+    }
+
+    // Merge semester courses from cloud into local state
+    cloud.semesters.forEach(sem => {
+      if (Array.isArray(sem.courses)) {
+        sem.courses.forEach(c => {
+          const courseId = `${sem.semester}:${c.code}`;
+          // If not graded locally or pending, restore from cloud
+          if (!state.results[courseId] || !state.results[courseId].grade || state.results[courseId].grade === 'Pending') {
+            state.results[courseId] = { grade: c.grade, repeat: false, confirmed: true, note: '' };
+            restoredCount++;
+          }
+          // If elective / custom course not in baseCourses, add to customCourses
+          const isBase = baseCourses.some(b => cleanCode(b.code) === cleanCode(c.code) && b.semester === sem.semester);
+          if (!isBase && !state.customCourses.some(cc => cc.id === courseId)) {
+            state.customCourses.push({
+              id: courseId,
+              semester: sem.semester,
+              code: c.code,
+              title: c.title,
+              credits: c.credits,
+              gpa: true,
+              custom: true
+            });
+          }
+        });
+      }
+    });
+
+    if (restoredCount > 0) {
+      persist();
+      render();
+      toast(`☁️ Cloud Sync: Restored ${restoredCount} saved courses for [${reg}] from your other device! ✓`);
+    }
+  } catch (err) {
+    console.warn('Could not sync from cloud:', err);
   }
 }
 
@@ -955,7 +1026,10 @@ function wire() {
     const evt = el.tagName === 'SELECT' ? 'change' : 'input';
     el.addEventListener(evt, e => {
       if (id === 'student-name') state.profile.name = e.target.value;
-      else if (id === 'student-id') state.profile.registration = e.target.value;
+      else if (id === 'student-id') {
+        const norm = cleanReg(e.target.value);
+        state.profile.registration = norm;
+      }
       else if (id === 'student-batch') state.profile.batch = e.target.value;
       else if (id === 'student-degree') {
         state.profile.degree = e.target.value;
@@ -970,6 +1044,24 @@ function wire() {
       scheduleAutoSync();
     });
   });
+
+  // Cross-device Cloud Restore on Registration blur / change
+  const idInput = $('#student-id');
+  if (idInput) {
+    const onRegChange = async () => {
+      const reg = cleanReg(idInput.value);
+      if (reg) {
+        idInput.value = reg;
+        state.profile.registration = reg;
+        persist();
+        if (reg.length >= 6) {
+          await syncFromCloudIfAvailable(reg);
+        }
+      }
+    };
+    idInput.addEventListener('blur', onRegChange);
+    idInput.addEventListener('change', onRegChange);
+  }
 
   // Quick Add Elective Course from Handbook
   const quickEl = $('#quick-add-elective');
@@ -1063,8 +1155,8 @@ function wire() {
   });
 
   // Add Elective Buttons (Top & Bottom)
-  $('#btn-add-elective').addEventListener('click', () => openElectiveDialog());
-  $('#btn-add-elective-bottom').addEventListener('click', () => openElectiveDialog());
+  $('#btn-add-elective')?.addEventListener('click', () => openElectiveDialog());
+  $('#btn-add-elective-bottom')?.addEventListener('click', () => openElectiveDialog());
 
   // Elective Modal Form
   $('#elective-form').addEventListener('submit', saveElective);
