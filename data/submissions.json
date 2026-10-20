@@ -1,0 +1,218 @@
+[
+  {
+    "name": "Tharindu Madushanka",
+    "registration": "AG/2021/105",
+    "batch": "2021/2022",
+    "resultsThrough": "Year 3 Semester II",
+    "cgpa": 2.88,
+    "credits": 88,
+    "gradedCount": 38,
+    "semesters": [
+      {
+        "semester": "1-I",
+        "gpa": 2.8,
+        "credits": 15,
+        "gradedCount": 7
+      },
+      {
+        "semester": "1-II",
+        "gpa": 2.92,
+        "credits": 18,
+        "gradedCount": 8
+      },
+      {
+        "semester": "2-I",
+        "gpa": 2.85,
+        "credits": 15,
+        "gradedCount": 6
+      },
+      {
+        "semester": "2-II",
+        "gpa": 2.9,
+        "credits": 16,
+        "gradedCount": 7
+      },
+      {
+        "semester": "3-I",
+        "gpa": 2.84,
+        "credits": 12,
+        "gradedCount": 5
+      },
+      {
+        "semester": "3-II",
+        "gpa": 2.95,
+        "credits": 12,
+        "gradedCount": 5
+      }
+    ],
+    "submittedAt": "2026-10-20T09:17:22.306Z"
+  },
+  {
+    "name": "K.A. Kavindu Senanayake",
+    "registration": "AG/2021/014",
+    "batch": "2021/2022",
+    "resultsThrough": "Year 4 Semester II",
+    "cgpa": 4,
+    "credits": 7,
+    "gradedCount": 3,
+    "semesters": [
+      {
+        "semester": "1-I",
+        "gpa": 4,
+        "credits": 4,
+        "gradedCount": 2
+      },
+      {
+        "semester": "1-II",
+        "gpa": 4,
+        "credits": 3,
+        "gradedCount": 1
+      }
+    ],
+    "submittedAt": "2026-10-20T09:59:10.795Z"
+  },
+  {
+    "name": "Dilki Fernando",
+    "registration": "AG/2021/029",
+    "batch": "2021/2022",
+    "resultsThrough": "Year 3 Semester II",
+    "cgpa": 3.74,
+    "credits": 88,
+    "gradedCount": 38,
+    "semesters": [
+      {
+        "semester": "1-I",
+        "gpa": 3.65,
+        "credits": 15,
+        "gradedCount": 7
+      },
+      {
+        "semester": "1-II",
+        "gpa": 3.8,
+        "credits": 18,
+        "gradedCount": 8
+      },
+      {
+        "semester": "2-I",
+        "gpa": 3.72,
+        "credits": 15,
+        "gradedCount": 6
+      },
+      {
+        "semester": "2-II",
+        "gpa": 3.79,
+        "credits": 16,
+        "gradedCount": 7
+      },
+      {
+        "semester": "3-I",
+        "gpa": 3.7,
+        "credits": 12,
+        "gradedCount": 5
+      },
+      {
+        "semester": "3-II",
+        "gpa": 3.78,
+        "credits": 12,
+        "gradedCount": 5
+      }
+    ],
+    "submittedAt": "2026-10-20T09:17:22.253Z"
+  },
+  {
+    "name": "Nuwan Jayasinghe",
+    "registration": "AG/2021/053",
+    "batch": "2021/2022",
+    "resultsThrough": "Year 3 Semester II",
+    "cgpa": 3.48,
+    "credits": 88,
+    "gradedCount": 38,
+    "semesters": [
+      {
+        "semester": "1-I",
+        "gpa": 3.4,
+        "credits": 15,
+        "gradedCount": 7
+      },
+      {
+        "semester": "1-II",
+        "gpa": 3.52,
+        "credits": 18,
+        "gradedCount": 8
+      },
+      {
+        "semester": "2-I",
+        "gpa": 3.45,
+        "credits": 15,
+        "gradedCount": 6
+      },
+      {
+        "semester": "2-II",
+        "gpa": 3.5,
+        "credits": 16,
+        "gradedCount": 7
+      },
+      {
+        "semester": "3-I",
+        "gpa": 3.48,
+        "credits": 12,
+        "gradedCount": 5
+      },
+      {
+        "semester": "3-II",
+        "gpa": 3.55,
+        "credits": 12,
+        "gradedCount": 5
+      }
+    ],
+    "submittedAt": "2026-10-20T09:17:22.276Z"
+  },
+  {
+    "name": "Sachini Perera",
+    "registration": "AG/2021/082",
+    "batch": "2021/2022",
+    "resultsThrough": "Year 3 Semester II",
+    "cgpa": 3.15,
+    "credits": 88,
+    "gradedCount": 38,
+    "semesters": [
+      {
+        "semester": "1-I",
+        "gpa": 3.1,
+        "credits": 15,
+        "gradedCount": 7
+      },
+      {
+        "semester": "1-II",
+        "gpa": 3.22,
+        "credits": 18,
+        "gradedCount": 8
+      },
+      {
+        "semester": "2-I",
+        "gpa": 3.05,
+        "credits": 15,
+        "gradedCount": 6
+      },
+      {
+        "semester": "2-II",
+        "gpa": 3.18,
+        "credits": 16,
+        "gradedCount": 7
+      },
+      {
+        "semester": "3-I",
+        "gpa": 3.2,
+        "credits": 12,
+        "gradedCount": 5
+      },
+      {
+        "semester": "3-II",
+        "gpa": 3.12,
+        "credits": 12,
+        "gradedCount": 5
+      }
+    ],
+    "submittedAt": "2026-10-20T09:17:22.292Z"
+  }
+]
