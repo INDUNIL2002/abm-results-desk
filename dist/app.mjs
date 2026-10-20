@@ -241,30 +241,14 @@ async function autoSyncToBatch() {
   }
 }
 
-// ── Background Auto-Pull: periodically pull cloud updates silently ─────────────
-function scheduleAutoPull() {
-  clearTimeout(autoSyncPullTimer);
-  autoSyncPullTimer = setTimeout(autoPullFromCloud, PULL_INTERVAL_MS);
-}
-
-async function autoPullFromCloud() {
-  const reg = cleanReg(state.profile.registration);
-  if (!reg || reg.length < 6) {
-    scheduleAutoPull();
+// ── Cloud Restore: restore results when opening app fresh or empty ────────────
+async function syncFromCloudIfAvailable(reg, options = { silent: false, force: false }) {
+  // If the user already has active local grades and not forced, DO NOT overwrite their local work!
+  const hasLocalGrades = Object.values(state.results).some(r => r && r.grade && r.grade !== 'Pending');
+  if (hasLocalGrades && !options.force) {
     return;
   }
-  // Debounce: don't pull if we already pulled very recently
-  if (Date.now() - lastPullTimestamp < 30_000) {
-    scheduleAutoPull();
-    return;
-  }
-  lastPullTimestamp = Date.now();
-  await syncFromCloudIfAvailable(reg, { silent: true });
-  scheduleAutoPull();
-}
 
-// ── Cross-device Cloud Restore: seamlessly sync results from other device ─────
-async function syncFromCloudIfAvailable(reg, options = { silent: false }) {
   try {
     const cloud = await fetchSubmissionByRegistration(reg);
     if (!cloud || !Array.isArray(cloud.semesters) || cloud.semesters.length === 0) {
@@ -295,13 +279,12 @@ async function syncFromCloudIfAvailable(reg, options = { silent: false }) {
       renderProfile();
     }
 
-    // Merge semester courses from cloud into local state
+    // Restore semester courses from cloud only if not set locally
     cloud.semesters.forEach(sem => {
       if (Array.isArray(sem.courses)) {
         sem.courses.forEach(c => {
           const courseId = `${sem.semester}:${c.code}`;
-          // If not graded locally or pending, restore from cloud
-          if (!state.results[courseId] || !state.results[courseId].grade || state.results[courseId].grade === 'Pending') {
+          if (c.grade && c.grade !== 'Pending' && !state.results[courseId]?.grade) {
             state.results[courseId] = { grade: c.grade, repeat: false, confirmed: true, note: '' };
             restoredCount++;
           }
@@ -345,16 +328,14 @@ function switchTab(tabId) {
   });
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (tabId === 'transcript') {
-    // Force push local → cloud, then pull cloud → local, then render sheet
+    // Push latest local edits to cloud, then render sheet
     const reg = cleanReg(state.profile.registration);
     if (reg && reg.length >= 6 && state.profile.name?.trim()) {
       (async () => {
         try {
-          await autoSyncToBatch();           // push latest local
-          await syncFromCloudIfAvailable(reg, { silent: true }); // pull merged
-          lastPullTimestamp = Date.now();
+          await autoSyncToBatch();
         } catch {} 
-        renderOfficialResultSheet();         // re-render with freshest data
+        renderOfficialResultSheet();
       })();
     } else {
       renderOfficialResultSheet();
@@ -1396,18 +1377,9 @@ async function init() {
     // Auto-sync initial state if details already filled
     scheduleAutoSync();
 
-    // Start background auto-pull cycle (cloud → local every 3 min)
-    scheduleAutoPull();
-
-    // Auto-pull when user returns to the app (tab switch, phone unlock, etc.)
+    // Re-push in case local changes were made while tab was hidden
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
-        const reg = cleanReg(state.profile.registration);
-        if (reg && reg.length >= 6 && (Date.now() - lastPullTimestamp > 30_000)) {
-          lastPullTimestamp = Date.now();
-          syncFromCloudIfAvailable(reg, { silent: true });
-        }
-        // Also re-push in case local changes were made offline
         scheduleAutoSync();
       }
     });

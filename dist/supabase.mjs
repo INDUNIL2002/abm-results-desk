@@ -58,120 +58,15 @@ export async function upsertSubmissionToSupabase(payload) {
   const reg = cleanReg(payload.registration);
   if (!reg) return false;
 
-  const incomingName = cleanName(payload.name);
-  const incomingBatch = payload.batch || '';
-  const incomingThrough = payload.results_through || payload.resultsThrough || '';
-  const incomingSemesters = Array.isArray(payload.semesters) ? payload.semesters : [];
-
-  // Try to check existing cloud record to perform smart merge across devices
-  let mergedSemesters = [...incomingSemesters];
-  let finalName = incomingName;
-  let finalBatch = incomingBatch;
-  let finalThrough = incomingThrough;
-
-  try {
-    const existing = await fetchSubmissionByRegistration(reg);
-    if (existing && Array.isArray(existing.semesters) && existing.semesters.length > 0) {
-      if (!finalName && existing.name) finalName = existing.name;
-      if (!finalBatch && existing.batch) finalBatch = existing.batch;
-
-      // Map incoming semesters by key
-      const incomingMap = new Map(incomingSemesters.map(s => [s.semester, s]));
-
-      // Merge: keep all semesters from existing that are not in incoming, or update with newer incoming
-      const allSemKeys = new Set([...existing.semesters.map(s => s.semester), ...incomingSemesters.map(s => s.semester)]);
-      const semsOrder = ['1-I', '1-II', '2-I', '2-II', '3-I', '3-II', '4-I', '4-II'];
-
-      mergedSemesters = [];
-      for (const semKey of semsOrder) {
-        if (!allSemKeys.has(semKey)) continue;
-        const inc = incomingMap.get(semKey);
-        const ext = existing.semesters.find(s => s.semester === semKey);
-
-        if (inc && ext) {
-          // ── Per-course smart merge ────────────────────────────────────────
-          // Local (incoming) wins for course metadata (credits, title).
-          // Cloud grades are preserved for courses not yet graded locally.
-          const codeKey = (code) => String(code ?? '').replace(/\s/g, '').toUpperCase();
-          const incMap = new Map((inc.courses || []).map(c => [codeKey(c.code), c]));
-          const extMap = new Map((ext.courses || []).map(c => [codeKey(c.code), c]));
-          const allCodes = new Set([...incMap.keys(), ...extMap.keys()]);
-
-          const mergedCourses = [];
-          for (const code of allCodes) {
-            const iC = incMap.get(code);
-            const eC = extMap.get(code);
-            if (iC && iC.grade && iC.grade !== 'Pending') {
-              // Local device has a grade → local wins (most up-to-date)
-              mergedCourses.push(iC);
-            } else if (eC && eC.grade && eC.grade !== 'Pending') {
-              // Cloud has a grade but local doesn't yet →
-              // keep cloud grade but overwrite stale credits/title with local values
-              mergedCourses.push(iC
-                ? { ...eC, credits: iC.credits, title: iC.title }
-                : eC
-              );
-            } else if (iC) {
-              mergedCourses.push(iC); // local metadata (no grade on either side)
-            } else if (eC) {
-              mergedCourses.push(eC); // cloud-only course
-            }
-          }
-
-          let semPts = 0;
-          let semCreds = 0;
-          const gradedInMerge = mergedCourses.filter(c => c.grade && c.grade !== 'Pending' && GRADE_POINTS[c.grade] != null);
-          gradedInMerge.forEach(c => {
-            const cr = Number(c.credits || 0);
-            semPts += GRADE_POINTS[c.grade] * cr;
-            semCreds += cr;
-          });
-          const semGpa = semCreds > 0 ? (semPts / semCreds) : (inc?.gpa ?? ext?.gpa ?? null);
-
-          mergedSemesters.push({
-            semester: semKey,
-            gpa:         semGpa != null ? Math.round(semGpa * 10000) / 10000 : null,
-            credits:     semCreds || inc.credits || ext.credits || 0,
-            gradedCount: gradedInMerge.length,
-            courses:     mergedCourses,
-          });
-        } else if (inc) {
-          mergedSemesters.push(inc);
-        } else if (ext) {
-          mergedSemesters.push(ext);
-        }
-      }
-    }
-  } catch (err) {
-    console.warn('Could not check existing cloud record before upsert:', err);
-  }
-
-  // Calculate combined totals from merged semesters
-  let totalPoints = 0;
-  let totalCredits = 0;
-  let totalGraded = 0;
-
-  mergedSemesters.forEach(sem => {
-    if (sem.gpa != null && sem.credits) {
-      totalPoints += Number(sem.gpa) * Number(sem.credits);
-      totalCredits += Number(sem.credits);
-    }
-    totalGraded += Number(sem.gradedCount || 0);
-  });
-
-  const finalCgpa = totalCredits > 0 ? (totalPoints / totalCredits) : (payload.cgpa != null ? Number(payload.cgpa) : null);
-  const finalTotalCredits = totalCredits > 0 ? totalCredits : (payload.credits != null ? Number(payload.credits) : null);
-  const finalGradedCount = totalGraded > 0 ? totalGraded : (payload.graded_count != null ? Number(payload.graded_count) : (payload.gradedCount != null ? Number(payload.gradedCount) : null));
-
   const row = {
     registration:    reg,
-    name:            finalName,
-    batch:           finalBatch || '2021/2022',
-    results_through: finalThrough,
-    cgpa:            finalCgpa != null ? Math.round(finalCgpa * 10000) / 10000 : null,
-    credits:         finalTotalCredits,
-    graded_count:    finalGradedCount,
-    semesters:       mergedSemesters,
+    name:            cleanName(payload.name),
+    batch:           payload.batch || '2021/2022',
+    results_through: payload.results_through || payload.resultsThrough || '',
+    cgpa:            payload.cgpa != null ? Math.round(Number(payload.cgpa) * 10000) / 10000 : null,
+    credits:         payload.credits != null ? Number(payload.credits) : 0,
+    graded_count:    payload.graded_count != null ? Number(payload.graded_count) : (payload.gradedCount != null ? Number(payload.gradedCount) : 0),
+    semesters:       Array.isArray(payload.semesters) ? payload.semesters : [],
     submitted_at:    new Date().toISOString(),
   };
 

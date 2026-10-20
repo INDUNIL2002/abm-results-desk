@@ -907,7 +907,8 @@ function openAddStudentModal() {
   document.getElementById('student-form').reset();
   const regInput = document.getElementById('m-reg');
   regInput.disabled = false;
-  document.getElementById('m-batch').value = '2021/2022';
+  if (document.getElementById('m-batch')) document.getElementById('m-batch').value = '45th Batch (2021/2022)';
+  if (document.getElementById('m-degree')) document.getElementById('m-degree').value = 'ABM';
   document.getElementById('student-modal').hidden = false;
 }
 
@@ -920,8 +921,19 @@ function openEditStudentModal(reg) {
   const regInput = document.getElementById('m-reg');
   regInput.value = r.registration || '';
   regInput.disabled = true; // Primary key locked on edit
-  document.getElementById('m-batch').value = r.batch || '2021/2022';
-  document.getElementById('m-through').value = r.results_through || r.resultsThrough || '';
+  
+  const batchParts = (r.batch || '').split('·').map(s => s.trim());
+  if (document.getElementById('m-batch')) {
+    const bOpts = Array.from(document.getElementById('m-batch').options).map(o => o.value);
+    const matched = bOpts.find(v => v.includes(batchParts[0]));
+    document.getElementById('m-batch').value = matched || bOpts[0] || '45th Batch (2021/2022)';
+  }
+  if (document.getElementById('m-degree') && batchParts[1]) {
+    document.getElementById('m-degree').value = batchParts[1];
+  }
+  if (document.getElementById('m-through')) {
+    document.getElementById('m-through').value = r.results_through || r.resultsThrough || '';
+  }
   document.getElementById('m-cgpa').value = r.cgpa != null ? Number(r.cgpa) : '';
   document.getElementById('m-credits').value = r.credits != null ? Number(r.credits) : '';
 
