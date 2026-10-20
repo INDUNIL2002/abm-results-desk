@@ -75,12 +75,23 @@
               <input id="student-id" maxlength="60" placeholder="e.g. AG/2021/014">
             </div>
             <div class="input-field">
-              <label for="student-batch">Academic Year / Intake</label>
-              <input id="student-batch" maxlength="40" placeholder="e.g. 2021/2022">
+              <label for="student-batch">Academic Year / Batch <span class="required-star">*</span></label>
+              <select id="student-batch" required>
+                <option value="" disabled selected>-- Select Academic Year / Batch --</option>
+                <option value="45th Batch (2021/2022)">45th Batch (2021/2022)</option>
+                <option value="46th Batch (2022/2023)">46th Batch (2022/2023)</option>
+                <option value="47th Batch (2023/2024)">47th Batch (2023/2024)</option>
+                <option value="48th Batch (2024/2025)">48th Batch (2024/2025)</option>
+              </select>
             </div>
             <div class="input-field">
-              <label for="results-through">Result up to</label>
-              <input id="results-through" maxlength="80" placeholder="e.g. Year 3 Semester II">
+              <label for="student-degree">Degree Programme <span class="required-star">*</span></label>
+              <select id="student-degree" required>
+                <option value="" disabled selected>-- Select Degree Programme --</option>
+                <option value="ABM">BSc. (Hons) Agribusiness Management (ABM)</option>
+                <option value="ARMT">BSc. (Hons) Agricultural Resource Management &amp; Technology (ARMT)</option>
+                <option value="GT">BSc. (Hons) Green Technology (GT)</option>
+              </select>
             </div>
           </div>
         </div>
@@ -192,9 +203,14 @@
 
             <!-- Table Footer: SGPA & Elective action -->
             <div class="sem-table-footer">
-              <button type="button" id="btn-add-elective-bottom" class="btn btn-subtle">
-                ➕ Add Elective to this Semester
-              </button>
+              <div class="elective-action-wrap" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <select id="quick-add-elective" class="search-box" style="width:auto;min-width:280px;background:#fff;border-color:var(--line)">
+                  <option value="" disabled selected>➕ Add Handbook Elective Course…</option>
+                </select>
+                <button type="button" id="btn-add-elective-bottom" class="btn btn-subtle" title="Add unlisted custom course">
+                  ✏️ Custom Course
+                </button>
+              </div>
               <div class="sem-footer-sgpa">
                 <span class="sgpa-text">Semester SGPA:</span>
                 <strong id="sem-footer-gpa" class="sgpa-number">—</strong>

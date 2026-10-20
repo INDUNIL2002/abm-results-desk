@@ -224,14 +224,13 @@
       }
     }
 
-    @media(max-width:900px) {
-      .stats-row { grid-template-columns:repeat(2,1fr); }
-      .class-grid { grid-template-columns:repeat(2,1fr); }
-      .shell { padding:20px 16px; }
-      .sems-input-grid { grid-template-columns:repeat(2,1fr); }
-      .form-grid-2 { grid-template-columns:1fr; }
-      .rsp-cols { grid-template-columns:1fr; }
-    }
+    .filter-bar-wrap { display:flex; gap:16px; flex-wrap:wrap; align-items:center; background:#fff; padding:10px 14px; border-radius:8px; border:1px solid var(--line); margin-bottom:12px; }
+    .filter-item { display:flex; align-items:center; gap:8px; }
+    .filter-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
+    .chip-group { display:inline-flex; gap:3px; background:#f1f5f9; padding:2px; border-radius:6px; }
+    .fchip { border:0; background:transparent; font-size:11.5px; font-weight:600; padding:4px 10px; border-radius:4px; cursor:pointer; color:#475569; transition:all 0.15s; }
+    .fchip:hover { color:#183f32; background:#e2e8f0; }
+    .fchip.active { background:#183f32; color:#fff; font-weight:700; }
   </style>
 </head>
 <body>
@@ -318,9 +317,33 @@
 
   <div class="table-section">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:12px">
-      <h2 style="margin:0">Full Batch Ranking</h2>
+      <h2 style="margin:0">Faculty Results Leaderboard</h2>
       <button id="btn-add-student-2" class="act-btn" style="background:#183f32;color:#fff;padding:8px 14px;font-size:12px;border-radius:6px" type="button">➕ Add Student Record</button>
     </div>
+
+    <!-- Multi-Degree and Batch Filter Bar -->
+    <div class="filter-bar-wrap">
+      <div class="filter-item">
+        <span class="filter-label">Degree:</span>
+        <div id="deg-filter-group" class="chip-group">
+          <button type="button" class="fchip fdeg active" data-deg="all">All Degrees</button>
+          <button type="button" class="fchip fdeg" data-deg="ABM">ABM</button>
+          <button type="button" class="fchip fdeg" data-deg="ARMT">ARMT</button>
+          <button type="button" class="fchip fdeg" data-deg="GT">GT</button>
+        </div>
+      </div>
+      <div class="filter-item">
+        <span class="filter-label">Batch:</span>
+        <div id="batch-filter-group" class="chip-group">
+          <button type="button" class="fchip fbatch active" data-batch="all">All Batches</button>
+          <button type="button" class="fchip fbatch" data-batch="45">45th (21/22)</button>
+          <button type="button" class="fchip fbatch" data-batch="46">46th (22/23)</button>
+          <button type="button" class="fchip fbatch" data-batch="47">47th (23/24)</button>
+          <button type="button" class="fchip fbatch" data-batch="48">48th (24/25)</button>
+        </div>
+      </div>
+    </div>
+
     <div class="table-controls">
       <input type="search" class="search-input" id="search-input" placeholder="Search by name or registration…">
       <select class="filter-select" id="class-filter">
@@ -372,12 +395,21 @@
       </div>
       <div class="form-grid-2">
         <div class="form-group">
-          <label for="m-batch">Academic Year / Intake</label>
-          <input type="text" id="m-batch" placeholder="2021/2022">
+          <label for="m-batch">Academic Year / Batch</label>
+          <select id="m-batch">
+            <option value="45th Batch (2021/2022)">45th Batch (2021/2022)</option>
+            <option value="46th Batch (2022/2023)">46th Batch (2022/2023)</option>
+            <option value="47th Batch (2023/2024)">47th Batch (2023/2024)</option>
+            <option value="48th Batch (2024/2025)">48th Batch (2024/2025)</option>
+          </select>
         </div>
         <div class="form-group">
-          <label for="m-through">Result up to</label>
-          <input type="text" id="m-through" placeholder="e.g. Year 2 Semester II">
+          <label for="m-degree">Degree Programme</label>
+          <select id="m-degree">
+            <option value="ABM">BSc. (Hons) Agribusiness Management (ABM)</option>
+            <option value="ARMT">BSc. (Hons) Agricultural Resource Management &amp; Technology (ARMT)</option>
+            <option value="GT">BSc. (Hons) Green Technology (GT)</option>
+          </select>
         </div>
       </div>
       <div class="form-grid-2">
@@ -634,7 +666,7 @@ function renderDashboardView() {
           return `<td class="sem-cell">${sd?.gpa != null ? `<strong>${Number(sd.gpa).toFixed(2)}</strong><br><small>${sd.credits || ''}cr</small>` : '<span style="color:#ccc">—</span>'}</td>`;
         }).join('')}
         <td style="text-align:center">${r.credits ?? '—'}</td>
-        <td><small style="color:var(--muted)">${esc(r.batch || '—')}</small></td>
+        <td class="batch-col"><small style="color:var(--muted)">${esc(r.batch || '—')}</small></td>
         <td><small style="color:var(--muted)">${date}</small></td>
         <td style="text-align:center">
           <div class="actions-cell">
@@ -647,24 +679,56 @@ function renderDashboardView() {
     `;
   }).join('');
 
-  filterTable();
-}
+let currentDegreeFilter = 'all';
+let currentBatchFilter = 'all';
 
 function filterTable() {
   const q = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
   const cls = document.getElementById('class-filter')?.value || '';
   const rows = document.querySelectorAll('#table-body tr.data-row');
   let visible = 0;
+
   rows.forEach(row => {
     const text = row.textContent.toLowerCase();
     const badge = row.querySelector('.badge')?.textContent || '';
+    const regText = (row.querySelector('.reg')?.textContent || '').toUpperCase();
+    const batchText = (row.querySelector('.batch-col')?.textContent || row.textContent).toUpperCase();
+
+    // Match search
     const matchQ = !q || text.includes(q);
+
+    // Match class
     const matchCls = !cls || badge.includes(cls);
-    row.hidden = !(matchQ && matchCls);
+
+    // Match Degree
+    let matchDeg = true;
+    if (currentDegreeFilter !== 'all') {
+      const deg = currentDegreeFilter.toUpperCase();
+      const inBatch = batchText.includes(deg);
+      const inReg = (deg === 'ABM' && regText.includes('/AB/')) ||
+                    (deg === 'ARMT' && (regText.includes('/AT/') || regText.includes('/AR/') || regText.includes('/RM/'))) ||
+                    (deg === 'GT' && regText.includes('/GT/'));
+      matchDeg = inBatch || inReg;
+    }
+
+    // Match Batch
+    let matchBatch = true;
+    if (currentBatchFilter !== 'all') {
+      const aliases = {
+        '45': ['45', '2021', '21/22'],
+        '46': ['46', '2022', '22/23'],
+        '47': ['47', '2023', '23/24'],
+        '48': ['48', '2024', '24/25'],
+      }[currentBatchFilter] || [currentBatchFilter];
+      matchBatch = aliases.some(a => batchText.toLowerCase().includes(a) || regText.toLowerCase().includes(a));
+    }
+
+    row.hidden = !(matchQ && matchCls && matchDeg && matchBatch);
     if (!row.hidden) visible++;
   });
+
   const countEl = document.getElementById('row-count');
-  if (countEl) countEl.textContent = q || cls ? `Showing ${visible} of ${rows.length}` : `${rows.length} students`;
+  if (countEl) countEl.textContent = `Showing ${visible} of ${rows.length} students`;
 }
 
 // ── View Full Student Academic Results Modal ──────────────────────────────────
@@ -889,8 +953,10 @@ document.getElementById('student-form').addEventListener('submit', async (e) => 
   try {
     const registration = (editingReg || document.getElementById('m-reg').value).trim();
     const name = document.getElementById('m-name').value.trim();
-    const batch = document.getElementById('m-batch').value.trim() || '2021/2022';
-    const results_through = document.getElementById('m-through').value.trim();
+    const batch = document.getElementById('m-batch').value;
+    const degree = document.getElementById('m-degree').value;
+    const batchVal = `${batch} · ${degree}`;
+    const results_through = '';
     const cgpaVal = document.getElementById('m-cgpa').value;
     const creditsVal = document.getElementById('m-credits').value;
 
@@ -915,7 +981,7 @@ document.getElementById('student-form').addEventListener('submit', async (e) => 
     const payload = {
       registration,
       name,
-      batch,
+      batch: batchVal,
       results_through,
       cgpa: cgpaVal !== '' ? Number(cgpaVal) : null,
       credits: creditsVal !== '' ? Number(creditsVal) : null,
@@ -1006,6 +1072,25 @@ document.getElementById('btn-signout').addEventListener('click', () => {
 
 document.getElementById('search-input').addEventListener('input', filterTable);
 document.getElementById('class-filter').addEventListener('change', filterTable);
+
+// Degree and Batch chip filters
+document.querySelectorAll('.fdeg').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.fdeg').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentDegreeFilter = btn.dataset.deg;
+    filterTable();
+  });
+});
+
+document.querySelectorAll('.fbatch').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.fbatch').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentBatchFilter = btn.dataset.batch;
+    filterTable();
+  });
+});
 
 // CSV Export
 document.getElementById('btn-export-csv').addEventListener('click', () => {

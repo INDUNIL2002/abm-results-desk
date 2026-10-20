@@ -1,97 +1,2337 @@
 {
   "institution": "University of Ruhuna",
   "faculty": "Faculty of Agriculture",
-  "programme": "BSc Honours in Agribusiness Management",
-  "abbreviation": "ABM",
-  "handbookYear": "2021/22",
-  "source": "User-provided images of Student Handbook-FOA/UOR 2021/22, pages 30–36",
-  "courseTable": "Table 5.3.3, pages 32–33",
-  "minimumDegreeCredits": 125,
-  "compulsoryGpaCredits": 109,
-  "minimumElectiveCredits": 16,
-  "knownNonGpaCredits": 5,
-  "semesterGpaCredits": {
-    "1-I": 15,
-    "1-II": 18,
-    "2-I": 15,
-    "2-II": 16,
-    "3-I": 12,
-    "3-II": 12,
-    "4-I": 12,
-    "4-II": 9
+  "handbookYear": "2021/2022",
+  "programmes": {
+    "ABM": {
+      "name": "BSc Honours in Agribusiness Management",
+      "shortName": "ABM",
+      "degreeTitle": "BSc. Hons Agribusiness Management",
+      "minimumDegreeCredits": 125,
+      "compulsoryGpaCredits": 109,
+      "minimumElectiveCredits": 16,
+      "courses": [
+        {
+          "semester": "Orientation",
+          "code": "CC10001",
+          "title": "General English",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "Orientation",
+          "code": "CC10002",
+          "title": "Computer Awareness",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "Orientation",
+          "code": "CC10003",
+          "title": "Basic Mathematics",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "Orientation",
+          "code": "CC10004",
+          "title": "Basic Statistics",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "Orientation",
+          "code": "CC10005",
+          "title": "Career Development and Active Citizen",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "1-I",
+          "code": "AS11201",
+          "title": "Anatomy and Physiology of Farm Animals",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "BL11301",
+          "title": "Plant Physiology and Systematics",
+          "credits": 3,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "CC11201",
+          "title": "Information and Communication Technology in Agriculture",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "CS11201",
+          "title": "Principles of Agronomy",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "EC11201",
+          "title": "Micro Economics",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "EC11202",
+          "title": "Economic Statistics",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "FS11201",
+          "title": "Biochemistry",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "CC11202",
+          "title": "English I",
+          "credits": 2,
+          "gpa": false
+        },
+        {
+          "semester": "1-II",
+          "code": "AS12301",
+          "title": "Animal Nutrition, Forage & Feed Technology",
+          "credits": 3,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "CS12201",
+          "title": "Agroforestry and Silviculture",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "EC12201",
+          "title": "Macro Economics",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "EC12202",
+          "title": "Principles of Business Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "EC12203",
+          "title": "Marketing Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "EN12201",
+          "title": "Agricultural Machinery Engineering",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "FS12201",
+          "title": "Food Chemistry",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "SS12301",
+          "title": "Fundamentals of Soil Science",
+          "credits": 3,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "CC12101",
+          "title": "Basic Technical Writing",
+          "credits": 1,
+          "gpa": false
+        },
+        {
+          "semester": "1-II",
+          "code": "CC12202",
+          "title": "English II",
+          "credits": 2,
+          "gpa": false
+        },
+        {
+          "semester": "2-I",
+          "code": "AS21102",
+          "title": "Animal Products Technology",
+          "credits": 1,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "CS21201",
+          "title": "Agroecology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EC21201",
+          "title": "Agricultural Marketing",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EC21202",
+          "title": "Book Keeping & Accountancy",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EC21204",
+          "title": "Natural Resource Economics",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EC21205",
+          "title": "Consumer Behavior",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EN21201",
+          "title": "Bioprocessing and Post-harvest Engineering",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "FS21201",
+          "title": "Food and Nutrition",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "AS22201",
+          "title": "Aquaculture and Non-ruminant Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "CS22201",
+          "title": "Management of Spices and Beverage Crops",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "CS22202",
+          "title": "Fruit Crop Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "EC22201",
+          "title": "Farm Business Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "EC22202",
+          "title": "Communication and diffusion of Innovation",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "EC22203",
+          "title": "Human Resource Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "EC22204",
+          "title": "Managerial Economics and Customer Relationship Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "EC22205",
+          "title": "Strategic Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "CS31201",
+          "title": "Plantation Crop Management and Training",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "EC31201",
+          "title": "Social Science Research Methods",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "EC31203",
+          "title": "International Trade & Marketing",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "EC31204",
+          "title": "Innovation and Knowledge Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "EC31206",
+          "title": "Organizational Behavior",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "FS31201",
+          "title": "Food Preservation and Processing",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "CC32201",
+          "title": "Applied Statistics I",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EC32201",
+          "title": "Extension Education",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EC32202",
+          "title": "Project Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EC32204",
+          "title": "Entrepreneurship",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EC32206",
+          "title": "Business Start-ups",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EC32207",
+          "title": "Financial Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "CC41201",
+          "title": "Technical Writing and Communication Skills",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "CC41202",
+          "title": "Applied Statistics II",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "CC41203",
+          "title": "Professional Development",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "EC41201",
+          "title": "Natural Resource Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "EC41202",
+          "title": "Agricultural Policy Analysis",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "EC41203",
+          "title": "Econometrics",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-II",
+          "code": "EC42601",
+          "title": "Research project",
+          "credits": 6,
+          "gpa": true
+        },
+        {
+          "semester": "4-II",
+          "code": "CC42301",
+          "title": "Internship",
+          "credits": 3,
+          "gpa": true
+        }
+      ]
+    },
+    "ARMT": {
+      "name": "BSc Honours in Agricultural Resource Management & Technology",
+      "shortName": "ARMT",
+      "degreeTitle": "BSc. Hons Agricultural Resource Management & Technology",
+      "minimumDegreeCredits": 126,
+      "compulsoryGpaCredits": 108,
+      "minimumElectiveCredits": 18,
+      "courses": [
+        {
+          "semester": "Orientation",
+          "code": "CC10001",
+          "title": "General English",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "Orientation",
+          "code": "CC10002",
+          "title": "Computer Awareness",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "Orientation",
+          "code": "CC10003",
+          "title": "Basic Mathematics",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "Orientation",
+          "code": "CC10004",
+          "title": "Basic Statistics",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "Orientation",
+          "code": "CC10005",
+          "title": "Career Development and Active Citizen",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "1-I",
+          "code": "AS11201",
+          "title": "Anatomy and Physiology of Farm Animals",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "BL11301",
+          "title": "Plant Physiology and Systematics",
+          "credits": 3,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "CC11201",
+          "title": "Information and Communication Technology in Agriculture",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "CS11201",
+          "title": "Principles of Agronomy",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "EC11201",
+          "title": "Micro Economics",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "EN11201",
+          "title": "Hydrology and Climatology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "FS11201",
+          "title": "Biochemistry",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "CC11202",
+          "title": "English I",
+          "credits": 2,
+          "gpa": false
+        },
+        {
+          "semester": "1-II",
+          "code": "AS12301",
+          "title": "Animal Nutrition, Forage & Feed Technology",
+          "credits": 3,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "BL12201",
+          "title": "Entomology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "CS12201",
+          "title": "Agroforestry and Silviculture",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "EC12201",
+          "title": "Macro Economics",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "EN12201",
+          "title": "Agricultural Machinery Engineering",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "FS12201",
+          "title": "Food Chemistry",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "SS12301",
+          "title": "Fundamentals of Soil Science",
+          "credits": 3,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "CC12101",
+          "title": "Basic Technical Writing",
+          "credits": 1,
+          "gpa": false
+        },
+        {
+          "semester": "1-II",
+          "code": "CC12202",
+          "title": "English II",
+          "credits": 2,
+          "gpa": false
+        },
+        {
+          "semester": "2-I",
+          "code": "AS21101",
+          "title": "Animal Genetics and Breeding",
+          "credits": 1,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "AS21102",
+          "title": "Animal Products Technology",
+          "credits": 1,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "BL21201",
+          "title": "Genetics and Plant Breeding",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "CS21201",
+          "title": "Agroecology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EC21201",
+          "title": "Agricultural Marketing",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EN21201",
+          "title": "Bioprocessing and Post-harvest Engineering",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "FS21201",
+          "title": "Food and Nutrition",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "SS21201",
+          "title": "Soil, Plant and Environment",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "AS22201",
+          "title": "Aquaculture and Non-ruminant Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "AS22102",
+          "title": "Animal Health and Hygiene",
+          "credits": 1,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "BL22201",
+          "title": "Molecular Biology, Biotechnology and Bioinformatics",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "BL22202",
+          "title": "Plant Pathology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "CS22201",
+          "title": "Management of Spices and Beverage Crops",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "CS22202",
+          "title": "Fruit Crop Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "EC22201",
+          "title": "Farm Business Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "EN22201",
+          "title": "GIS and Remote sensing",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "AS31201",
+          "title": "Ruminant Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "CS31201",
+          "title": "Plantation Crop Management and Training",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "EC31201",
+          "title": "Social Science Research Methods",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "EN31201",
+          "title": "Irrigation and Water Resources Engineering",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "FS31201",
+          "title": "Food Preservation and Processing",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "SS31201",
+          "title": "Land Resource Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "AS32201",
+          "title": "Applied Livestock Production",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "BL32201",
+          "field": "Field Biology in Agriculture",
+          "title": "Field Biology in Agriculture",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "CC32201",
+          "title": "Applied Statistics",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "CS32301",
+          "title": "Production Technology of Field Crops and Vegetables",
+          "credits": 3,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "CS32102",
+          "title": "Protected Agriculture",
+          "credits": 1,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EC32201",
+          "title": "Extension Education",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EN32201",
+          "title": "Applied Agricultural Engineering and Environmental Technology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "SS32101",
+          "title": "Field Practices in Soil Science",
+          "credits": 1,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "CC41201",
+          "title": "Technical Writing and Communication Skills",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "CC41202",
+          "title": "Applied Statistics II",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "CC41203",
+          "title": "Professional Development",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-II",
+          "code": "CC42601",
+          "title": "Research project",
+          "credits": 6,
+          "gpa": true
+        },
+        {
+          "semester": "4-II",
+          "code": "CC42302",
+          "title": "Internship",
+          "credits": 3,
+          "gpa": true
+        }
+      ]
+    },
+    "GT": {
+      "name": "BSc Honours in Green Technology",
+      "shortName": "GT",
+      "degreeTitle": "BSc. Hons Green Technology",
+      "minimumDegreeCredits": 125,
+      "compulsoryGpaCredits": 109,
+      "minimumElectiveCredits": 14,
+      "courses": [
+        {
+          "semester": "Orientation",
+          "code": "CC10001",
+          "title": "General English",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "Orientation",
+          "code": "CC10002",
+          "title": "Computer Awareness",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "Orientation",
+          "code": "CC10003",
+          "title": "Basic Mathematics",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "Orientation",
+          "code": "CC10004",
+          "title": "Basic Statistics",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "Orientation",
+          "code": "CC10005",
+          "title": "Career Development and Active Citizen",
+          "credits": null,
+          "gpa": false
+        },
+        {
+          "semester": "1-I",
+          "code": "CC11203",
+          "title": "Information and Communication Technology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "CS11201",
+          "title": "Principles of Agronomy",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "EC11203",
+          "title": "Economic Principles",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "EN11201",
+          "title": "Hydrology and Climatology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "EN11302",
+          "title": "Environmental Pollution, Toxicology and Remediation",
+          "credits": 3,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "EN11203",
+          "title": "Natural and Cultural Heritage Conservation",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "EN11204",
+          "title": "Environmental Law & Policy",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-I",
+          "code": "CC11202",
+          "title": "English I",
+          "credits": 2,
+          "gpa": false
+        },
+        {
+          "semester": "1-II",
+          "code": "BL12202",
+          "title": "Biodiversity Conservation",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "BL12203",
+          "title": "Environmental Biotechnology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "EN12202",
+          "title": "Environmental Footprints",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "EN12203",
+          "title": "Renewable Energy Systems I",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "EN12204",
+          "title": "Climate Change Adaptation and Mitigation",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "EN12205",
+          "title": "Green Chemistry",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "SS12301",
+          "title": "Fundamentals of Soil Science",
+          "credits": 3,
+          "gpa": true
+        },
+        {
+          "semester": "1-II",
+          "code": "CC12101",
+          "title": "Basic Technical Writing",
+          "credits": 1,
+          "gpa": false
+        },
+        {
+          "semester": "1-II",
+          "code": "CC12202",
+          "title": "English II",
+          "credits": 2,
+          "gpa": false
+        },
+        {
+          "semester": "2-I",
+          "code": "CS21201",
+          "title": "Agroecology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EC21206",
+          "title": "Environmental Economics",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EN21202",
+          "title": "Ergonomics",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EN21205",
+          "title": "Machinery Principles and Power Units",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EN21206",
+          "title": "Life Cycle Assessment",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EN21207",
+          "title": "Renewable Energy Systems II",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EN21208",
+          "title": "Productivity and Quality Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
+          "code": "EN21209",
+          "title": "Energy Audit and Energy Asset Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "AS22204",
+          "title": "Sustainable Livestock Production Systems",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "CS22206",
+          "title": "Landscaping and Green Interior Design",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "EN22201",
+          "title": "GIS and Remote Sensing",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "EN22202",
+          "title": "Precision Agricultural Technology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "EN22205",
+          "title": "Waste Water & Water Treatment Technologies",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "EN22206",
+          "title": "Sustainable Solid Waste Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "EN22207",
+          "title": "Industrial Resource Management and Cleaner Production",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-II",
+          "code": "SS22204",
+          "title": "Soil Biophysicochemical Dynamics and Contaminants",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "EC31207",
+          "title": "Business Management and Entrepreneurship",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "EC31208",
+          "title": "Eco-tourism",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "EN31201",
+          "title": "Irrigation and Water Resources Engineering",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "EN31206",
+          "title": "Sustainable Post Harvest Technology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "EN31207",
+          "title": "Environmental Monitoring and Modelling",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "EN31208",
+          "title": "Green Infrastructure and Smart Cities",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-I",
+          "code": "FS31204",
+          "title": "Functional Foods and Nutraceuticals",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "CC32201",
+          "title": "Applied Statistics I",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EC32202",
+          "title": "Project Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EC32208",
+          "title": "Environmental Impact Assessment",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EN32206",
+          "title": "Disaster Management and Resilience",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EN32207",
+          "title": "Product Design and Development Protocols",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EN32208",
+          "title": "Analytical Techniques and Green Solutions",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "3-II",
+          "code": "EN32209",
+          "title": "Coastal and Marine Resource Management",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "CC41202",
+          "title": "Applied Statistics II",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "CC41203",
+          "title": "Professional Development",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "EN41205",
+          "title": "Research Methodology and Scientific Writing",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "EN41206",
+          "title": "Process Automation and Smart Control",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "EN41207",
+          "title": "Case Studies in Environmental Technology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-I",
+          "code": "EN41208",
+          "title": "Green Behavior and Sustainable Consumption Simulation",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "4-II",
+          "code": "EN42601",
+          "title": "Research Study",
+          "credits": 6,
+          "gpa": true
+        },
+        {
+          "semester": "4-II",
+          "code": "CC42301",
+          "title": "Internship",
+          "credits": 3,
+          "gpa": true
+        }
+      ]
+    }
+  },
+  "electives": {
+    "2-I": [
+      {
+        "code": "AS21203",
+        "title": "Analytical Methods in Animal Nutrition",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL21202",
+        "title": "Developmental Plant Physiology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL21203",
+        "title": "Economic Botany",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL21204",
+        "title": "Environmental Biology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS21202",
+        "title": "Management of Aquatic Plants",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS21203",
+        "title": "Management of Energy Crops",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS21204",
+        "title": "Commercial Nursery Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS21205",
+        "title": "Urban Agriculture and Food Security",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC21202",
+        "title": "Book Keeping and Accountancy",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC21203",
+        "title": "Financial Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC21204",
+        "title": "Natural Resource Economics",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN21202",
+        "title": "Ergonomics",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN21203",
+        "title": "Agricultural Pollution, Prevention and Remediation",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN21204",
+        "title": "Wood Engineering Technology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN21210",
+        "title": "Spirituality and relaxation Techniques for Personality Development",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS21202",
+        "title": "Basic Kitchen Skills and Menu Planning",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS21203",
+        "title": "Food Toxicology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS21204",
+        "title": "Cereal Chemistry and Bakery Product Technology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS21202",
+        "title": "Wetland Resources and Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS21203",
+        "title": "Soil Fauna Ecology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS21204",
+        "title": "Geo-data Mapping and Analysis",
+        "credits": 2,
+        "gpa": true
+      }
+    ],
+    "2-II": [
+      {
+        "code": "AS22203",
+        "title": "Livestock Economics and Marketing",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL22203",
+        "title": "Microbial Genetics",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL22204",
+        "title": "Weed Biology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL22205",
+        "title": "Plant Protection Practicum",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS22203",
+        "title": "Management of Medicinal and Aromatic Plants",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS22204",
+        "title": "Floriculture and Landscaping",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS22205",
+        "title": "Crop Stress Physiology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC22202",
+        "title": "Communication & Diffusion of Innovation",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC22203",
+        "title": "Human Resource Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC22204",
+        "title": "Managerial Economics and Customer Relationship Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN22202",
+        "title": "Precision Agricultural Technology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN22203",
+        "title": "Agricultural Systems design and Construction",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN22204",
+        "title": "Surveying and Levelling",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN22208",
+        "title": "Integrated Water Resource Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS22201",
+        "title": "Nutrition for Life cycle",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS22202",
+        "title": "Food Enzymology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS22203",
+        "title": "Fermentation Technology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS22201",
+        "title": "Soil Microbiology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS22202",
+        "title": "Potting Media in Container Gardening",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS22203",
+        "title": "Soil Amendments and Risk Assessment",
+        "credits": 2,
+        "gpa": true
+      }
+    ],
+    "3-I": [
+      {
+        "code": "AS31202",
+        "title": "Livestock Genomics",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "AS31203",
+        "title": "Micro-livestock Production",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL31201",
+        "title": "Environmental Plant Physiology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL31202",
+        "title": "Industrial Entomology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL31203",
+        "title": "Plant-microbe Interactions",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CC31201",
+        "title": "Database Management Systems",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CC31202",
+        "title": "Smart Farming Techniques and its Applications",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS31202",
+        "title": "Forest Ecology and Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS31203",
+        "title": "Plant Tissue Culture",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS31204",
+        "title": "Rice Production Technology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS31205",
+        "title": "Organic Agriculture",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC31202",
+        "title": "Rural Development and Empowerment",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC31203",
+        "title": "International Trade and Marketing",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC31204",
+        "title": "Innovation and Knowledge Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC31205",
+        "title": "Total Quality Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC31208",
+        "title": "Eco-tourism",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN31202",
+        "title": "Designing and Installation of Micro Irrigation Systems",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN31203",
+        "title": "Technical Instrumentation and Device Development",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN31204",
+        "title": "Environment Information and Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN31205",
+        "title": "Renewable Energy for Sustainable Agriculture",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN31209",
+        "title": "Business Models in Resource Recovery from Waste",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS31202",
+        "title": "Food Waste Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS31203",
+        "title": "Sensory Evaluation of Food",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS31204",
+        "title": "Functional Foods and Nutraceuticals",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS31205",
+        "title": "Fish, Meat and Egg Product Technology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS31202",
+        "title": "Tools for Environmental Studies",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS31203",
+        "title": "Land-use Planning",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS31204",
+        "title": "Soil Fertility Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS31205",
+        "title": "Climate Change and Soil Gas Fluxes",
+        "credits": 2,
+        "gpa": true
+      }
+    ],
+    "3-II": [
+      {
+        "code": "AS32202",
+        "title": "Animal Reproduction",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "AS32203",
+        "title": "Livestock Waste Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "AS32204",
+        "title": "Indigenous Farm Animal Genetic Resources Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "AS32205",
+        "title": "Wildlife Conservation & Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL32202",
+        "title": "Practicum in Molecular Biology and Biotechnology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL32203",
+        "title": "Ecological Engineering for Pest and Disease Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL32204",
+        "title": "Commercial Apiculture",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "BL32205",
+        "title": "Occupational Health and Safety in Agriculture",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CC32202",
+        "title": "Programming Concepts and Computer Programming",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CC32203",
+        "title": "Data Science in Agriculture and its Applications",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CC32204",
+        "title": "Time Series Data Analysis",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CC32205",
+        "title": "Multivariate Data Analysis",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CC32206",
+        "title": "Research Data Analysis",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CC32207",
+        "title": "Non-parametric Data Analysis",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS32203",
+        "title": "Root Architecture and Crop Productivity",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS32204",
+        "title": "Crop Modelling",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS32205",
+        "title": "Commercial Seed Production",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "CS32206",
+        "title": "Weed Management Technology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC32202",
+        "title": "Project Management",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC32203",
+        "title": "Fisheries Management and Wellbeing",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC32204",
+        "title": "Entrepreneurship",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC32205",
+        "title": "Social Network Analysis",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC32208",
+        "title": "Environmental Impact Assessment",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EC32209",
+        "title": "Logistics Management and Professional Communication",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN32202",
+        "title": "Non-Destructive Analytical Techniques",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN32203",
+        "title": "Engineering Solutions for Controlled Environment in Agriculture",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN32204",
+        "title": "Training in Agricultural Machineries",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN32205",
+        "title": "Engineering Drawing",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "EN32210",
+        "title": "Ecological Sanitation",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS32201",
+        "title": "Food Product Development",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS32202",
+        "title": "Dairy product Technology",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS32203",
+        "title": "Food Packaging and Labeling",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "FS32204",
+        "title": "Food Material Science",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS32202",
+        "title": "Field Identification and Management of Soils",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS32203",
+        "title": "Land Use and Environment Quality",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS32204",
+        "title": "Data Interpretation and Communication",
+        "credits": 2,
+        "gpa": true
+      },
+      {
+        "code": "SS32205",
+        "title": "Research Initiation and Publication Ethics",
+        "credits": 2,
+        "gpa": true
+      }
+    ]
   },
   "courses": [
-    {"semester":"Orientation","code":"CC10001","title":"General English","credits":null,"gpa":false,"sourcePage":32},
-    {"semester":"Orientation","code":"CC10002","title":"Computer Awareness","credits":null,"gpa":false,"sourcePage":32},
-    {"semester":"Orientation","code":"CC10003","title":"Basic Mathematics","credits":null,"gpa":false,"sourcePage":32},
-    {"semester":"Orientation","code":"CC10004","title":"Basic Statistics","credits":null,"gpa":false,"sourcePage":32},
-    {"semester":"Orientation","code":"CC10005","title":"Career Development and Active Citizen","credits":null,"gpa":false,"sourcePage":32},
-    {"semester":"1-I","code":"AS11201","title":"Anatomy and Physiology of Farm Animals","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"1-I","code":"BL11301","title":"Plant Physiology and Systematics","credits":3,"gpa":true,"sourcePage":32},
-    {"semester":"1-I","code":"CC11201","title":"Information and Communication Technology in Agriculture","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"1-I","code":"CS11201","title":"Principles of Agronomy","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"1-I","code":"EC11201","title":"Micro Economics","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"1-I","code":"EC11202","title":"Economic Statistics","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"1-I","code":"FS11201","title":"Biochemistry","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"1-I","code":"CC11202","title":"English I","credits":2,"gpa":false,"sourcePage":32},
-    {"semester":"1-II","code":"AS12301","title":"Animal Nutrition, Forage & Feed Technology","credits":3,"gpa":true,"sourcePage":32},
-    {"semester":"1-II","code":"CS12201","title":"Agroforestry and Silviculture","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"1-II","code":"EC12201","title":"Macro Economics","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"1-II","code":"EC12202","title":"Principles of Business Management","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"1-II","code":"EC12203","title":"Marketing Management","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"1-II","code":"EN12201","title":"Agricultural Machinery Engineering","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"1-II","code":"FS12201","title":"Food Chemistry","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"1-II","code":"SS12301","title":"Fundamentals of Soil Science","credits":3,"gpa":true,"sourcePage":32},
-    {"semester":"1-II","code":"CC12101","title":"Basic Technical Writing","credits":1,"gpa":false,"sourcePage":32},
-    {"semester":"1-II","code":"CC12202","title":"English II","credits":2,"gpa":false,"sourcePage":32},
-    {"semester":"2-I","code":"AS21102","title":"Animal Products Technology","credits":1,"gpa":true,"sourcePage":32},
-    {"semester":"2-I","code":"CS21201","title":"Agroecology","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"2-I","code":"EC21201","title":"Agricultural Marketing","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"2-I","code":"EC21202","title":"Book Keeping & Accountancy","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"2-I","code":"EC21204","title":"Natural Resource Economics","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"2-I","code":"EC21205","title":"Consumer Behavior","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"2-I","code":"EN21201","title":"Bioprocessing and Post-harvest Engineering","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"2-I","code":"FS21201","title":"Food and Nutrition","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"2-II","code":"AS22201","title":"Aquaculture and Non-ruminant Management","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"2-II","code":"CS22201","title":"Management of Spices and Beverage Crops","credits":2,"gpa":true,"sourcePage":32},
-    {"semester":"2-II","code":"CS22202","title":"Fruit Crop Management","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"2-II","code":"EC22201","title":"Farm Business Management","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"2-II","code":"EC22202","title":"Communication and diffusion of Innovation","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"2-II","code":"EC22203","title":"Human Resource Management","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"2-II","code":"EC22204","title":"Managerial Economics and Customer Relationship Management","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"2-II","code":"EC22205","title":"Strategic Management","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"3-I","code":"CS31201","title":"Plantation Crop Management and Training","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"3-I","code":"EC31201","title":"Social Science Research Methods","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"3-I","code":"EC31203","title":"International Trade & Marketing","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"3-I","code":"EC31204","title":"Innovation and Knowledge Management","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"3-I","code":"EC31206","title":"Organizational Behavior","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"3-I","code":"FS31201","title":"Food Preservation and Processing","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"3-II","code":"CC32201","title":"Applied Statistics I","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"3-II","code":"EC32201","title":"Extension Education","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"3-II","code":"EC32202","title":"Project Management","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"3-II","code":"EC32204","title":"Entrepreneurship","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"3-II","code":"EC32206","title":"Business Start-ups","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"3-II","code":"EC32207","title":"Financial Management","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"4-I","code":"CC41201","title":"Technical Writing and Communication Skills","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"4-I","code":"CC41202","title":"Applied Statistics II","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"4-I","code":"CC41203","title":"Professional Development","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"4-I","code":"EC41201","title":"Natural Resource Management","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"4-I","code":"EC41202","title":"Agricultural Policy Analysis","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"4-I","code":"EC41203","title":"Econometrics","credits":2,"gpa":true,"sourcePage":33},
-    {"semester":"4-II","code":"EC42601","title":"Research project","credits":6,"gpa":true,"sourcePage":33},
-    {"semester":"4-II","code":"CC42301","title":"Internship","credits":3,"gpa":true,"sourcePage":33}
-  ],
-  "electives": [],
-  "electiveNotes": [
-    "Specific elective course codes, titles and credits are not enumerated in the supplied pages. Students must add their actual registered electives using their own academic records.",
-    "Table 5.3.2 assigns elective ranges of 2–6 credits in 2-I and 2-II and 4–8 credits in 3-I and 3-II, with a minimum total of 16 elective credits.",
-    "The text on page 31 discusses choosing electives from third year first semester, while the table and course notes on pages 31–33 also include second-year electives. The tool should accept the student's actual registered semester rather than enforcing the prose as a restriction."
-  ],
-  "transcriptionNotes": [
-    "Course codes are retained as printed in Table 5.3.3, including AS21102 (Animal Products Technology) and CC12101 (Basic Technical Writing).",
-    "Orientation credit values are not given in the supplied pages and are null, not zero. Their non-GPA classification is explicitly stated on page 34.",
-    "The 109 compulsory GPA credits include the 6-credit research project and 3-credit internship. Page 34 lists 100 other compulsory credits plus these 9 credits.",
-    "The three separately listed non-GPA modules total 5 credits and are excluded from the 125-credit minimum.",
-    "GPA rules and grade points are on page 36. These curriculum records alone do not determine repeat-attempt replacement policy, programme completion, or official standing."
+    {
+      "semester": "Orientation",
+      "code": "CC10001",
+      "title": "General English",
+      "credits": null,
+      "gpa": false
+    },
+    {
+      "semester": "Orientation",
+      "code": "CC10002",
+      "title": "Computer Awareness",
+      "credits": null,
+      "gpa": false
+    },
+    {
+      "semester": "Orientation",
+      "code": "CC10003",
+      "title": "Basic Mathematics",
+      "credits": null,
+      "gpa": false
+    },
+    {
+      "semester": "Orientation",
+      "code": "CC10004",
+      "title": "Basic Statistics",
+      "credits": null,
+      "gpa": false
+    },
+    {
+      "semester": "Orientation",
+      "code": "CC10005",
+      "title": "Career Development and Active Citizen",
+      "credits": null,
+      "gpa": false
+    },
+    {
+      "semester": "1-I",
+      "code": "AS11201",
+      "title": "Anatomy and Physiology of Farm Animals",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "1-I",
+      "code": "BL11301",
+      "title": "Plant Physiology and Systematics",
+      "credits": 3,
+      "gpa": true
+    },
+    {
+      "semester": "1-I",
+      "code": "CC11201",
+      "title": "Information and Communication Technology in Agriculture",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "1-I",
+      "code": "CS11201",
+      "title": "Principles of Agronomy",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "1-I",
+      "code": "EC11201",
+      "title": "Micro Economics",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "1-I",
+      "code": "EC11202",
+      "title": "Economic Statistics",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "1-I",
+      "code": "FS11201",
+      "title": "Biochemistry",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "1-I",
+      "code": "CC11202",
+      "title": "English I",
+      "credits": 2,
+      "gpa": false
+    },
+    {
+      "semester": "1-II",
+      "code": "AS12301",
+      "title": "Animal Nutrition, Forage & Feed Technology",
+      "credits": 3,
+      "gpa": true
+    },
+    {
+      "semester": "1-II",
+      "code": "CS12201",
+      "title": "Agroforestry and Silviculture",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "1-II",
+      "code": "EC12201",
+      "title": "Macro Economics",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "1-II",
+      "code": "EC12202",
+      "title": "Principles of Business Management",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "1-II",
+      "code": "EC12203",
+      "title": "Marketing Management",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "1-II",
+      "code": "EN12201",
+      "title": "Agricultural Machinery Engineering",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "1-II",
+      "code": "FS12201",
+      "title": "Food Chemistry",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "1-II",
+      "code": "SS12301",
+      "title": "Fundamentals of Soil Science",
+      "credits": 3,
+      "gpa": true
+    },
+    {
+      "semester": "1-II",
+      "code": "CC12101",
+      "title": "Basic Technical Writing",
+      "credits": 1,
+      "gpa": false
+    },
+    {
+      "semester": "1-II",
+      "code": "CC12202",
+      "title": "English II",
+      "credits": 2,
+      "gpa": false
+    },
+    {
+      "semester": "2-I",
+      "code": "AS21102",
+      "title": "Animal Products Technology",
+      "credits": 1,
+      "gpa": true
+    },
+    {
+      "semester": "2-I",
+      "code": "CS21201",
+      "title": "Agroecology",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-I",
+      "code": "EC21201",
+      "title": "Agricultural Marketing",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-I",
+      "code": "EC21202",
+      "title": "Book Keeping & Accountancy",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-I",
+      "code": "EC21204",
+      "title": "Natural Resource Economics",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-I",
+      "code": "EC21205",
+      "title": "Consumer Behavior",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-I",
+      "code": "EN21201",
+      "title": "Bioprocessing and Post-harvest Engineering",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-I",
+      "code": "FS21201",
+      "title": "Food and Nutrition",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-II",
+      "code": "AS22201",
+      "title": "Aquaculture and Non-ruminant Management",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-II",
+      "code": "CS22201",
+      "title": "Management of Spices and Beverage Crops",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-II",
+      "code": "CS22202",
+      "title": "Fruit Crop Management",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-II",
+      "code": "EC22201",
+      "title": "Farm Business Management",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-II",
+      "code": "EC22202",
+      "title": "Communication and diffusion of Innovation",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-II",
+      "code": "EC22203",
+      "title": "Human Resource Management",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-II",
+      "code": "EC22204",
+      "title": "Managerial Economics and Customer Relationship Management",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "2-II",
+      "code": "EC22205",
+      "title": "Strategic Management",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "3-I",
+      "code": "CS31201",
+      "title": "Plantation Crop Management and Training",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "3-I",
+      "code": "EC31201",
+      "title": "Social Science Research Methods",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "3-I",
+      "code": "EC31203",
+      "title": "International Trade & Marketing",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "3-I",
+      "code": "EC31204",
+      "title": "Innovation and Knowledge Management",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "3-I",
+      "code": "EC31206",
+      "title": "Organizational Behavior",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "3-I",
+      "code": "FS31201",
+      "title": "Food Preservation and Processing",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "3-II",
+      "code": "CC32201",
+      "title": "Applied Statistics I",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "3-II",
+      "code": "EC32201",
+      "title": "Extension Education",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "3-II",
+      "code": "EC32202",
+      "title": "Project Management",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "3-II",
+      "code": "EC32204",
+      "title": "Entrepreneurship",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "3-II",
+      "code": "EC32206",
+      "title": "Business Start-ups",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "3-II",
+      "code": "EC32207",
+      "title": "Financial Management",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "4-I",
+      "code": "CC41201",
+      "title": "Technical Writing and Communication Skills",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "4-I",
+      "code": "CC41202",
+      "title": "Applied Statistics II",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "4-I",
+      "code": "CC41203",
+      "title": "Professional Development",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "4-I",
+      "code": "EC41201",
+      "title": "Natural Resource Management",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "4-I",
+      "code": "EC41202",
+      "title": "Agricultural Policy Analysis",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "4-I",
+      "code": "EC41203",
+      "title": "Econometrics",
+      "credits": 2,
+      "gpa": true
+    },
+    {
+      "semester": "4-II",
+      "code": "EC42601",
+      "title": "Research project",
+      "credits": 6,
+      "gpa": true
+    },
+    {
+      "semester": "4-II",
+      "code": "CC42301",
+      "title": "Internship",
+      "credits": 3,
+      "gpa": true
+    }
   ]
 }

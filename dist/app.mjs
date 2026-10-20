@@ -79,12 +79,25 @@ function getDisplayThrough(s) {
 
 const fresh = () => ({
   format: FILE_FORMAT,
-  profile: { name: '', registration: '', batch: '2021/2022', through: '' },
+  profile: { name: '', registration: '', batch: '', degree: '', through: '' },
   completedSemesters: [...ALL_ACADEMIC_SEMS],
   results: {},
   customCourses: [],
   overrides: {},
 });
+
+function getDegreeTitle() {
+  const deg = state.profile.degree || 'ABM';
+  const prog = catalogue?.programmes?.[deg] || catalogue?.programmes?.ABM;
+  return prog?.degreeTitle || 'BSc. Hons Agribusiness Management';
+}
+
+function switchDegreeProgramme(degKey) {
+  if (!catalogue?.programmes) return;
+  const prog = catalogue.programmes[degKey] || catalogue.programmes.ABM;
+  baseCourses = (prog.courses || []).map(c => ({ ...c, id: `${c.semester}:${c.code}` }));
+  state.profile.degree = degKey;
+}
 
 let state = fresh();
 let baseCourses = [];
@@ -160,10 +173,14 @@ async function autoSyncToBatch() {
         };
       });
 
+    const batchVal = state.profile.batch 
+      ? (state.profile.degree ? `${state.profile.batch} · ${state.profile.degree}` : state.profile.batch)
+      : (state.profile.degree || '');
+
     const payload = {
       name:           state.profile.name,
       registration:   state.profile.registration,
-      batch:          state.profile.batch,
+      batch:          batchVal,
       resultsThrough: getDisplayThrough(s),
       cgpa:           s.gpa,
       credits:        s.credits,
@@ -229,10 +246,8 @@ function gradeStyleClass(grade) {
 function renderProfile() {
   $('#student-name').value    = state.profile.name || '';
   $('#student-id').value      = state.profile.registration || '';
-  $('#student-batch').value   = state.profile.batch || '';
-  $('#results-through').value = state.profile.through || '';
-  const dt = getDisplayThrough(summary());
-  $('#results-through').placeholder = dt;
+  if ($('#student-batch')) $('#student-batch').value = state.profile.batch || '';
+  if ($('#student-degree')) $('#student-degree').value = state.profile.degree || '';
 }
 
 // ── Completed Semesters Tiles Grid ────────────────────────────────────────────
@@ -375,6 +390,24 @@ function renderCourses(s) {
       </tr>
     `;
   }).join('');
+
+  // Populate Quick Add Elective dropdown for active semester
+  const elSelect = $('#quick-add-elective');
+  if (elSelect) {
+    const semElectives = catalogue?.electives?.[currentSemester] || [];
+    const currentCodes = new Set(list.map(c => cleanCode(c.code)));
+    const available = semElectives.filter(e => !currentCodes.has(cleanCode(e.code)));
+
+    if (available.length > 0) {
+      elSelect.hidden = false;
+      elSelect.innerHTML = `
+        <option value="" disabled selected>➕ Quick Add Handbook Elective (${available.length} available)…</option>
+        ${available.map(e => `<option value="${escape(e.code)}">${escape(e.code)} — ${escape(e.title)} (${e.credits} Cr)</option>`).join('')}
+      `;
+    } else {
+      elSelect.hidden = true;
+    }
+  }
 }
 
 function render() {
@@ -514,7 +547,7 @@ function generateOfficialResultSheetHTML(s) {
         <div class="sheet-main-title">RESULT SHEET</div>
         <div class="sheet-uni-name">UNIVERSITY OF RUHUNA</div>
         <div class="sheet-fac-name">FACULTY OF AGRICULTURE</div>
-        <div class="sheet-degree-name">BSc. Hons Agribusiness Management</div>
+        <div class="sheet-degree-name">${escape(getDegreeTitle())}</div>
       </div>
 
       <!-- Student Identification & Overall Result Table -->
@@ -527,7 +560,7 @@ function generateOfficialResultSheetHTML(s) {
           <td class="sheet-meta-label">Index / Reg. No:</td>
           <td class="sheet-meta-value">${escape(state.profile.registration || '—')}</td>
           <td class="sheet-meta-label">Academic Year / Intake:</td>
-          <td class="sheet-meta-value">${escape(state.profile.batch || '2021/2022')}</td>
+          <td class="sheet-meta-value">${escape(state.profile.batch || '—')}</td>
         </tr>
         <tr>
           <td class="sheet-meta-label">Result up to:</td>
@@ -618,12 +651,12 @@ function exportWord() {
         <div class="title">RESULT SHEET</div>
         <div class="sub">UNIVERSITY OF RUHUNA</div>
         <div class="sub">FACULTY OF AGRICULTURE</div>
-        <div style="font-style:italic">BSc. Hons Agribusiness Management</div>
+        <div style="font-style:italic">${escape(getDegreeTitle())}</div>
       </div>
 
       <table class="meta">
         <tr><td><b>Name of Student:</b></td><td colspan="3">${escape(state.profile.name || '—')}</td></tr>
-        <tr><td><b>Index / Reg No:</b></td><td>${escape(state.profile.registration || '—')}</td><td><b>Academic Year / Batch:</b></td><td>${escape(state.profile.batch || '2021/2022')}</td></tr>
+        <tr><td><b>Index / Reg No:</b></td><td>${escape(state.profile.registration || '—')}</td><td><b>Academic Year / Batch:</b></td><td>${escape(state.profile.batch || '—')}</td></tr>
         <tr><td><b>Result up to:</b></td><td>${escape(getDisplayThrough(s))}</td><td><b>Cumulative GPA (CGPA):</b></td><td><b>${s.gpa != null ? fmt(s.gpa) : '—'} / 4.00</b></td></tr>
         <tr><td><b>Degree Classification:</b></td><td><b>${cls ? cls.label : 'Incomplete'}</b></td><td><b>Total GPA Credits:</b></td><td>${s.credits || 0}</td></tr>
       </table>
@@ -679,13 +712,13 @@ function exportMarkdown() {
   const lines = [
     `# RESULT SHEET`,
     `## UNIVERSITY OF RUHUNA — FACULTY OF AGRICULTURE`,
-    `### BSc. Hons Agribusiness Management`,
+    `### ${getDegreeTitle()}`,
     ``,
     `| Student Information | Details |`,
     `| :--- | :--- |`,
     `| **Name of Student** | ${state.profile.name || '—'} |`,
     `| **Index / Reg. No** | ${state.profile.registration || '—'} |`,
-    `| **Academic Year / Batch** | ${state.profile.batch || '2021/2022'} |`,
+    `| **Academic Year / Batch** | ${state.profile.batch || '—'} |`,
     `| **Result up to** | ${getDisplayThrough(s)} |`,
     `| **Cumulative GPA (CGPA)** | **${s.gpa != null ? fmt(s.gpa) : '—'} / 4.00** |`,
     `| **Degree Classification** | **${cls ? cls.label : 'Incomplete'}** |`,
@@ -726,11 +759,11 @@ function exportText() {
     '                              RESULT SHEET',
     '                          UNIVERSITY OF RUHUNA',
     '                         FACULTY OF AGRICULTURE',
-    '                   BSc. Hons Agribusiness Management',
+    `                   ${getDegreeTitle()}`,
     line,
     `Name of Student       : ${state.profile.name || 'Not provided'}`,
     `Index / Reg. No       : ${state.profile.registration || 'Not provided'}`,
-    `Academic Year / Batch : ${state.profile.batch || '2021/2022'}`,
+    `Academic Year / Batch : ${state.profile.batch || 'Not provided'}`,
     `Result up to          : ${getDisplayThrough(s)}`,
     `Cumulative GPA (CGPA) : ${s.gpa != null ? fmt(s.gpa) : '—'} / 4.00`,
     `Degree Classification : ${cls ? cls.label : 'Incomplete'}`,
@@ -829,7 +862,7 @@ function validateState(input) {
   if (!input || input.format !== FILE_FORMAT) throw Error('Invalid progress file.');
   const result = fresh();
   if (input.profile) {
-    for (const key of ['name', 'registration', 'batch', 'through']) {
+    for (const key of ['name', 'registration', 'batch', 'degree', 'through']) {
       if (typeof input.profile[key] === 'string') result.profile[key] = input.profile[key];
     }
   }
@@ -878,13 +911,56 @@ function wire() {
   });
 
   // Profile Inputs (Live Auto-save & Auto-sync)
-  ['student-name', 'student-id', 'student-batch', 'results-through'].forEach(id => {
-    const key = id.replace('student-', '').replace('results-', '');
-    $(`#${id}`).addEventListener('input', e => {
-      state.profile[key === 'id' ? 'registration' : key] = e.target.value;
+  ['student-name', 'student-id', 'student-batch', 'student-degree'].forEach(id => {
+    const el = $(`#${id}`);
+    if (!el) return;
+    const evt = el.tagName === 'SELECT' ? 'change' : 'input';
+    el.addEventListener(evt, e => {
+      if (id === 'student-name') state.profile.name = e.target.value;
+      else if (id === 'student-id') state.profile.registration = e.target.value;
+      else if (id === 'student-batch') state.profile.batch = e.target.value;
+      else if (id === 'student-degree') {
+        state.profile.degree = e.target.value;
+        switchDegreeProgramme(e.target.value);
+        persist();
+        render();
+        toast(`Curriculum switched to ${catalogue.programmes[e.target.value]?.shortName || e.target.value} ✓`);
+        scheduleAutoSync();
+        return;
+      }
       persist();
+      scheduleAutoSync();
     });
   });
+
+  // Quick Add Elective Course from Handbook
+  const quickEl = $('#quick-add-elective');
+  if (quickEl) {
+    quickEl.addEventListener('change', e => {
+      const code = e.target.value;
+      if (!code) return;
+      const semElectives = catalogue?.electives?.[currentSemester] || [];
+      const found = semElectives.find(x => x.code === code);
+      if (!found) return;
+
+      const id = `${currentSemester}:${found.code}`;
+      if (!state.customCourses.some(c => c.id === id)) {
+        state.customCourses.push({
+          id,
+          semester: currentSemester,
+          code: found.code,
+          title: found.title,
+          credits: found.credits,
+          gpa: true,
+          custom: true,
+        });
+        persist();
+        render();
+        toast(`Added elective [${found.code}] ${found.title} ✓`);
+      }
+      quickEl.value = '';
+    });
+  }
 
   // Completed Semesters Checkboxes
   $('#completed-sems-list').addEventListener('change', e => {
@@ -1041,6 +1117,11 @@ async function init() {
         state = validateState(JSON.parse(saved));
       }
     } catch {}
+
+    const initDeg = state.profile.degree && catalogue?.programmes?.[state.profile.degree]
+      ? state.profile.degree
+      : 'ABM';
+    switchDegreeProgramme(initDeg);
 
     wire();
     renderProfile();
