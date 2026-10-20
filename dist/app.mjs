@@ -57,6 +57,26 @@ function classify(cgpa) {
 
 const ALL_ACADEMIC_SEMS = ['1-I', '1-II', '2-I', '2-II', '3-I', '3-II', '4-I', '4-II'];
 
+function getDisplayThrough(s) {
+  if (state.profile.through && state.profile.through.trim() !== '' && 
+      state.profile.through !== 'Latest Completed Semester' && 
+      state.profile.through !== 'Latest Completed' && 
+      state.profile.through !== 'Latest') {
+    return state.profile.through.trim();
+  }
+  const selectedSems = ALL_ACADEMIC_SEMS.filter(sem => (state.completedSemesters || []).includes(sem));
+  if (selectedSems.length) {
+    const lastSem = selectedSems[selectedSems.length - 1];
+    return SEMESTER_LABELS[lastSem] || lastSem;
+  }
+  const gradedRows = (s?.rows || []).filter(r => r.grade);
+  if (gradedRows.length) {
+    const lastRow = gradedRows[gradedRows.length - 1];
+    return SEMESTER_LABELS[lastRow.semester] || lastRow.semester;
+  }
+  return 'Year 1 · Semester I';
+}
+
 const fresh = () => ({
   format: FILE_FORMAT,
   profile: { name: '', registration: '', batch: '2021/2022', through: '' },
@@ -144,7 +164,7 @@ async function autoSyncToBatch() {
       name:           state.profile.name,
       registration:   state.profile.registration,
       batch:          state.profile.batch,
-      resultsThrough: state.profile.through || SEMESTER_LABELS[currentSemester] || '',
+      resultsThrough: getDisplayThrough(s),
       cgpa:           s.gpa,
       credits:        s.credits,
       gradedCount:    s.gradedCount,
@@ -211,6 +231,8 @@ function renderProfile() {
   $('#student-id').value      = state.profile.registration || '';
   $('#student-batch').value   = state.profile.batch || '';
   $('#results-through').value = state.profile.through || '';
+  const dt = getDisplayThrough(summary());
+  $('#results-through').placeholder = dt;
 }
 
 // ── Completed Semesters Tiles Grid ────────────────────────────────────────────
@@ -509,7 +531,7 @@ function generateOfficialResultSheetHTML(s) {
         </tr>
         <tr>
           <td class="sheet-meta-label">Result up to:</td>
-          <td class="sheet-meta-value">${escape(state.profile.through || 'Latest Completed Semester')}</td>
+          <td class="sheet-meta-value">${escape(getDisplayThrough(s))}</td>
           <td class="sheet-meta-label">Cumulative GPA (CGPA):</td>
           <td class="sheet-meta-value sheet-meta-hl">${s.gpa != null ? fmt(s.gpa) : '—'} / 4.00</td>
         </tr>
@@ -602,7 +624,7 @@ function exportWord() {
       <table class="meta">
         <tr><td><b>Name of Student:</b></td><td colspan="3">${escape(state.profile.name || '—')}</td></tr>
         <tr><td><b>Index / Reg No:</b></td><td>${escape(state.profile.registration || '—')}</td><td><b>Academic Year / Batch:</b></td><td>${escape(state.profile.batch || '2021/2022')}</td></tr>
-        <tr><td><b>Result up to:</b></td><td>${escape(state.profile.through || 'Latest Completed')}</td><td><b>Cumulative GPA (CGPA):</b></td><td><b>${s.gpa != null ? fmt(s.gpa) : '—'} / 4.00</b></td></tr>
+        <tr><td><b>Result up to:</b></td><td>${escape(getDisplayThrough(s))}</td><td><b>Cumulative GPA (CGPA):</b></td><td><b>${s.gpa != null ? fmt(s.gpa) : '—'} / 4.00</b></td></tr>
         <tr><td><b>Degree Classification:</b></td><td><b>${cls ? cls.label : 'Incomplete'}</b></td><td><b>Total GPA Credits:</b></td><td>${s.credits || 0}</td></tr>
       </table>
 
@@ -664,7 +686,7 @@ function exportMarkdown() {
     `| **Name of Student** | ${state.profile.name || '—'} |`,
     `| **Index / Reg. No** | ${state.profile.registration || '—'} |`,
     `| **Academic Year / Batch** | ${state.profile.batch || '2021/2022'} |`,
-    `| **Result up to** | ${state.profile.through || 'Latest Completed'} |`,
+    `| **Result up to** | ${getDisplayThrough(s)} |`,
     `| **Cumulative GPA (CGPA)** | **${s.gpa != null ? fmt(s.gpa) : '—'} / 4.00** |`,
     `| **Degree Classification** | **${cls ? cls.label : 'Incomplete'}** |`,
     `| **Total GPA Credits** | ${s.credits || 0} |`,
@@ -709,7 +731,7 @@ function exportText() {
     `Name of Student       : ${state.profile.name || 'Not provided'}`,
     `Index / Reg. No       : ${state.profile.registration || 'Not provided'}`,
     `Academic Year / Batch : ${state.profile.batch || '2021/2022'}`,
-    `Result up to          : ${state.profile.through || 'Latest Completed'}`,
+    `Result up to          : ${getDisplayThrough(s)}`,
     `Cumulative GPA (CGPA) : ${s.gpa != null ? fmt(s.gpa) : '—'} / 4.00`,
     `Degree Classification : ${cls ? cls.label : 'Incomplete'}`,
     `Total GPA Credits     : ${s.credits || 0}`,

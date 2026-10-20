@@ -757,31 +757,72 @@ input:focus, select:focus {
 .app-mobile-footer { display: none; }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   PRINT MEDIA QUERY (Clean, exact A4 single-page fit)
+   PRINT MEDIA QUERY (Clean, exact A4 single-page fit without browser headers)
    ══════════════════════════════════════════════════════════════════════════ */
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    height: auto !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
   body * { visibility: hidden !important; }
   #print-root, #print-root * { visibility: visible !important; }
   #print-root {
     position: absolute !important;
     left: 0 !important;
     top: 0 !important;
-    width: 100% !important;
-    background: #fff !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 10mm 14mm 8mm 14mm !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
   }
   .official-sheet-wrapper {
     box-shadow: none !important;
     padding: 0 !important;
+    margin: 0 !important;
     max-width: 100% !important;
     min-height: auto !important;
     width: 100% !important;
+    border: none !important;
   }
-  @page {
-    size: A4 portrait;
-    margin: 10mm 12mm 8mm 12mm;
+  .sheet-header-block {
+    margin-bottom: 8px !important;
+    padding-bottom: 4px !important;
   }
+  .sheet-main-title { font-size: 13pt !important; margin: 0 0 1px !important; }
+  .sheet-uni-name { font-size: 11pt !important; margin: 0 0 1px !important; }
+  .sheet-fac-name { font-size: 9.5pt !important; }
+  .sheet-degree-name { font-size: 9pt !important; }
+  .sheet-meta-table { margin-bottom: 8px !important; font-size: 8.5pt !important; }
+  .sheet-meta-table td { padding: 2.5px 6px !important; }
+  .sheet-semesters-columns { gap: 8px !important; margin-bottom: 8px !important; }
+  .sheet-sem-col { gap: 6px !important; }
+  .sheet-sem-card {
+    margin-bottom: 5px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .sheet-sem-title-bar { padding: 2px 5px !important; font-size: 8pt !important; }
+  .sheet-table th, .sheet-table td { padding: 2px 4px !important; font-size: 7.5pt !important; }
+  .sheet-sem-total-bar { padding: 2px 5px !important; font-size: 7.5pt !important; }
+  .sheet-certification-block {
+    margin-top: 8px !important;
+    padding-top: 6px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .sheet-declaration-text { font-size: 7.5pt !important; margin-bottom: 12px !important; }
+  .sheet-sig-dots { font-size: 8pt !important; padding-top: 25px !important; }
 }
 
 /* ── Responsive Mobile (Phone & Tablet) ── */
