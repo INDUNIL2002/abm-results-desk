@@ -4,7 +4,7 @@
  * University of Ruhuna · Faculty of Agriculture.
  */
 import { GRADE_POINTS, SEMESTERS, calculate } from './gpa.mjs';
-import { upsertSubmissionToSupabase, fetchSubmissionByRegistration, cleanReg, cleanName } from './supabase.mjs';
+import { upsertSubmissionToSupabase, fetchSubmissionByRegistration, deleteSubmissionFromSupabase, cleanReg, cleanName } from './supabase.mjs';
 
 // Register Service Worker for PWA Offline & Install support
 if ('serviceWorker' in navigator) {
@@ -219,10 +219,15 @@ async function autoSyncToBatch() {
 }
 
 // ── Cross-device Cloud Restore: seamlessly sync results from other device ─────
-async function syncFromCloudIfAvailable(reg) {
+async function syncFromCloudIfAvailable(reg, options = { silent: false }) {
   try {
     const cloud = await fetchSubmissionByRegistration(reg);
-    if (!cloud || !Array.isArray(cloud.semesters) || cloud.semesters.length === 0) return;
+    if (!cloud || !Array.isArray(cloud.semesters) || cloud.semesters.length === 0) {
+      if (!options.silent) {
+        toast(`No existing online record found for [${reg}]. Entering grades will auto-save online!`);
+      }
+      return;
+    }
 
     let restoredCount = 0;
     // Restore profile name if empty
@@ -272,13 +277,16 @@ async function syncFromCloudIfAvailable(reg) {
       }
     });
 
-    if (restoredCount > 0) {
+    if (restoredCount > 0 || !options.silent) {
       persist();
       render();
-      toast(`☁️ Cloud Sync: Restored ${restoredCount} saved courses for [${reg}] from your other device! ✓`);
+      toast(`☁️ Cloud Sync: Loaded ${restoredCount > 0 ? restoredCount + ' courses' : 'latest results'} for [${reg}]! ✓`);
     }
   } catch (err) {
     console.warn('Could not sync from cloud:', err);
+    if (!options.silent) {
+      toast('Cloud sync check encountered an issue. Data is safely saved locally.');
+    }
   }
 }
 
@@ -1055,12 +1063,68 @@ function wire() {
         state.profile.registration = reg;
         persist();
         if (reg.length >= 6) {
-          await syncFromCloudIfAvailable(reg);
+          await syncFromCloudIfAvailable(reg, { silent: false });
         }
       }
     };
     idInput.addEventListener('blur', onRegChange);
     idInput.addEventListener('change', onRegChange);
+  }
+
+  // Explicit Cloud Sync Button
+  const syncBtn = $('#btn-cloud-sync');
+  if (syncBtn) {
+    syncBtn.addEventListener('click', async () => {
+      const reg = cleanReg(state.profile.registration || $('#student-id')?.value);
+      if (!reg) {
+        alert('Please enter your Index / Registration Number first to sync results.');
+        $('#student-id')?.focus();
+        return;
+      }
+      syncBtn.disabled = true;
+      syncBtn.textContent = 'Syncing…';
+      try {
+        await syncFromCloudIfAvailable(reg, { silent: false });
+      } finally {
+        syncBtn.disabled = false;
+        syncBtn.textContent = '☁️ Sync Cloud';
+      }
+    });
+  }
+
+  // Reset / Clear Data Button
+  const resetBtn = $('#btn-reset-data');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', async () => {
+      const reg = cleanReg(state.profile.registration || $('#student-id')?.value);
+      const ok = confirm(
+        '⚠️ Reset all entered data on this device?\n\nThis will clear your form and entered grades so you can start fresh.'
+      );
+      if (!ok) return;
+
+      let deleteOnline = false;
+      if (reg) {
+        deleteOnline = confirm(
+          `Do you ALSO want to permanently delete your saved record (${reg}) from the online batch database?\n\n• Click OK to delete from online database\n• Click Cancel to only clear this device`
+        );
+      }
+
+      if (deleteOnline && reg) {
+        try {
+          await deleteSubmissionFromSupabase(reg);
+          toast(`Deleted [${reg}] from online database ✓`);
+        } catch (err) {
+          console.warn('Could not delete online record:', err);
+        }
+      }
+
+      state = fresh();
+      try { localStorage.removeItem(STORAGE_KEY); } catch {}
+      switchDegreeProgramme('ABM');
+      renderProfile();
+      render();
+      toast('Form and grades cleared! You can enter data fresh. ✓');
+    });
   }
 
   // Quick Add Elective Course from Handbook
@@ -1261,6 +1325,11 @@ async function init() {
     wire();
     renderProfile();
     render();
+
+    // Automatically check cloud for any updates from other devices on launch
+    if (state.profile.registration && cleanReg(state.profile.registration).length >= 6) {
+      syncFromCloudIfAvailable(cleanReg(state.profile.registration), { silent: true });
+    }
 
     // Auto-sync initial state if details already filled
     scheduleAutoSync();

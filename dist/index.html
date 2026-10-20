@@ -63,11 +63,21 @@
       <section id="tab-profile-pane" class="tab-pane active">
         <!-- Student Details Card -->
         <div class="glass-card">
-          <div class="card-title-row">
-            <span class="step-badge">1</span>
-            <div>
-              <h2>Student Information</h2>
-              <p class="card-caption">Enter your identification details for the official Result Sheet.</p>
+          <div class="card-title-row flex-between" style="flex-wrap:wrap;gap:12px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="step-badge">1</span>
+              <div>
+                <h2>Student Information</h2>
+                <p class="card-caption">Enter your identification details for the official Result Sheet.</p>
+              </div>
+            </div>
+            <div class="profile-card-actions" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <button type="button" id="btn-cloud-sync" class="btn btn-secondary btn-sm" title="Pull saved results from online database across devices">
+                ☁️ Sync Cloud
+              </button>
+              <button type="button" id="btn-reset-data" class="btn btn-danger btn-sm" title="Clear form on this device to correct mistakes and start fresh">
+                🔄 Reset Data
+              </button>
             </div>
           </div>
 
