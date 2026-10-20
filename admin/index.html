@@ -245,6 +245,7 @@
   </div>
   <div class="header-actions">
     <span class="admin-pill">ADMIN</span>
+    <button id="btn-refresh" class="hbtn" type="button" title="Refresh live data from cloud">🔄 Refresh</button>
     <button id="btn-add-student" class="hbtn emerald" type="button">➕ Add Student</button>
     <button id="btn-export-csv" class="hbtn green" type="button">⬇ Export CSV</button>
     <a href="/" class="hbtn" title="Back to Student Calculator">Student App</a>
@@ -1065,6 +1066,21 @@ document.getElementById('login-form').addEventListener('submit', (e) => {
     loadDashboard();
   } else {
     document.getElementById('login-err').hidden = false;
+  }
+});
+
+document.getElementById('btn-refresh')?.addEventListener('click', async () => {
+  const btn = document.getElementById('btn-refresh');
+  const oldText = btn.textContent;
+  btn.textContent = 'Refreshing…';
+  btn.disabled = true;
+  try {
+    await loadDashboard();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    btn.textContent = oldText;
+    btn.disabled = false;
   }
 });
 

@@ -14,11 +14,20 @@ const defaultHeaders = {
 export const cleanReg = (s) => String(s ?? '').trim().toUpperCase().replace(/\s+/g, '');
 export const cleanName = (s) => String(s ?? '').trim().replace(/\s+/g, ' ');
 
+export const GRADE_POINTS = {
+  'A+': 4.0, 'A': 4.0, 'A-': 3.7,
+  'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+  'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+  'D+': 1.3, 'D': 1.0, 'E': 0.0,
+};
+
 export async function fetchSubmissionsFromSupabase() {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/submissions?select=*&order=cgpa.desc.nullslast`, {
     headers: {
       'apikey': SUPABASE_KEY,
       'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
     },
   });
   if (!res.ok) throw new Error(await res.text());
@@ -33,6 +42,8 @@ export async function fetchSubmissionByRegistration(registration) {
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
       },
     });
     if (!res.ok) return null;
@@ -107,15 +118,21 @@ export async function upsertSubmissionToSupabase(payload) {
             }
           }
 
-          const gradedInMerge = mergedCourses.filter(c => c.grade && c.grade !== 'Pending');
-          const mCredits  = gradedInMerge.reduce((s, c) => s + Number(c.credits || 0), 0);
-          const mGraded   = gradedInMerge.length;
+          let semPts = 0;
+          let semCreds = 0;
+          const gradedInMerge = mergedCourses.filter(c => c.grade && c.grade !== 'Pending' && GRADE_POINTS[c.grade] != null);
+          gradedInMerge.forEach(c => {
+            const cr = Number(c.credits || 0);
+            semPts += GRADE_POINTS[c.grade] * cr;
+            semCreds += cr;
+          });
+          const semGpa = semCreds > 0 ? (semPts / semCreds) : (inc?.gpa ?? ext?.gpa ?? null);
 
           mergedSemesters.push({
             semester: semKey,
-            gpa:         inc.gpa,        // recalculated in totals block below
-            credits:     mCredits  || inc.credits  || ext.credits  || 0,
-            gradedCount: mGraded   || inc.gradedCount || ext.gradedCount || 0,
+            gpa:         semGpa != null ? Math.round(semGpa * 10000) / 10000 : null,
+            credits:     semCreds || inc.credits || ext.credits || 0,
+            gradedCount: gradedInMerge.length,
             courses:     mergedCourses,
           });
         } else if (inc) {
@@ -158,7 +175,7 @@ export async function upsertSubmissionToSupabase(payload) {
     submitted_at:    new Date().toISOString(),
   };
 
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/submissions`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/submissions?on_conflict=registration`, {
     method: 'POST',
     headers: {
       ...defaultHeaders,

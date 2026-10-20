@@ -149,8 +149,22 @@ function persist() {
 
 function scheduleAutoSync() {
   clearTimeout(autoSyncTimer);
-  autoSyncTimer = setTimeout(autoSyncToBatch, 1200);
+  autoSyncTimer = setTimeout(autoSyncToBatch, 400);
 }
+
+window.addEventListener('beforeunload', () => {
+  if (autoSyncTimer) {
+    clearTimeout(autoSyncTimer);
+    autoSyncToBatch();
+  }
+});
+
+window.addEventListener('pagehide', () => {
+  if (autoSyncTimer) {
+    clearTimeout(autoSyncTimer);
+    autoSyncToBatch();
+  }
+});
 
 async function autoSyncToBatch() {
   if (!state.profile.name?.trim() || !state.profile.registration?.trim()) return;
@@ -1301,9 +1315,10 @@ function wire() {
 
   // ── Secret Admin Shortcuts (Hidden from regular students) ──────────────────
   // 1. Keyboard Shortcut: Ctrl + Shift + A (or Cmd + Shift + A)
-  window.addEventListener('keydown', (e) => {
+  window.addEventListener('keydown', async (e) => {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
       e.preventDefault();
+      try { await autoSyncToBatch(); } catch {}
       window.location.href = '/admin';
     }
   });
@@ -1313,12 +1328,13 @@ function wire() {
   let crestTimer = null;
   const brandCrest = $('.brand-crest') || $('.topbar-brand');
   if (brandCrest) {
-    brandCrest.addEventListener('click', () => {
+    brandCrest.addEventListener('click', async () => {
       crestClicks++;
       clearTimeout(crestTimer);
       crestTimer = setTimeout(() => { crestClicks = 0; }, 1500);
       if (crestClicks >= 3) {
         crestClicks = 0;
+        try { await autoSyncToBatch(); } catch {}
         window.location.href = '/admin';
       }
     });
@@ -1327,13 +1343,14 @@ function wire() {
   // 3. Triple tap on footer MONTY
   let montyClicks = 0;
   let montyTimer = null;
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', async (e) => {
     if (e.target.closest('#monty-tag')) {
       montyClicks++;
       clearTimeout(montyTimer);
       montyTimer = setTimeout(() => { montyClicks = 0; }, 1500);
       if (montyClicks >= 3) {
         montyClicks = 0;
+        try { await autoSyncToBatch(); } catch {}
         window.location.href = '/admin';
       }
     }
