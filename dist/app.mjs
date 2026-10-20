@@ -113,6 +113,9 @@ let editingId = null;
 let toastTimer;
 let catalogue;
 let autoSyncTimer;
+let autoSyncPullTimer;
+let lastPullTimestamp = 0;
+const PULL_INTERVAL_MS = 3 * 60 * 1000; // 3 minutes
 
 // ── Course collection & Summary ───────────────────────────────────────────────
 function courses() {
@@ -160,8 +163,14 @@ async function autoSyncToBatch() {
   if (syncText) syncText.textContent = 'Syncing…';
 
   try {
+    // Include semesters that either have graded courses OR have custom (elective) courses
+    // so that elective course metadata (credits, title) always stays up-to-date in the cloud
+    // even before a grade is entered.
     const semesterData = s.semesters
-      .filter(sem => sem.gradedCount > 0)
+      .filter(sem =>
+        sem.gradedCount > 0 ||
+        state.customCourses.some(c => c.semester === sem.semester)
+      )
       .map(sem => {
         const semCourses = s.rows
           .filter(r => r.semester === sem.semester && r.grade && r.grade !== 'Pending')
@@ -216,6 +225,28 @@ async function autoSyncToBatch() {
   } finally {
     if (syncIndicator) syncIndicator.classList.remove('syncing');
   }
+}
+
+// ── Background Auto-Pull: periodically pull cloud updates silently ─────────────
+function scheduleAutoPull() {
+  clearTimeout(autoSyncPullTimer);
+  autoSyncPullTimer = setTimeout(autoPullFromCloud, PULL_INTERVAL_MS);
+}
+
+async function autoPullFromCloud() {
+  const reg = cleanReg(state.profile.registration);
+  if (!reg || reg.length < 6) {
+    scheduleAutoPull();
+    return;
+  }
+  // Debounce: don't pull if we already pulled very recently
+  if (Date.now() - lastPullTimestamp < 30_000) {
+    scheduleAutoPull();
+    return;
+  }
+  lastPullTimestamp = Date.now();
+  await syncFromCloudIfAvailable(reg, { silent: true });
+  scheduleAutoPull();
 }
 
 // ── Cross-device Cloud Restore: seamlessly sync results from other device ─────
@@ -300,7 +331,20 @@ function switchTab(tabId) {
   });
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (tabId === 'transcript') {
-    renderOfficialResultSheet();
+    // Force push local → cloud, then pull cloud → local, then render sheet
+    const reg = cleanReg(state.profile.registration);
+    if (reg && reg.length >= 6 && state.profile.name?.trim()) {
+      (async () => {
+        try {
+          await autoSyncToBatch();           // push latest local
+          await syncFromCloudIfAvailable(reg, { silent: true }); // pull merged
+          lastPullTimestamp = Date.now();
+        } catch {} 
+        renderOfficialResultSheet();         // re-render with freshest data
+      })();
+    } else {
+      renderOfficialResultSheet();
+    }
   }
 }
 
@@ -1328,11 +1372,28 @@ async function init() {
 
     // Automatically check cloud for any updates from other devices on launch
     if (state.profile.registration && cleanReg(state.profile.registration).length >= 6) {
+      lastPullTimestamp = Date.now();
       syncFromCloudIfAvailable(cleanReg(state.profile.registration), { silent: true });
     }
 
     // Auto-sync initial state if details already filled
     scheduleAutoSync();
+
+    // Start background auto-pull cycle (cloud → local every 3 min)
+    scheduleAutoPull();
+
+    // Auto-pull when user returns to the app (tab switch, phone unlock, etc.)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        const reg = cleanReg(state.profile.registration);
+        if (reg && reg.length >= 6 && (Date.now() - lastPullTimestamp > 30_000)) {
+          lastPullTimestamp = Date.now();
+          syncFromCloudIfAvailable(reg, { silent: true });
+        }
+        // Also re-push in case local changes were made offline
+        scheduleAutoSync();
+      }
+    });
   } catch (err) {
     const box = $('#issues');
     if (box) {

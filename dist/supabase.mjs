@@ -76,12 +76,52 @@ export async function upsertSubmissionToSupabase(payload) {
         if (!allSemKeys.has(semKey)) continue;
         const inc = incomingMap.get(semKey);
         const ext = existing.semesters.find(s => s.semester === semKey);
-        if (inc && (inc.gradedCount > 0 || (inc.courses && inc.courses.length > 0))) {
+
+        if (inc && ext) {
+          // ── Per-course smart merge ────────────────────────────────────────
+          // Local (incoming) wins for course metadata (credits, title).
+          // Cloud grades are preserved for courses not yet graded locally.
+          const codeKey = (code) => String(code ?? '').replace(/\s/g, '').toUpperCase();
+          const incMap = new Map((inc.courses || []).map(c => [codeKey(c.code), c]));
+          const extMap = new Map((ext.courses || []).map(c => [codeKey(c.code), c]));
+          const allCodes = new Set([...incMap.keys(), ...extMap.keys()]);
+
+          const mergedCourses = [];
+          for (const code of allCodes) {
+            const iC = incMap.get(code);
+            const eC = extMap.get(code);
+            if (iC && iC.grade && iC.grade !== 'Pending') {
+              // Local device has a grade → local wins (most up-to-date)
+              mergedCourses.push(iC);
+            } else if (eC && eC.grade && eC.grade !== 'Pending') {
+              // Cloud has a grade but local doesn't yet →
+              // keep cloud grade but overwrite stale credits/title with local values
+              mergedCourses.push(iC
+                ? { ...eC, credits: iC.credits, title: iC.title }
+                : eC
+              );
+            } else if (iC) {
+              mergedCourses.push(iC); // local metadata (no grade on either side)
+            } else if (eC) {
+              mergedCourses.push(eC); // cloud-only course
+            }
+          }
+
+          const gradedInMerge = mergedCourses.filter(c => c.grade && c.grade !== 'Pending');
+          const mCredits  = gradedInMerge.reduce((s, c) => s + Number(c.credits || 0), 0);
+          const mGraded   = gradedInMerge.length;
+
+          mergedSemesters.push({
+            semester: semKey,
+            gpa:         inc.gpa,        // recalculated in totals block below
+            credits:     mCredits  || inc.credits  || ext.credits  || 0,
+            gradedCount: mGraded   || inc.gradedCount || ext.gradedCount || 0,
+            courses:     mergedCourses,
+          });
+        } else if (inc) {
           mergedSemesters.push(inc);
         } else if (ext) {
           mergedSemesters.push(ext);
-        } else if (inc) {
-          mergedSemesters.push(inc);
         }
       }
     }
