@@ -483,11 +483,39 @@ input:focus, select:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 10px;
+  padding-top: 14px;
   flex-wrap: wrap;
   gap: 12px;
 }
-.sem-footer-sgpa { display: flex; align-items: baseline; gap: 8px; }
+.elective-action-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+}
+.quick-add-select {
+  flex: 1;
+  min-width: 200px;
+  max-width: 420px;
+  height: 38px;
+  padding: 6px 12px;
+  font-size: 13px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.quick-add-select:focus {
+  outline: none;
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 2px var(--mint-border);
+}
+.sem-footer-sgpa { display: flex; align-items: baseline; gap: 8px; flex-shrink: 0; }
 .sgpa-text { font-size: 13px; font-weight: 600; color: var(--muted); }
 .sgpa-number { font-size: 22px; font-weight: 700; color: var(--green-primary); font-variant-numeric: tabular-nums; }
 
@@ -868,6 +896,46 @@ input:focus, select:focus {
   .search-box { width: 100%; }
   .export-actions-grid { width: 100%; }
   .sheet-semesters-columns { grid-template-columns: 1fr; }
+
+  .active-sem-card { padding: 14px 10px; }
+  .sem-table-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .elective-action-wrap {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 8px;
+  }
+  .quick-add-select {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    font-size: 12.5px;
+  }
+  #btn-add-elective-bottom {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+  .sem-footer-sgpa {
+    justify-content: space-between;
+    width: 100%;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .workspace-nav-buttons {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .workspace-nav-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* ── PWA First-time Install Banner ─────────────────────────────────────────── */
