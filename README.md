@@ -1,6 +1,6 @@
-# ABM Results Desk
+# FOA Results Desk
 
-A browser-only results and current GPA calculator for the University of Ruhuna BSc Honours in Agribusiness Management batch. Source curriculum and grading rules are transcribed from the supplied Faculty of Agriculture handbook 2021/22, pp. 30–36.
+A browser-only results and current GPA calculator & Official Result Sheet Maker for the Faculty of Agriculture (ABM, ARMT, GT), University of Ruhuna. Source curriculum and grading rules are transcribed from the official Faculty of Agriculture Undergraduate Handbook 2021/22.
 
 No academic data is sent to a server. Entries stay in memory by default. Students can opt into local storage, save/open a JSON progress file, export CSV, and print a student-prepared academic summary to PDF.
 

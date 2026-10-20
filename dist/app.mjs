@@ -846,8 +846,8 @@ async function shareResultSheet() {
   const cls = classify(s.gpa);
   const textSummary = [
     `🎓 *RESULT SHEET — UNIVERSITY OF RUHUNA*`,
-    `*Faculty of Agriculture — BSc. Hons Agribusiness Management*`,
-    `*Student:* ${state.profile.name || 'ABM Student'} (${state.profile.registration || '—'})`,
+    `*Faculty of Agriculture — ${getDegreeTitle()}*`,
+    `*Student:* ${state.profile.name || 'FOA Student'} (${state.profile.registration || '—'})`,
     `*Batch:* ${state.profile.batch || '2021/2022'}`,
     `⭐ *Cumulative GPA (CGPA):* ${s.gpa != null ? fmt(s.gpa) : '—'} / 4.00`,
     `🏆 *Classification:* ${cls ? cls.label : 'Incomplete'}`,
@@ -857,7 +857,7 @@ async function shareResultSheet() {
   if (navigator.share) {
     try {
       await navigator.share({
-        title: `Result Sheet - ${state.profile.name || 'ABM Student'}`,
+        title: `Result Sheet - ${state.profile.name || 'FOA Student'}`,
         text: textSummary,
         url: window.location.href,
       });

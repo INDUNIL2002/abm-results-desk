@@ -1,7 +1,7 @@
 {
-  "name": "abm-results-desk",
+  "name": "foa-results-desk",
   "version": "1.0.0",
-  "description": "GPA Calculator and Academic Result Sheet Maker for BSc (Hons) in Agribusiness Management, University of Ruhuna",
+  "description": "GPA Calculator and Academic Result Sheet Maker for Faculty of Agriculture (ABM, ARMT, GT), University of Ruhuna",
   "main": "server.mjs",
   "type": "module",
   "scripts": {
