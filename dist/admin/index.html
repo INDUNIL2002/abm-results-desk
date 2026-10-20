@@ -29,12 +29,14 @@
     }
     .header-title { font-size:17px; font-weight:600; }
     .header-sub   { font-size:11px; color:#9ccfb2; margin-top:1px; }
-    .header-actions { display:flex; align-items:center; gap:10px; }
+    .header-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
     .admin-pill { background:#7c3aed; font-size:10px; font-weight:700; letter-spacing:1px; padding:4px 11px; border-radius:20px; }
-    .hbtn { background:rgba(255,255,255,.12); border:0; color:#fff; border-radius:6px; padding:7px 14px; font:inherit; font-size:12px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; }
+    .hbtn { background:rgba(255,255,255,.12); border:0; color:#fff; border-radius:6px; padding:7px 14px; font:inherit; font-size:12px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:4px; }
     .hbtn:hover { background:rgba(255,255,255,.22); }
     .hbtn.green { background:#2e7d32; }
     .hbtn.green:hover { background:#388e3c; }
+    .hbtn.emerald { background:#059669; }
+    .hbtn.emerald:hover { background:#10b981; }
 
     /* Login Box */
     .login-wrap { min-height:85vh; display:flex; align-items:center; justify-content:center; padding:20px; }
@@ -95,9 +97,9 @@
     .search-input { flex:1; min-width:200px; max-width:340px; height:38px; border:1px solid var(--line); border-radius:6px; padding:8px 12px; font:inherit; font-size:13px; background:var(--white); }
     .filter-select { height:38px; border:1px solid var(--line); border-radius:6px; padding:0 10px; font:inherit; font-size:13px; background:var(--white); }
     .table-wrap { overflow-x:auto; border-radius:9px; border:1px solid var(--line); }
-    table { width:100%; border-collapse:collapse; background:var(--white); min-width:900px; }
+    table { width:100%; border-collapse:collapse; background:var(--white); min-width:960px; }
     thead th { background:var(--mint); text-align:left; padding:11px 13px; font-size:10px; font-weight:700; letter-spacing:.5px; color:#3a5c44; white-space:nowrap; position:sticky; top:0; }
-    td { padding:11px 13px; border-top:1px solid var(--line); vertical-align:middle; font-size:13px; }
+    td { padding:10px 13px; border-top:1px solid var(--line); vertical-align:middle; font-size:13px; }
     .data-row:hover td { background:#f5f9f3; }
     .rank-cell { font-size:16px; width:48px; text-align:center; font-weight:bold; }
     .name-cell .name { font-weight:600; font-size:13px; }
@@ -106,10 +108,46 @@
     .sem-cell small { color:var(--muted); font-size:10px; }
     .badge { display:inline-block; font-size:10px; font-weight:700; padding:3px 9px; border-radius:12px; border:1px solid; white-space:nowrap; }
 
+    /* Action Buttons */
+    .actions-cell { white-space:nowrap; display:flex; gap:6px; align-items:center; }
+    .act-btn { border:0; padding:5px 9px; border-radius:5px; font-size:11px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:3px; }
+    .act-btn.edit { background:#e0f2fe; color:#0369a1; }
+    .act-btn.edit:hover { background:#bae6fd; }
+    .act-btn.del  { background:#fee2e2; color:#b91c1c; }
+    .act-btn.del:hover  { background:#fecaca; }
+
+    /* Modal dialog */
+    .modal-backdrop {
+      position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000; padding:16px;
+    }
+    .modal-card {
+      background:#fffefa; border-radius:14px; max-width:620px; width:100%; max-height:90vh; overflow-y:auto; padding:28px 32px; box-shadow:0 24px 80px rgba(0,0,0,0.25); border:1px solid var(--line);
+    }
+    .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .modal-header h3 { margin:0; font-size:20px; color:var(--green); font-family:Georgia,serif; font-weight:bold; }
+    .btn-close-x { background:transparent; border:0; font-size:20px; cursor:pointer; color:var(--muted); }
+    .form-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+    .form-group { display:flex; flex-direction:column; gap:4px; margin-bottom:12px; }
+    .form-group label { font-size:11px; font-weight:600; color:#4a554a; }
+    .form-group input { height:38px; border:1px solid var(--line); border-radius:6px; padding:0 10px; font:inherit; font-size:13px; background:#fff; }
+    .form-group input:disabled { background:#f1f5f9; color:#64748b; cursor:not-allowed; }
+    .sems-section-title { font-size:12px; font-weight:700; color:#3a5c44; border-top:1px solid var(--line); padding-top:14px; margin-top:8px; margin-bottom:10px; }
+    .sems-input-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px; }
+    .sem-input-box { background:#f8fafc; border:1px solid var(--line); border-radius:6px; padding:8px 10px; }
+    .sem-input-box label { font-size:10px; font-weight:700; color:#334155; display:block; margin-bottom:4px; }
+    .sem-input-box input { width:100%; height:30px; font-size:12px; padding:0 6px; border:1px solid var(--line); border-radius:4px; }
+    .modal-actions { display:flex; justify-content:flex-end; gap:10px; border-top:1px solid var(--line); padding-top:16px; }
+    .btn-save { background:#183f32; color:#fff; border:0; padding:10px 20px; border-radius:6px; font-weight:600; cursor:pointer; font-size:13px; }
+    .btn-save:hover { background:#24553f; }
+    .btn-cancel { background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; padding:10px 16px; border-radius:6px; font-weight:600; cursor:pointer; font-size:13px; }
+    .btn-cancel:hover { background:#e2e8f0; }
+
     @media(max-width:900px) {
       .stats-row { grid-template-columns:repeat(2,1fr); }
       .class-grid { grid-template-columns:repeat(2,1fr); }
       .shell { padding:20px 16px; }
+      .sems-input-grid { grid-template-columns:repeat(2,1fr); }
+      .form-grid-2 { grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -125,6 +163,7 @@
   </div>
   <div class="header-actions">
     <span class="admin-pill">ADMIN</span>
+    <button id="btn-add-student" class="hbtn emerald" type="button">➕ Add Student</button>
     <button id="btn-export-csv" class="hbtn green" type="button">⬇ Export CSV</button>
     <a href="/" class="hbtn" title="Back to Student Calculator">Student App</a>
     <button id="btn-signout" class="hbtn" type="button" hidden>Sign out</button>
@@ -195,7 +234,10 @@
   </div>
 
   <div class="table-section">
-    <h2>Full Batch Ranking</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:12px">
+      <h2 style="margin:0">Full Batch Ranking</h2>
+      <button id="btn-add-student-2" class="act-btn" style="background:#183f32;color:#fff;padding:8px 14px;font-size:12px;border-radius:6px" type="button">➕ Add Student Record</button>
+    </div>
     <div class="table-controls">
       <input type="search" class="search-input" id="search-input" placeholder="Search by name or registration…">
       <select class="filter-select" id="class-filter">
@@ -219,10 +261,103 @@
       </table>
     </div>
   </div>
+
+  <!-- Admin Footer with Credit -->
+  <footer style="text-align:center;padding:28px 16px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:48px">
+    ABM Results Desk &middot; Faculty of Agriculture &middot; University of Ruhuna<br>
+    Made with ❤️ by <strong style="color:var(--green)">MONTY</strong>
+  </footer>
+</div>
+
+<!-- Add / Edit Student Modal -->
+<div id="student-modal" class="modal-backdrop" hidden>
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="modal-title">Edit Student Record</h3>
+      <button type="button" class="btn-close-x" id="btn-close-modal">&times;</button>
+    </div>
+    <form id="student-form">
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="m-name">Student Full Name *</label>
+          <input type="text" id="m-name" required placeholder="e.g. K.A. Kavindu Senanayake">
+        </div>
+        <div class="form-group">
+          <label for="m-reg">Registration Number *</label>
+          <input type="text" id="m-reg" required placeholder="e.g. AG/2021/014">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="m-batch">Academic Year / Intake</label>
+          <input type="text" id="m-batch" placeholder="2021/2022">
+        </div>
+        <div class="form-group">
+          <label for="m-through">Result up to</label>
+          <input type="text" id="m-through" placeholder="e.g. Year 2 Semester II">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="m-cgpa">Cumulative GPA (CGPA) (0.00 - 4.00)</label>
+          <input type="number" id="m-cgpa" step="0.01" min="0" max="4.00" placeholder="e.g. 3.84">
+        </div>
+        <div class="form-group">
+          <label for="m-credits">Total Credits</label>
+          <input type="number" id="m-credits" step="1" min="0" placeholder="e.g. 60">
+        </div>
+      </div>
+
+      <div class="sems-section-title">Semester GPAs (SGPA)</div>
+      <div class="sems-input-grid">
+        <div class="sem-input-box">
+          <label for="m-sem-1-I">Y1·S1 GPA</label>
+          <input type="number" id="m-sem-1-I" step="0.01" min="0" max="4.00" placeholder="3.80">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-1-II">Y1·S2 GPA</label>
+          <input type="number" id="m-sem-1-II" step="0.01" min="0" max="4.00" placeholder="3.91">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-2-I">Y2·S1 GPA</label>
+          <input type="number" id="m-sem-2-I" step="0.01" min="0" max="4.00" placeholder="—">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-2-II">Y2·S2 GPA</label>
+          <input type="number" id="m-sem-2-II" step="0.01" min="0" max="4.00" placeholder="—">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-3-I">Y3·S1 GPA</label>
+          <input type="number" id="m-sem-3-I" step="0.01" min="0" max="4.00" placeholder="—">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-3-II">Y3·S2 GPA</label>
+          <input type="number" id="m-sem-3-II" step="0.01" min="0" max="4.00" placeholder="—">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-4-I">Y4·S1 GPA</label>
+          <input type="number" id="m-sem-4-I" step="0.01" min="0" max="4.00" placeholder="—">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-4-II">Y4·S2 GPA</label>
+          <input type="number" id="m-sem-4-II" step="0.01" min="0" max="4.00" placeholder="—">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" id="btn-cancel-modal">Cancel</button>
+        <button type="submit" class="btn-save" id="btn-save-modal">Save Student Record</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script type="module">
-import { fetchSubmissionsFromSupabase } from '/supabase.mjs';
+import {
+  fetchSubmissionsFromSupabase,
+  upsertSubmissionToSupabase,
+  deleteSubmissionFromSupabase
+} from '/supabase.mjs';
 
 const ADMIN_PASSWORD = 'abm2021';
 const CLASSES = [
@@ -234,8 +369,9 @@ const CLASSES = [
 ];
 
 function classify(cgpa) {
-  if (cgpa == null) return null;
-  for (const c of CLASSES) { if (cgpa >= c.min) return c; }
+  if (cgpa == null || cgpa === '') return null;
+  const val = Number(cgpa);
+  for (const c of CLASSES) { if (val >= c.min) return c; }
   return CLASSES[CLASSES.length - 1];
 }
 
@@ -246,9 +382,10 @@ const SEM_LABELS = {
 };
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const fmt = (n, d = 2) => n == null ? '—' : Number(n).toFixed(d);
+const fmt = (n, d = 2) => n == null || n === '' ? '—' : Number(n).toFixed(d);
 
 let allRows = [];
+let editingReg = null;
 
 async function loadDashboard() {
   try {
@@ -273,7 +410,7 @@ async function loadDashboard() {
 }
 
 function renderDashboardView() {
-  const withGpa = allRows.filter(r => r.cgpa != null);
+  const withGpa = allRows.filter(r => r.cgpa != null && r.cgpa !== '');
   const avg = withGpa.length ? (withGpa.reduce((s, r) => s + Number(r.cgpa), 0) / withGpa.length) : null;
   const top = withGpa[0]?.cgpa ?? null;
 
@@ -330,7 +467,7 @@ function renderDashboardView() {
 
   // Active sems
   const activeSems = SEMESTERS_ORDERED.filter(s =>
-    allRows.some(r => (r.semesters || []).some(x => x.semester === s))
+    allRows.some(r => (r.semesters || []).some(x => x.semester === s && x.gpa != null))
   );
 
   // Table header
@@ -342,9 +479,9 @@ function renderDashboardView() {
       <th>Class</th>
       ${activeSems.map(s => `<th>${SEM_LABELS[s]}</th>`).join('')}
       <th>Credits</th>
-      <th>Courses</th>
       <th>Batch</th>
       <th>Submitted</th>
+      <th style="text-align:center">Actions</th>
     </tr>
   `;
 
@@ -370,12 +507,17 @@ function renderDashboardView() {
         <td><span class="badge" style="background:${cls?.bg};color:${cls?.color};border-color:${cls?.border}">${cls?.label || 'Incomplete'}</span></td>
         ${activeSems.map(s => {
           const sd = semMap[s];
-          return `<td class="sem-cell">${sd?.gpa != null ? `<strong>${Number(sd.gpa).toFixed(2)}</strong><br><small>${sd.credits}cr</small>` : '<span style="color:#ccc">—</span>'}</td>`;
+          return `<td class="sem-cell">${sd?.gpa != null ? `<strong>${Number(sd.gpa).toFixed(2)}</strong><br><small>${sd.credits || ''}cr</small>` : '<span style="color:#ccc">—</span>'}</td>`;
         }).join('')}
         <td style="text-align:center">${r.credits ?? '—'}</td>
-        <td style="text-align:center">${r.graded_count ?? r.gradedCount ?? '—'}</td>
         <td><small style="color:var(--muted)">${esc(r.batch || '—')}</small></td>
         <td><small style="color:var(--muted)">${date}</small></td>
+        <td style="text-align:center">
+          <div class="actions-cell">
+            <button type="button" class="act-btn edit" data-action="edit" data-reg="${esc(r.registration)}">✏️ Edit</button>
+            <button type="button" class="act-btn del" data-action="delete" data-reg="${esc(r.registration)}">🗑️ Delete</button>
+          </div>
+        </td>
       </tr>
     `;
   }).join('');
@@ -399,6 +541,135 @@ function filterTable() {
   const countEl = document.getElementById('row-count');
   if (countEl) countEl.textContent = q || cls ? `Showing ${visible} of ${rows.length}` : `${rows.length} students`;
 }
+
+// ── Modal & CRUD Management ───────────────────────────────────────────────────
+function openAddStudentModal() {
+  editingReg = null;
+  document.getElementById('modal-title').textContent = 'Add New Student Record';
+  document.getElementById('student-form').reset();
+  const regInput = document.getElementById('m-reg');
+  regInput.disabled = false;
+  document.getElementById('m-batch').value = '2021/2022';
+  document.getElementById('student-modal').hidden = false;
+}
+
+function openEditStudentModal(reg) {
+  const r = allRows.find(x => String(x.registration).trim() === String(reg).trim());
+  if (!r) return alert('Student record not found.');
+  editingReg = r.registration;
+  document.getElementById('modal-title').textContent = `Edit Record: ${r.name}`;
+  document.getElementById('m-name').value = r.name || '';
+  const regInput = document.getElementById('m-reg');
+  regInput.value = r.registration || '';
+  regInput.disabled = true; // Primary key locked on edit
+  document.getElementById('m-batch').value = r.batch || '2021/2022';
+  document.getElementById('m-through').value = r.results_through || r.resultsThrough || '';
+  document.getElementById('m-cgpa').value = r.cgpa != null ? Number(r.cgpa) : '';
+  document.getElementById('m-credits').value = r.credits != null ? Number(r.credits) : '';
+
+  // Semesters
+  const semMap = Object.fromEntries((r.semesters || []).map(s => [s.semester, s]));
+  SEMESTERS_ORDERED.forEach(sem => {
+    const input = document.getElementById(`m-sem-${sem}`);
+    if (input) {
+      input.value = semMap[sem]?.gpa != null ? Number(semMap[sem].gpa) : '';
+    }
+  });
+
+  document.getElementById('student-modal').hidden = false;
+}
+
+function closeModal() {
+  document.getElementById('student-modal').hidden = true;
+  editingReg = null;
+}
+
+document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+document.getElementById('btn-cancel-modal').addEventListener('click', closeModal);
+document.getElementById('btn-add-student').addEventListener('click', openAddStudentModal);
+document.getElementById('btn-add-student-2').addEventListener('click', openAddStudentModal);
+
+// Form submit
+document.getElementById('student-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const saveBtn = document.getElementById('btn-save-modal');
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Saving to Database…';
+
+  try {
+    const registration = (editingReg || document.getElementById('m-reg').value).trim();
+    const name = document.getElementById('m-name').value.trim();
+    const batch = document.getElementById('m-batch').value.trim() || '2021/2022';
+    const results_through = document.getElementById('m-through').value.trim();
+    const cgpaVal = document.getElementById('m-cgpa').value;
+    const creditsVal = document.getElementById('m-credits').value;
+
+    // Build semesters array
+    const semesters = [];
+    SEMESTERS_ORDERED.forEach(sem => {
+      const gpa = document.getElementById(`m-sem-${sem}`)?.value;
+      if (gpa !== '' && gpa != null) {
+        semesters.push({
+          semester: sem,
+          gpa: Number(gpa),
+          credits: 18 // standard RUHUNA credit baseline
+        });
+      }
+    });
+
+    const payload = {
+      registration,
+      name,
+      batch,
+      results_through,
+      cgpa: cgpaVal !== '' ? Number(cgpaVal) : null,
+      credits: creditsVal !== '' ? Number(creditsVal) : null,
+      graded_count: semesters.length * 6,
+      semesters
+    };
+
+    await upsertSubmissionToSupabase(payload);
+    closeModal();
+    await loadDashboard();
+    alert(`Student record for ${name} saved successfully! ✓`);
+  } catch (err) {
+    console.error('Save failed:', err);
+    alert('Failed to save record: ' + err.message);
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Save Student Record';
+  }
+});
+
+// Table action clicks (Edit / Delete)
+document.getElementById('table-body').addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+  const action = btn.dataset.action;
+  const reg = btn.dataset.reg;
+
+  if (action === 'edit') {
+    openEditStudentModal(reg);
+  } else if (action === 'delete') {
+    const r = allRows.find(x => String(x.registration).trim() === String(reg).trim());
+    const name = r ? r.name : reg;
+    if (!confirm(`Are you sure you want to permanently delete student:\n\n${name} (${reg})\n\nThis will remove the record from the Supabase database.`)) {
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Deleting…';
+    try {
+      await deleteSubmissionFromSupabase(reg);
+      await loadDashboard();
+      alert(`Deleted ${name} from database. ✓`);
+    } catch (err) {
+      console.error('Delete failed:', err);
+      alert('Delete failed: ' + err.message);
+      btn.disabled = false;
+      btn.textContent = '🗑️ Delete';
+    }
+  }
+});
 
 // Authentication
 const isAuthed = localStorage.getItem('abm_admin_authed') === 'true';

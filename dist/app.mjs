@@ -427,11 +427,13 @@ function generateOfficialResultSheetHTML(s) {
   const cls = classify(s.gpa);
   const entered = s.rows.filter(r => r.grade && r.grade !== '');
 
-  // 8 Semesters arranged in 2 columns:
-  // Column 1: Y1-I, Y1-II, Y2-I, Y2-II
-  // Column 2: Y3-I, Y3-II, Y4-I, Y4-II
-  const col1Sems = ['1-I', '1-II', '2-I', '2-II'];
-  const col2Sems = ['3-I', '3-II', '4-I', '4-II'];
+  // Only display tables for selected completed semesters
+  const selectedSems = ALL_ACADEMIC_SEMS.filter(sem => (state.completedSemesters || []).includes(sem));
+  const activeSems = selectedSems.length ? selectedSems : ALL_ACADEMIC_SEMS;
+
+  const mid = Math.ceil(activeSems.length / 2);
+  const col1Sems = activeSems.slice(0, mid);
+  const col2Sems = activeSems.slice(mid);
 
   const renderSemCard = (sem) => {
     const semRows = entered.filter(r => r.semester === sem);
@@ -508,14 +510,16 @@ function generateOfficialResultSheetHTML(s) {
         </tr>
       </table>
 
-      <!-- 2-Column Semesters Layout (Fits all 8 semesters onto A4) -->
-      <div class="sheet-semesters-columns">
+      <!-- Semesters Layout (Fits selected semesters onto A4) -->
+      <div class="sheet-semesters-columns"${col2Sems.length === 0 ? ' style="grid-template-columns: 1fr;"' : ''}>
         <div class="sheet-sem-col">
           ${col1Sems.map(renderSemCard).join('')}
         </div>
+        ${col2Sems.length ? `
         <div class="sheet-sem-col">
           ${col2Sems.map(renderSemCard).join('')}
         </div>
+        ` : ''}
       </div>
 
       <!-- Formal Declaration Statement & Signature -->
@@ -591,29 +595,33 @@ function exportWord() {
         <tr><td><b>Degree Classification:</b></td><td><b>${cls ? cls.label : 'Incomplete'}</b></td><td><b>Total GPA Credits:</b></td><td>${s.credits || 0}</td></tr>
       </table>
 
-      ${ALL_ACADEMIC_SEMS.map(sem => {
-        const semRows = s.rows.filter(r => r.semester === sem && r.grade);
-        if (!semRows.length) return '';
-        const sd = s.semesters.find(x => x.semester === sem);
-        return `
-          <div class="sem-title">${SEMESTER_LABELS[sem] || sem} — SGPA: ${sd?.gpa != null ? fmt(sd.gpa) : '—'} | Credits: ${sd?.credits || 0}</div>
-          <table class="courses">
-            <thead>
-              <tr><th style="width:20%">Code</th><th>Course Title</th><th class="center" style="width:12%">Credits</th><th class="center" style="width:15%">Grade</th></tr>
-            </thead>
-            <tbody>
-              ${semRows.map(r => `
-                <tr>
-                  <td><b>${escape(r.code)}</b></td>
-                  <td>${escape(r.title)}</td>
-                  <td class="center">${r.credits ?? '—'}</td>
-                  <td class="center"><b>${escape(r.grade)}</b></td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        `;
-      }).join('')}
+      ${(() => {
+        const selectedSems = ALL_ACADEMIC_SEMS.filter(sem => (state.completedSemesters || []).includes(sem));
+        const activeSems = selectedSems.length ? selectedSems : ALL_ACADEMIC_SEMS;
+        return activeSems.map(sem => {
+          const semRows = s.rows.filter(r => r.semester === sem && r.grade);
+          if (!semRows.length) return '';
+          const sd = s.semesters.find(x => x.semester === sem);
+          return `
+            <div class="sem-title">${SEMESTER_LABELS[sem] || sem} — SGPA: ${sd?.gpa != null ? fmt(sd.gpa) : '—'} | Credits: ${sd?.credits || 0}</div>
+            <table class="courses">
+              <thead>
+                <tr><th style="width:20%">Code</th><th>Course Title</th><th class="center" style="width:12%">Credits</th><th class="center" style="width:15%">Grade</th></tr>
+              </thead>
+              <tbody>
+                ${semRows.map(r => `
+                  <tr>
+                    <td><b>${escape(r.code)}</b></td>
+                    <td>${escape(r.title)}</td>
+                    <td class="center">${r.credits ?? '—'}</td>
+                    <td class="center"><b>${escape(r.grade)}</b></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+        }).join('');
+      })()}
 
       <div class="sig">
         <p><i>I hereby certify that the examination results and grades recorded above are a true and accurate record of my academic performance at the Faculty of Agriculture, University of Ruhuna.</i></p>
@@ -654,7 +662,9 @@ function exportMarkdown() {
     ``,
   ];
 
-  ALL_ACADEMIC_SEMS.forEach(sem => {
+  const selectedSems = ALL_ACADEMIC_SEMS.filter(sem => (state.completedSemesters || []).includes(sem));
+  const activeSems = selectedSems.length ? selectedSems : ALL_ACADEMIC_SEMS;
+  activeSems.forEach(sem => {
     const semRows = s.rows.filter(r => r.semester === sem && r.grade);
     if (!semRows.length) return;
     const sd = s.semesters.find(x => x.semester === sem);
@@ -696,7 +706,9 @@ function exportText() {
     '',
   ];
 
-  ALL_ACADEMIC_SEMS.forEach(sem => {
+  const selectedSems = ALL_ACADEMIC_SEMS.filter(sem => (state.completedSemesters || []).includes(sem));
+  const activeSems = selectedSems.length ? selectedSems : ALL_ACADEMIC_SEMS;
+  activeSems.forEach(sem => {
     const semRows = s.rows.filter(r => r.semester === sem && r.grade);
     if (!semRows.length) return;
     const sd = s.semesters.find(x => x.semester === sem);
@@ -934,6 +946,46 @@ function wire() {
     toast('Backup JSON file downloaded ✓');
   });
   $('#btn-share-transcript').addEventListener('click', shareResultSheet);
+
+  // ── Secret Admin Shortcuts (Hidden from regular students) ──────────────────
+  // 1. Keyboard Shortcut: Ctrl + Shift + A (or Cmd + Shift + A)
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+      e.preventDefault();
+      window.location.href = '/admin';
+    }
+  });
+
+  // 2. Triple tap / click on University Brand Crest 🏛️
+  let crestClicks = 0;
+  let crestTimer = null;
+  const brandCrest = $('.brand-crest') || $('.topbar-brand');
+  if (brandCrest) {
+    brandCrest.addEventListener('click', () => {
+      crestClicks++;
+      clearTimeout(crestTimer);
+      crestTimer = setTimeout(() => { crestClicks = 0; }, 1500);
+      if (crestClicks >= 3) {
+        crestClicks = 0;
+        window.location.href = '/admin';
+      }
+    });
+  }
+
+  // 3. Triple tap on footer MONTY
+  let montyClicks = 0;
+  let montyTimer = null;
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#monty-tag')) {
+      montyClicks++;
+      clearTimeout(montyTimer);
+      montyTimer = setTimeout(() => { montyClicks = 0; }, 1500);
+      if (montyClicks >= 3) {
+        montyClicks = 0;
+        window.location.href = '/admin';
+      }
+    }
+  });
 }
 
 // ── Application Initialization ────────────────────────────────────────────────

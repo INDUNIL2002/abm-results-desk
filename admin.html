@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ABM Admin — Batch Results</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      --green:#183f32; --mint:#e8eee3; --line:#dedfd4; --muted:#6e776f;
+      --paper:#f7f6f0; --white:#fffefa; --ink:#21392f;
+      font-family:"Segoe UI",Arial,sans-serif; font-size:14px;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); }
+    [hidden] { display:none !important; }
+
+    /* Header */
+    header {
+      background:var(--green); color:#fff; padding:16px 32px;
+      display:flex; align-items:center; justify-content:space-between; gap:20px;
+      position:sticky; top:0; z-index:100; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .header-brand { display:flex; align-items:center; gap:14px; }
+    .brand-icon {
+      height:36px; width:36px; display:inline-flex; align-items:center; justify-content:center;
+      background:rgba(255,255,255,.15); color:#c9ebb7; border-radius:9px 9px 3px 9px;
+      font:italic 32px/1 Georgia,serif; padding-bottom:4px;
+    }
+    .header-title { font-size:17px; font-weight:600; }
+    .header-sub   { font-size:11px; color:#9ccfb2; margin-top:1px; }
+    .header-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .admin-pill { background:#7c3aed; font-size:10px; font-weight:700; letter-spacing:1px; padding:4px 11px; border-radius:20px; }
+    .hbtn { background:rgba(255,255,255,.12); border:0; color:#fff; border-radius:6px; padding:7px 14px; font:inherit; font-size:12px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:4px; }
+    .hbtn:hover { background:rgba(255,255,255,.22); }
+    .hbtn.green { background:#2e7d32; }
+    .hbtn.green:hover { background:#388e3c; }
+    .hbtn.emerald { background:#059669; }
+    .hbtn.emerald:hover { background:#10b981; }
+
+    /* Login Box */
+    .login-wrap { min-height:85vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .login-card { background:#fffefa; border-radius:16px; padding:40px 44px; width:100%; max-width:380px; box-shadow:0 24px 80px rgba(0,0,0,.15); border:1px solid var(--line); }
+    .login-card h2 { margin:0 0 18px; font-size:22px; font-weight:600; }
+    .login-card label { display:flex; flex-direction:column; gap:7px; font-size:12px; font-weight:600; color:#546352; margin-bottom:16px; }
+    .login-card input { width:100%; min-height:42px; border:1px solid #d9ddcf; border-radius:6px; padding:10px 12px; font:inherit; font-size:14px; }
+    .login-card button { width:100%; min-height:44px; background:#183f32; color:#fff; border:0; border-radius:7px; font:inherit; font-weight:600; font-size:14px; cursor:pointer; }
+    .login-card button:hover { background:#24553f; }
+    .err-msg { background:#fff3f0; border:1px solid #e8bdb7; border-left:3px solid #c0392b; border-radius:5px; padding:8px 12px; font-size:12px; color:#7a2c22; margin-bottom:12px; }
+
+    /* Dashboard Layout */
+    .shell { max-width:1400px; margin:0 auto; padding:28px 32px; }
+    .eyebrow { font-size:9px; font-weight:700; letter-spacing:1.8px; color:var(--muted); margin-bottom:8px; }
+    h1 { font-family:Georgia,serif; font-size:clamp(28px,3vw,38px); font-weight:400; letter-spacing:-1.2px; margin:0 0 4px; }
+    h2 { font-size:17px; font-weight:600; margin:0 0 16px; }
+    h1 em { color:#5d7655; }
+
+    /* Stats */
+    .stats-row { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:28px; }
+    .stat { background:var(--white); border:1px solid var(--line); border-radius:9px; padding:18px 20px; }
+    .stat.main { background:var(--green); color:#fff; border-color:var(--green); }
+    .stat-label { font-size:9px; font-weight:700; letter-spacing:1.4px; color:var(--muted); }
+    .stat.main .stat-label { color:#9ccfb2; }
+    .stat-value { font-size:32px; font-weight:500; letter-spacing:-1px; margin-top:8px; font-variant-numeric:tabular-nums; line-height:1; }
+    .stat-sub { font-size:11px; color:var(--muted); margin-top:6px; }
+    .stat.main .stat-sub { color:#9ccfb2; }
+
+    /* Podium */
+    .podium-section { margin-bottom:32px; }
+    .podium-grid { display:flex; gap:16px; align-items:flex-end; flex-wrap:wrap; }
+    .podium-card { flex:1; min-width:180px; max-width:280px; background:var(--white); border:1px solid var(--line); border-radius:12px; padding:20px; text-align:center; transition:transform .15s; }
+    .podium-card:hover { transform:translateY(-3px); }
+    .podium-1 { border-color:#f9c74f; box-shadow:0 4px 20px rgba(249,199,79,.2); }
+    .podium-2 { border-color:#c9d6df; box-shadow:0 4px 16px rgba(0,0,0,.06); }
+    .podium-3 { border-color:#e8b49a; box-shadow:0 4px 16px rgba(0,0,0,.06); }
+    .podium-medal { font-size:36px; line-height:1; margin-bottom:8px; }
+    .podium-rank  { font-size:10px; font-weight:700; letter-spacing:1px; color:var(--muted); margin-bottom:6px; }
+    .podium-name  { font-size:15px; font-weight:700; margin-bottom:2px; }
+    .podium-reg   { font-size:11px; color:var(--muted); margin-bottom:12px; }
+    .podium-gpa   { font-size:32px; font-weight:500; letter-spacing:-1px; font-variant-numeric:tabular-nums; margin-bottom:10px; color:#183f32; }
+
+    /* Class summary */
+    .class-section { margin-bottom:32px; }
+    .class-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+    .class-card { background:var(--white); border:1px solid var(--line); border-left:4px solid; border-radius:9px; padding:16px 18px; }
+    .class-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .class-badge { font-size:11px; font-weight:700; padding:3px 9px; border-radius:12px; border:1px solid; }
+    .class-range { font-size:10px; font-weight:600; }
+    .class-count { font-size:32px; font-weight:500; letter-spacing:-1px; font-variant-numeric:tabular-nums; }
+    .class-pct { display:flex; align-items:center; gap:8px; margin-top:8px; font-size:11px; color:var(--muted); }
+    .pct-bar { flex:1; height:4px; background:#eee; border-radius:2px; overflow:hidden; }
+    .pct-fill { height:100%; border-radius:2px; }
+
+    /* Table */
+    .table-section { margin-bottom:32px; }
+    .table-controls { display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+    .search-input { flex:1; min-width:200px; max-width:340px; height:38px; border:1px solid var(--line); border-radius:6px; padding:8px 12px; font:inherit; font-size:13px; background:var(--white); }
+    .filter-select { height:38px; border:1px solid var(--line); border-radius:6px; padding:0 10px; font:inherit; font-size:13px; background:var(--white); }
+    .table-wrap { overflow-x:auto; border-radius:9px; border:1px solid var(--line); }
+    table { width:100%; border-collapse:collapse; background:var(--white); min-width:960px; }
+    thead th { background:var(--mint); text-align:left; padding:11px 13px; font-size:10px; font-weight:700; letter-spacing:.5px; color:#3a5c44; white-space:nowrap; position:sticky; top:0; }
+    td { padding:10px 13px; border-top:1px solid var(--line); vertical-align:middle; font-size:13px; }
+    .data-row:hover td { background:#f5f9f3; }
+    .rank-cell { font-size:16px; width:48px; text-align:center; font-weight:bold; }
+    .name-cell .name { font-weight:600; font-size:13px; }
+    .name-cell .reg  { font-size:11px; color:var(--muted); }
+    .sem-cell { text-align:center; font-size:12px; line-height:1.3; white-space:nowrap; }
+    .sem-cell small { color:var(--muted); font-size:10px; }
+    .badge { display:inline-block; font-size:10px; font-weight:700; padding:3px 9px; border-radius:12px; border:1px solid; white-space:nowrap; }
+
+    /* Action Buttons */
+    .actions-cell { white-space:nowrap; display:flex; gap:6px; align-items:center; }
+    .act-btn { border:0; padding:5px 9px; border-radius:5px; font-size:11px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:3px; }
+    .act-btn.edit { background:#e0f2fe; color:#0369a1; }
+    .act-btn.edit:hover { background:#bae6fd; }
+    .act-btn.del  { background:#fee2e2; color:#b91c1c; }
+    .act-btn.del:hover  { background:#fecaca; }
+
+    /* Modal dialog */
+    .modal-backdrop {
+      position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000; padding:16px;
+    }
+    .modal-card {
+      background:#fffefa; border-radius:14px; max-width:620px; width:100%; max-height:90vh; overflow-y:auto; padding:28px 32px; box-shadow:0 24px 80px rgba(0,0,0,0.25); border:1px solid var(--line);
+    }
+    .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .modal-header h3 { margin:0; font-size:20px; color:var(--green); font-family:Georgia,serif; font-weight:bold; }
+    .btn-close-x { background:transparent; border:0; font-size:20px; cursor:pointer; color:var(--muted); }
+    .form-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+    .form-group { display:flex; flex-direction:column; gap:4px; margin-bottom:12px; }
+    .form-group label { font-size:11px; font-weight:600; color:#4a554a; }
+    .form-group input { height:38px; border:1px solid var(--line); border-radius:6px; padding:0 10px; font:inherit; font-size:13px; background:#fff; }
+    .form-group input:disabled { background:#f1f5f9; color:#64748b; cursor:not-allowed; }
+    .sems-section-title { font-size:12px; font-weight:700; color:#3a5c44; border-top:1px solid var(--line); padding-top:14px; margin-top:8px; margin-bottom:10px; }
+    .sems-input-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px; }
+    .sem-input-box { background:#f8fafc; border:1px solid var(--line); border-radius:6px; padding:8px 10px; }
+    .sem-input-box label { font-size:10px; font-weight:700; color:#334155; display:block; margin-bottom:4px; }
+    .sem-input-box input { width:100%; height:30px; font-size:12px; padding:0 6px; border:1px solid var(--line); border-radius:4px; }
+    .modal-actions { display:flex; justify-content:flex-end; gap:10px; border-top:1px solid var(--line); padding-top:16px; }
+    .btn-save { background:#183f32; color:#fff; border:0; padding:10px 20px; border-radius:6px; font-weight:600; cursor:pointer; font-size:13px; }
+    .btn-save:hover { background:#24553f; }
+    .btn-cancel { background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; padding:10px 16px; border-radius:6px; font-weight:600; cursor:pointer; font-size:13px; }
+    .btn-cancel:hover { background:#e2e8f0; }
+
+    @media(max-width:900px) {
+      .stats-row { grid-template-columns:repeat(2,1fr); }
+      .class-grid { grid-template-columns:repeat(2,1fr); }
+      .shell { padding:20px 16px; }
+      .sems-input-grid { grid-template-columns:repeat(2,1fr); }
+      .form-grid-2 { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-brand">
+    <span class="brand-icon">a</span>
+    <div>
+      <div class="header-title">ABM Results Desk — Admin</div>
+      <div class="header-sub">University of Ruhuna · Faculty of Agriculture · Agribusiness Management</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <span class="admin-pill">ADMIN</span>
+    <button id="btn-add-student" class="hbtn emerald" type="button">➕ Add Student</button>
+    <button id="btn-export-csv" class="hbtn green" type="button">⬇ Export CSV</button>
+    <a href="/" class="hbtn" title="Back to Student Calculator">Student App</a>
+    <button id="btn-signout" class="hbtn" type="button" hidden>Sign out</button>
+  </div>
+</header>
+
+<!-- Login Container -->
+<div id="login-container" class="login-wrap">
+  <div class="login-card">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <span class="brand-icon" style="background:#183f32;color:#d8e8a7;width:34px;height:34px;font-size:26px">a</span>
+      <div><strong>ABM Results Desk</strong><div style="font-size:11px;color:#6e776f">Admin Verification</div></div>
+    </div>
+    <h2>Admin Sign in</h2>
+    <div id="login-err" class="err-msg" hidden>Wrong password. Please try again.</div>
+    <form id="login-form">
+      <label>Admin Password
+        <input type="password" id="admin-password" required placeholder="Enter admin password" autofocus autocomplete="current-password">
+      </label>
+      <button type="submit">Sign in to Leaderboard →</button>
+    </form>
+  </div>
+</div>
+
+<!-- Main Dashboard Container -->
+<div id="dashboard-container" class="shell" hidden>
+  <div style="margin-bottom:24px">
+    <p class="eyebrow">BATCH ACADEMIC RECORD · SUPABASE CLUSTER</p>
+    <h1>Results <em>leaderboard.</em></h1>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat main">
+      <div class="stat-label">TOTAL SUBMISSIONS</div>
+      <div class="stat-value" id="stat-total">0</div>
+      <div class="stat-sub">students in record</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">AVERAGE CGPA</div>
+      <div class="stat-value" id="stat-avg">—</div>
+      <div class="stat-sub">batch average</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">HIGHEST CGPA</div>
+      <div class="stat-value" id="stat-top">—</div>
+      <div class="stat-sub">top performer</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">FIRST CLASS</div>
+      <div class="stat-value" id="stat-first" style="color:#1d6b3e">0</div>
+      <div class="stat-sub">students (GPA ≥ 3.70)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">SECOND CLASS+</div>
+      <div class="stat-value" id="stat-second" style="color:#5c6b1a">0</div>
+      <div class="stat-sub">students (GPA ≥ 2.70)</div>
+    </div>
+  </div>
+
+  <div id="podium-section" class="podium-section" hidden>
+    <h2>🏆 Top Performers</h2>
+    <div id="podium-grid" class="podium-grid"></div>
+  </div>
+
+  <div class="class-section">
+    <h2>Degree Class Distribution</h2>
+    <div id="class-grid" class="class-grid"></div>
+  </div>
+
+  <div class="table-section">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:12px">
+      <h2 style="margin:0">Full Batch Ranking</h2>
+      <button id="btn-add-student-2" class="act-btn" style="background:#183f32;color:#fff;padding:8px 14px;font-size:12px;border-radius:6px" type="button">➕ Add Student Record</button>
+    </div>
+    <div class="table-controls">
+      <input type="search" class="search-input" id="search-input" placeholder="Search by name or registration…">
+      <select class="filter-select" id="class-filter">
+        <option value="">All classes</option>
+        <option value="First Class">First Class</option>
+        <option value="Second Class (Upper)">Second Class (Upper)</option>
+        <option value="Second Class (Lower)">Second Class (Lower)</option>
+        <option value="Pass">Pass</option>
+        <option value="Fail / Incomplete">Fail / Incomplete</option>
+      </select>
+      <span id="row-count" style="font-size:12px;color:var(--muted)"></span>
+    </div>
+    <div class="table-wrap">
+      <table id="results-table">
+        <thead id="table-head">
+          <!-- Dynamically generated with active semesters -->
+        </thead>
+        <tbody id="table-body">
+          <!-- Dynamically populated from Supabase -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Admin Footer with Credit -->
+  <footer style="text-align:center;padding:28px 16px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:48px">
+    ABM Results Desk &middot; Faculty of Agriculture &middot; University of Ruhuna<br>
+    Made with ❤️ by <strong style="color:var(--green)">MONTY</strong>
+  </footer>
+</div>
+
+<!-- Add / Edit Student Modal -->
+<div id="student-modal" class="modal-backdrop" hidden>
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="modal-title">Edit Student Record</h3>
+      <button type="button" class="btn-close-x" id="btn-close-modal">&times;</button>
+    </div>
+    <form id="student-form">
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="m-name">Student Full Name *</label>
+          <input type="text" id="m-name" required placeholder="e.g. K.A. Kavindu Senanayake">
+        </div>
+        <div class="form-group">
+          <label for="m-reg">Registration Number *</label>
+          <input type="text" id="m-reg" required placeholder="e.g. AG/2021/014">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="m-batch">Academic Year / Intake</label>
+          <input type="text" id="m-batch" placeholder="2021/2022">
+        </div>
+        <div class="form-group">
+          <label for="m-through">Result up to</label>
+          <input type="text" id="m-through" placeholder="e.g. Year 2 Semester II">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label for="m-cgpa">Cumulative GPA (CGPA) (0.00 - 4.00)</label>
+          <input type="number" id="m-cgpa" step="0.01" min="0" max="4.00" placeholder="e.g. 3.84">
+        </div>
+        <div class="form-group">
+          <label for="m-credits">Total Credits</label>
+          <input type="number" id="m-credits" step="1" min="0" placeholder="e.g. 60">
+        </div>
+      </div>
+
+      <div class="sems-section-title">Semester GPAs (SGPA)</div>
+      <div class="sems-input-grid">
+        <div class="sem-input-box">
+          <label for="m-sem-1-I">Y1·S1 GPA</label>
+          <input type="number" id="m-sem-1-I" step="0.01" min="0" max="4.00" placeholder="3.80">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-1-II">Y1·S2 GPA</label>
+          <input type="number" id="m-sem-1-II" step="0.01" min="0" max="4.00" placeholder="3.91">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-2-I">Y2·S1 GPA</label>
+          <input type="number" id="m-sem-2-I" step="0.01" min="0" max="4.00" placeholder="—">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-2-II">Y2·S2 GPA</label>
+          <input type="number" id="m-sem-2-II" step="0.01" min="0" max="4.00" placeholder="—">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-3-I">Y3·S1 GPA</label>
+          <input type="number" id="m-sem-3-I" step="0.01" min="0" max="4.00" placeholder="—">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-3-II">Y3·S2 GPA</label>
+          <input type="number" id="m-sem-3-II" step="0.01" min="0" max="4.00" placeholder="—">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-4-I">Y4·S1 GPA</label>
+          <input type="number" id="m-sem-4-I" step="0.01" min="0" max="4.00" placeholder="—">
+        </div>
+        <div class="sem-input-box">
+          <label for="m-sem-4-II">Y4·S2 GPA</label>
+          <input type="number" id="m-sem-4-II" step="0.01" min="0" max="4.00" placeholder="—">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" id="btn-cancel-modal">Cancel</button>
+        <button type="submit" class="btn-save" id="btn-save-modal">Save Student Record</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+import {
+  fetchSubmissionsFromSupabase,
+  upsertSubmissionToSupabase,
+  deleteSubmissionFromSupabase
+} from '/supabase.mjs';
+
+const ADMIN_PASSWORD = 'abm2021';
+const CLASSES = [
+  { label: 'First Class',           min: 3.70, color: '#1d6b3e', bg: '#e8f5e9', border: '#66bb6a' },
+  { label: 'Second Class (Upper)',   min: 3.30, color: '#5c6b1a', bg: '#f9fbe7', border: '#aed581' },
+  { label: 'Second Class (Lower)',   min: 2.70, color: '#7b5a0f', bg: '#fff8e1', border: '#ffca28' },
+  { label: 'Pass',                   min: 2.00, color: '#6a4b7a', bg: '#f3e5f5', border: '#ce93d8' },
+  { label: 'Fail / Incomplete',      min: 0,    color: '#9a3d31', bg: '#fde8e8', border: '#ef9a9a' },
+];
+
+function classify(cgpa) {
+  if (cgpa == null || cgpa === '') return null;
+  const val = Number(cgpa);
+  for (const c of CLASSES) { if (val >= c.min) return c; }
+  return CLASSES[CLASSES.length - 1];
+}
+
+const SEMESTERS_ORDERED = ['1-I','1-II','2-I','2-II','3-I','3-II','4-I','4-II'];
+const SEM_LABELS = {
+  '1-I': 'Y1·S1', '1-II': 'Y1·S2', '2-I': 'Y2·S1', '2-II': 'Y2·S2',
+  '3-I': 'Y3·S1', '3-II': 'Y3·S2', '4-I': 'Y4·S1', '4-II': 'Y4·S2',
+};
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = (n, d = 2) => n == null || n === '' ? '—' : Number(n).toFixed(d);
+
+let allRows = [];
+let editingReg = null;
+
+async function loadDashboard() {
+  try {
+    allRows = await fetchSubmissionsFromSupabase();
+  } catch (err) {
+    console.error('Supabase fetch failed:', err);
+    try {
+      const res = await fetch('/data/submissions.json');
+      if (res.ok) allRows = await res.json();
+    } catch {}
+  }
+
+  // Sort by CGPA desc
+  allRows.sort((a, b) => {
+    if (a.cgpa == null && b.cgpa == null) return 0;
+    if (a.cgpa == null) return 1;
+    if (b.cgpa == null) return -1;
+    return b.cgpa - a.cgpa;
+  });
+
+  renderDashboardView();
+}
+
+function renderDashboardView() {
+  const withGpa = allRows.filter(r => r.cgpa != null && r.cgpa !== '');
+  const avg = withGpa.length ? (withGpa.reduce((s, r) => s + Number(r.cgpa), 0) / withGpa.length) : null;
+  const top = withGpa[0]?.cgpa ?? null;
+
+  const classCounts = Object.fromEntries(CLASSES.map(c => [c.label, 0]));
+  allRows.forEach(r => { const c = classify(r.cgpa); if (c) classCounts[c.label]++; });
+
+  document.getElementById('stat-total').textContent = allRows.length;
+  document.getElementById('stat-avg').textContent = fmt(avg);
+  document.getElementById('stat-top').textContent = fmt(top);
+  document.getElementById('stat-first').textContent = classCounts['First Class'];
+  document.getElementById('stat-second').textContent = classCounts['Second Class (Upper)'] + classCounts['Second Class (Lower)'];
+
+  // Podium
+  const podium = allRows.slice(0, Math.min(3, allRows.length));
+  const medal = i => ['🥇', '🥈', '🥉'][i] || '';
+  const podiumSec = document.getElementById('podium-section');
+  if (podium.length && podium[0].cgpa != null) {
+    podiumSec.hidden = false;
+    document.getElementById('podium-grid').innerHTML = podium.map((r, i) => {
+      const c = classify(r.cgpa);
+      return `
+        <div class="podium-card podium-${i + 1}">
+          <div class="podium-medal">${medal(i)}</div>
+          <div class="podium-rank">${['1st Place', '2nd Place', '3rd Place'][i]}</div>
+          <div class="podium-name">${esc(r.name)}</div>
+          <div class="podium-reg">${esc(r.registration)}</div>
+          <div class="podium-gpa">${r.cgpa != null ? Number(r.cgpa).toFixed(2) : '—'}</div>
+          <span class="badge" style="background:${c.bg};color:${c.color};border-color:${c.border}">${c.label}</span>
+        </div>
+      `;
+    }).join('');
+  } else {
+    podiumSec.hidden = true;
+  }
+
+  // Class Summary
+  document.getElementById('class-grid').innerHTML = CLASSES.map(c => {
+    const count = classCounts[c.label];
+    const pct = allRows.length ? Math.round((count / allRows.length) * 100) : 0;
+    return `
+      <div class="class-card" style="border-left-color:${c.border}">
+        <div class="class-header">
+          <span class="class-badge" style="background:${c.bg};color:${c.color};border-color:${c.border}">${c.label}</span>
+          <span class="class-range" style="color:${c.color}">GPA ≥ ${c.min.toFixed(2)}</span>
+        </div>
+        <div class="class-count">${count}</div>
+        <div class="class-pct">
+          <div class="pct-bar"><div class="pct-fill" style="width:${pct}%;background:${c.border}"></div></div>
+          <span>${pct}% of batch</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Active sems
+  const activeSems = SEMESTERS_ORDERED.filter(s =>
+    allRows.some(r => (r.semesters || []).some(x => x.semester === s && x.gpa != null))
+  );
+
+  // Table header
+  document.getElementById('table-head').innerHTML = `
+    <tr>
+      <th>#</th>
+      <th>Student</th>
+      <th>CGPA</th>
+      <th>Class</th>
+      ${activeSems.map(s => `<th>${SEM_LABELS[s]}</th>`).join('')}
+      <th>Credits</th>
+      <th>Batch</th>
+      <th>Submitted</th>
+      <th style="text-align:center">Actions</th>
+    </tr>
+  `;
+
+  // Table rows
+  const tbody = document.getElementById('table-body');
+  if (!allRows.length) {
+    tbody.innerHTML = `<tr><td colspan="15" style="text-align:center;padding:40px;color:var(--muted)">No student submissions found in database yet.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = allRows.map((r, i) => {
+    const semMap = Object.fromEntries((r.semesters || []).map(s => [s.semester, s]));
+    const cls = classify(r.cgpa);
+    const date = r.submitted_at || r.submittedAt ? new Date(r.submitted_at || r.submittedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '—';
+    return `
+      <tr class="data-row">
+        <td class="rank-cell">${medal(i) || (i + 1)}</td>
+        <td class="name-cell">
+          <div class="name">${esc(r.name)}</div>
+          <div class="reg">${esc(r.registration)}</div>
+        </td>
+        <td><strong style="color:${cls?.color || '#333'};font-size:16px;font-variant-numeric:tabular-nums">${fmt(r.cgpa)}</strong></td>
+        <td><span class="badge" style="background:${cls?.bg};color:${cls?.color};border-color:${cls?.border}">${cls?.label || 'Incomplete'}</span></td>
+        ${activeSems.map(s => {
+          const sd = semMap[s];
+          return `<td class="sem-cell">${sd?.gpa != null ? `<strong>${Number(sd.gpa).toFixed(2)}</strong><br><small>${sd.credits || ''}cr</small>` : '<span style="color:#ccc">—</span>'}</td>`;
+        }).join('')}
+        <td style="text-align:center">${r.credits ?? '—'}</td>
+        <td><small style="color:var(--muted)">${esc(r.batch || '—')}</small></td>
+        <td><small style="color:var(--muted)">${date}</small></td>
+        <td style="text-align:center">
+          <div class="actions-cell">
+            <button type="button" class="act-btn edit" data-action="edit" data-reg="${esc(r.registration)}">✏️ Edit</button>
+            <button type="button" class="act-btn del" data-action="delete" data-reg="${esc(r.registration)}">🗑️ Delete</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  filterTable();
+}
+
+function filterTable() {
+  const q = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+  const cls = document.getElementById('class-filter')?.value || '';
+  const rows = document.querySelectorAll('#table-body tr.data-row');
+  let visible = 0;
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    const badge = row.querySelector('.badge')?.textContent || '';
+    const matchQ = !q || text.includes(q);
+    const matchCls = !cls || badge.includes(cls);
+    row.hidden = !(matchQ && matchCls);
+    if (!row.hidden) visible++;
+  });
+  const countEl = document.getElementById('row-count');
+  if (countEl) countEl.textContent = q || cls ? `Showing ${visible} of ${rows.length}` : `${rows.length} students`;
+}
+
+// ── Modal & CRUD Management ───────────────────────────────────────────────────
+function openAddStudentModal() {
+  editingReg = null;
+  document.getElementById('modal-title').textContent = 'Add New Student Record';
+  document.getElementById('student-form').reset();
+  const regInput = document.getElementById('m-reg');
+  regInput.disabled = false;
+  document.getElementById('m-batch').value = '2021/2022';
+  document.getElementById('student-modal').hidden = false;
+}
+
+function openEditStudentModal(reg) {
+  const r = allRows.find(x => String(x.registration).trim() === String(reg).trim());
+  if (!r) return alert('Student record not found.');
+  editingReg = r.registration;
+  document.getElementById('modal-title').textContent = `Edit Record: ${r.name}`;
+  document.getElementById('m-name').value = r.name || '';
+  const regInput = document.getElementById('m-reg');
+  regInput.value = r.registration || '';
+  regInput.disabled = true; // Primary key locked on edit
+  document.getElementById('m-batch').value = r.batch || '2021/2022';
+  document.getElementById('m-through').value = r.results_through || r.resultsThrough || '';
+  document.getElementById('m-cgpa').value = r.cgpa != null ? Number(r.cgpa) : '';
+  document.getElementById('m-credits').value = r.credits != null ? Number(r.credits) : '';
+
+  // Semesters
+  const semMap = Object.fromEntries((r.semesters || []).map(s => [s.semester, s]));
+  SEMESTERS_ORDERED.forEach(sem => {
+    const input = document.getElementById(`m-sem-${sem}`);
+    if (input) {
+      input.value = semMap[sem]?.gpa != null ? Number(semMap[sem].gpa) : '';
+    }
+  });
+
+  document.getElementById('student-modal').hidden = false;
+}
+
+function closeModal() {
+  document.getElementById('student-modal').hidden = true;
+  editingReg = null;
+}
+
+document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+document.getElementById('btn-cancel-modal').addEventListener('click', closeModal);
+document.getElementById('btn-add-student').addEventListener('click', openAddStudentModal);
+document.getElementById('btn-add-student-2').addEventListener('click', openAddStudentModal);
+
+// Form submit
+document.getElementById('student-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const saveBtn = document.getElementById('btn-save-modal');
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Saving to Database…';
+
+  try {
+    const registration = (editingReg || document.getElementById('m-reg').value).trim();
+    const name = document.getElementById('m-name').value.trim();
+    const batch = document.getElementById('m-batch').value.trim() || '2021/2022';
+    const results_through = document.getElementById('m-through').value.trim();
+    const cgpaVal = document.getElementById('m-cgpa').value;
+    const creditsVal = document.getElementById('m-credits').value;
+
+    // Build semesters array
+    const semesters = [];
+    SEMESTERS_ORDERED.forEach(sem => {
+      const gpa = document.getElementById(`m-sem-${sem}`)?.value;
+      if (gpa !== '' && gpa != null) {
+        semesters.push({
+          semester: sem,
+          gpa: Number(gpa),
+          credits: 18 // standard RUHUNA credit baseline
+        });
+      }
+    });
+
+    const payload = {
+      registration,
+      name,
+      batch,
+      results_through,
+      cgpa: cgpaVal !== '' ? Number(cgpaVal) : null,
+      credits: creditsVal !== '' ? Number(creditsVal) : null,
+      graded_count: semesters.length * 6,
+      semesters
+    };
+
+    await upsertSubmissionToSupabase(payload);
+    closeModal();
+    await loadDashboard();
+    alert(`Student record for ${name} saved successfully! ✓`);
+  } catch (err) {
+    console.error('Save failed:', err);
+    alert('Failed to save record: ' + err.message);
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Save Student Record';
+  }
+});
+
+// Table action clicks (Edit / Delete)
+document.getElementById('table-body').addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+  const action = btn.dataset.action;
+  const reg = btn.dataset.reg;
+
+  if (action === 'edit') {
+    openEditStudentModal(reg);
+  } else if (action === 'delete') {
+    const r = allRows.find(x => String(x.registration).trim() === String(reg).trim());
+    const name = r ? r.name : reg;
+    if (!confirm(`Are you sure you want to permanently delete student:\n\n${name} (${reg})\n\nThis will remove the record from the Supabase database.`)) {
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Deleting…';
+    try {
+      await deleteSubmissionFromSupabase(reg);
+      await loadDashboard();
+      alert(`Deleted ${name} from database. ✓`);
+    } catch (err) {
+      console.error('Delete failed:', err);
+      alert('Delete failed: ' + err.message);
+      btn.disabled = false;
+      btn.textContent = '🗑️ Delete';
+    }
+  }
+});
+
+// Authentication
+const isAuthed = localStorage.getItem('abm_admin_authed') === 'true';
+if (isAuthed) {
+  document.getElementById('login-container').hidden = true;
+  document.getElementById('dashboard-container').hidden = false;
+  document.getElementById('btn-signout').hidden = false;
+  loadDashboard();
+}
+
+document.getElementById('login-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const pwd = document.getElementById('admin-password').value;
+  if (pwd === ADMIN_PASSWORD) {
+    localStorage.setItem('abm_admin_authed', 'true');
+    document.getElementById('login-container').hidden = true;
+    document.getElementById('dashboard-container').hidden = false;
+    document.getElementById('btn-signout').hidden = false;
+    loadDashboard();
+  } else {
+    document.getElementById('login-err').hidden = false;
+  }
+});
+
+document.getElementById('btn-signout').addEventListener('click', () => {
+  localStorage.removeItem('abm_admin_authed');
+  location.reload();
+});
+
+document.getElementById('search-input').addEventListener('input', filterTable);
+document.getElementById('class-filter').addEventListener('change', filterTable);
+
+// CSV Export
+document.getElementById('btn-export-csv').addEventListener('click', () => {
+  if (!allRows.length) return alert('No data to export.');
+  const semCols = SEMESTERS_ORDERED;
+  const header = ['Rank', 'Name', 'Registration', 'Batch', 'Results Up To', 'CGPA', 'Degree Class', 'GPA Credits', 'Courses Graded', ...semCols.map(s => `${SEM_LABELS[s]} GPA`), 'Submitted'];
+  const p = v => { let t = String(v ?? ''); if (/^[=+@-]/.test(t)) t = "'" + t; return `"${t.replace(/"/g, '""')}"`; };
+  const data = allRows.map((r, i) => {
+    const cls = classify(r.cgpa);
+    const semMap = Object.fromEntries((r.semesters || []).map(s => [s.semester, s.gpa]));
+    return [i + 1, r.name, r.registration, r.batch, r.results_through || r.resultsThrough, r.cgpa != null ? Number(r.cgpa).toFixed(2) : '', cls?.label || '', r.credits, r.graded_count || r.gradedCount, ...semCols.map(s => semMap[s] != null ? Number(semMap[s]).toFixed(2) : ''), r.submitted_at || r.submittedAt || ''];
+  });
+  const csv = '\uFEFF' + [header, ...data].map(row => row.map(p).join(',')).join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'abm-batch-results.csv'; a.click();
+});
+</script>
+</body>
+</html>

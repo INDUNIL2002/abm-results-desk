@@ -727,6 +727,32 @@ input:focus, select:focus {
 }
 #toast.visible { transform: translateY(0); opacity: 1; }
 
+/* ── Credit Footer (Made by MONTY) ── */
+.app-credit-footer {
+  margin-top: 40px;
+  padding: 24px 16px 80px 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  border-top: 1px solid var(--line);
+}
+.footer-credit-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.credit-sep { color: var(--line-dark); }
+.monty-link {
+  color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+@media (min-width: 769px) {
+  .app-credit-footer { padding-bottom: 32px; }
+}
+
 /* ── Mobile App Bottom Nav ── */
 .app-mobile-footer { display: none; }
 
