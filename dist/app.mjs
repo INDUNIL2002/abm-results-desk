@@ -391,21 +391,59 @@ function renderCourses(s) {
     `;
   }).join('');
 
-  // Populate Quick Add Elective dropdown for active semester
+  // Populate Quick Add Elective dropdown for active semester (Always visible)
   const elSelect = $('#quick-add-elective');
   if (elSelect) {
+    elSelect.hidden = false;
     const semElectives = catalogue?.electives?.[currentSemester] || [];
     const currentCodes = new Set(list.map(c => cleanCode(c.code)));
     const available = semElectives.filter(e => !currentCodes.has(cleanCode(e.code)));
 
     if (available.length > 0) {
-      elSelect.hidden = false;
+      elSelect.disabled = false;
       elSelect.innerHTML = `
-        <option value="" disabled selected>➕ Quick Add Handbook Elective (${available.length} available)…</option>
+        <option value="" disabled selected>➕ Quick Add Handbook Elective (${available.length} available for ${SEMESTER_SHORT[currentSemester] || currentSemester})…</option>
         ${available.map(e => `<option value="${escape(e.code)}">${escape(e.code)} — ${escape(e.title)} (${e.credits} Cr)</option>`).join('')}
       `;
+    } else if (['1-I', '1-II'].includes(currentSemester)) {
+      // In Ruhuna FoA, Year 1 has compulsory courses only. Electives begin in Year 2.
+      // We keep dropdown active and allow browsing/adding electives from the Faculty pool if desired.
+      elSelect.disabled = false;
+      let optgroups = '';
+      if (catalogue?.electives) {
+        optgroups = Object.entries(catalogue.electives)
+          .map(([semKey, eList]) => {
+            const availInSem = eList.filter(e => !currentCodes.has(cleanCode(e.code)));
+            if (!availInSem.length) return '';
+            return `<optgroup label="📚 ${SEMESTER_LABELS[semKey] || semKey} Electives">` +
+              availInSem.map(e => `<option value="${escape(e.code)}">${escape(e.code)} — ${escape(e.title)} (${e.credits} Cr)</option>`).join('') +
+              `</optgroup>`;
+          }).join('');
+      }
+      elSelect.innerHTML = `
+        <option value="" disabled selected>ℹ️ Electives start in Y2·S1 · Click to browse Faculty Elective Pool…</option>
+        ${optgroups}
+      `;
+    } else if (['4-I', '4-II'].includes(currentSemester)) {
+      elSelect.disabled = false;
+      let optgroups = '';
+      if (catalogue?.electives) {
+        optgroups = Object.entries(catalogue.electives)
+          .map(([semKey, eList]) => {
+            const availInSem = eList.filter(e => !currentCodes.has(cleanCode(e.code)));
+            if (!availInSem.length) return '';
+            return `<optgroup label="📚 ${SEMESTER_LABELS[semKey] || semKey} Electives">` +
+              availInSem.map(e => `<option value="${escape(e.code)}">${escape(e.code)} — ${escape(e.title)} (${e.credits} Cr)</option>`).join('') +
+              `</optgroup>`;
+          }).join('');
+      }
+      elSelect.innerHTML = `
+        <option value="" disabled selected>ℹ️ Year 4: Core Research Projects · Browse Faculty Electives…</option>
+        ${optgroups}
+      `;
     } else {
-      elSelect.hidden = true;
+      elSelect.disabled = true;
+      elSelect.innerHTML = `<option value="" disabled selected>✓ All handbook electives added for ${SEMESTER_SHORT[currentSemester] || currentSemester}</option>`;
     }
   }
 }
@@ -939,8 +977,13 @@ function wire() {
     quickEl.addEventListener('change', e => {
       const code = e.target.value;
       if (!code) return;
-      const semElectives = catalogue?.electives?.[currentSemester] || [];
-      const found = semElectives.find(x => x.code === code);
+      let found = (catalogue?.electives?.[currentSemester] || []).find(x => x.code === code);
+      if (!found && catalogue?.electives) {
+        for (const eList of Object.values(catalogue.electives)) {
+          found = eList.find(x => x.code === code);
+          if (found) break;
+        }
+      }
       if (!found) return;
 
       const id = `${currentSemester}:${found.code}`;
