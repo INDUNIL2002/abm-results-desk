@@ -4,7 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FOA Admin — Batch Results</title>
+  <meta name="theme-color" content="#183f32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="manifest" href="/admin-manifest.webmanifest">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FOA Admin">
   <style>
     :root {
       --green:#183f32; --mint:#e8eee3; --line:#dedfd4; --muted:#6e776f;
@@ -245,6 +252,7 @@
   </div>
   <div class="header-actions">
     <span class="admin-pill">ADMIN</span>
+    <button id="btn-install-admin" class="hbtn" type="button" hidden title="Install Admin App on this device">📲 Install App</button>
     <button id="btn-refresh" class="hbtn" type="button" title="Refresh live data from cloud">🔄 Refresh</button>
     <button id="btn-add-student" class="hbtn emerald" type="button">➕ Add Student</button>
     <button id="btn-export-csv" class="hbtn green" type="button">⬇ Export CSV</button>
@@ -1137,6 +1145,32 @@ document.getElementById('btn-export-csv').addEventListener('click', () => {
   const csv = '\uFEFF' + [header, ...data].map(row => row.map(p).join(',')).join('\r\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'abm-batch-results.csv'; a.click();
+});
+
+// PWA Service Worker Registration & Install Prompt
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW reg error:', err));
+  });
+}
+
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  const installBtn = document.getElementById('btn-install-admin');
+  if (installBtn) {
+    installBtn.hidden = false;
+    installBtn.addEventListener('click', async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice;
+      if (choice && choice.outcome === 'accepted') {
+        installBtn.hidden = true;
+      }
+      deferredInstallPrompt = null;
+    });
+  }
 });
 </script>
 </body>

@@ -10,7 +10,8 @@ const STATIC_ASSETS = [
   '/favicon.svg',
   '/icon-192.png',
   '/icon-512.png',
-  '/manifest.webmanifest'
+  '/manifest.webmanifest',
+  '/admin-manifest.webmanifest'
 ];
 
 // Install: cache static assets
