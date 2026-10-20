@@ -4,6 +4,7 @@
  * University of Ruhuna · Faculty of Agriculture.
  */
 import { GRADE_POINTS, SEMESTERS, calculate } from './gpa.mjs';
+import { upsertSubmissionToSupabase } from './supabase.mjs';
 
 const $ = (s) => document.querySelector(s);
 const escape = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
@@ -128,25 +129,34 @@ async function autoSyncToBatch() {
         gradedCount: sem.gradedCount,
       }));
 
-    const res = await fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name:           state.profile.name,
-        registration:   state.profile.registration,
-        batch:          state.profile.batch,
-        resultsThrough: state.profile.through || SEMESTER_LABELS[currentSemester] || '',
-        cgpa:           s.gpa,
-        credits:        s.credits,
-        gradedCount:    s.gradedCount,
-        semesters:      semesterData,
-      }),
-    });
+    const payload = {
+      name:           state.profile.name,
+      registration:   state.profile.registration,
+      batch:          state.profile.batch,
+      resultsThrough: state.profile.through || SEMESTER_LABELS[currentSemester] || '',
+      cgpa:           s.gpa,
+      credits:        s.credits,
+      gradedCount:    s.gradedCount,
+      semesters:      semesterData,
+    };
 
-    if (res.ok && syncText) {
+    // 1. Direct cloud sync to Supabase database
+    await upsertSubmissionToSupabase(payload);
+
+    // 2. Local backend fallback
+    try {
+      fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }).catch(() => {});
+    } catch {}
+
+    if (syncText) {
       syncText.textContent = 'Cloud Synced ✓';
     }
-  } catch {
+  } catch (err) {
+    console.warn('Sync issue:', err);
     if (syncText) syncText.textContent = 'Saved locally';
   } finally {
     if (syncIndicator) syncIndicator.classList.remove('syncing');

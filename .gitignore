@@ -1,0 +1,7 @@
+node_modules/
+.sites/
+*.log
+qa/
+*.tar.gz
+*.tgz
+deployment-record.json
