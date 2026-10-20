@@ -373,6 +373,21 @@
   <!-- Print Container -->
   <div id="print-root"></div>
 
+  <!-- PWA First-time Install Banner -->
+  <div id="pwa-install-banner" class="pwa-install-banner" hidden>
+    <div class="pwa-banner-content">
+      <span class="pwa-banner-icon">📱</span>
+      <div class="pwa-banner-text">
+        <strong>Install FOA Results App</strong>
+        <span>Save to Home Screen for fast offline access!</span>
+      </div>
+    </div>
+    <div class="pwa-banner-actions">
+      <button type="button" id="btn-pwa-install" class="pwa-btn-install">Install</button>
+      <button type="button" id="btn-pwa-dismiss" class="pwa-btn-dismiss" title="Dismiss">&times;</button>
+    </div>
+  </div>
+
   <!-- Toast Element -->
   <div id="toast" role="status" aria-live="polite"></div>
 

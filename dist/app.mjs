@@ -1336,6 +1336,49 @@ function wire() {
       }
     }
   });
+
+  // ── First-time PWA Installation Prompt ───────────────────────────────────────
+  let pwaDeferredPrompt = null;
+  const pwaBanner = $('#pwa-install-banner');
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+  if (!isStandalone && !localStorage.getItem('foa_pwa_dismissed')) {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      pwaDeferredPrompt = e;
+      if (pwaBanner) pwaBanner.hidden = false;
+    });
+
+    // iOS Safari tip
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS && pwaBanner) {
+      setTimeout(() => {
+        if (!localStorage.getItem('foa_pwa_dismissed') && !isStandalone) {
+          const bannerText = pwaBanner.querySelector('.pwa-banner-text span');
+          if (bannerText) bannerText.textContent = 'Tap Share ➔ "Add to Home Screen" to install!';
+          const installBtn = $('#btn-pwa-install');
+          if (installBtn) installBtn.style.display = 'none';
+          pwaBanner.hidden = false;
+        }
+      }, 2500);
+    }
+  }
+
+  $('#btn-pwa-install')?.addEventListener('click', async () => {
+    if (pwaDeferredPrompt) {
+      pwaDeferredPrompt.prompt();
+      const choice = await pwaDeferredPrompt.userChoice;
+      if (choice && choice.outcome === 'accepted') {
+        if (pwaBanner) pwaBanner.hidden = true;
+      }
+      pwaDeferredPrompt = null;
+    }
+  });
+
+  $('#btn-pwa-dismiss')?.addEventListener('click', () => {
+    if (pwaBanner) pwaBanner.hidden = true;
+    localStorage.setItem('foa_pwa_dismissed', 'true');
+  });
 }
 
 // ── Application Initialization ────────────────────────────────────────────────
