@@ -315,7 +315,7 @@
         {
           "semester": "3-I",
           "code": "EC31206",
-          "title": "Organizational Behavior",
+          "title": "Entrepreneurship",
           "credits": 2,
           "gpa": true
         },
@@ -350,7 +350,7 @@
         {
           "semester": "3-II",
           "code": "EC32204",
-          "title": "Entrepreneurship",
+          "title": "Organizational Behavior",
           "credits": 2,
           "gpa": true
         },
@@ -1610,6 +1610,12 @@
         "gpa": true
       },
       {
+        "code": "EC31206",
+        "title": "Entrepreneurship",
+        "credits": 2,
+        "gpa": true
+      },
+      {
         "code": "EC31208",
         "title": "Eco-tourism",
         "credits": 2,
@@ -1817,7 +1823,7 @@
       },
       {
         "code": "EC32204",
-        "title": "Entrepreneurship",
+        "title": "Organizational Behavior",
         "credits": 2,
         "gpa": true
       },
@@ -2224,7 +2230,7 @@
     {
       "semester": "3-I",
       "code": "EC31206",
-      "title": "Organizational Behavior",
+      "title": "Entrepreneurship",
       "credits": 2,
       "gpa": true
     },
@@ -2259,7 +2265,7 @@
     {
       "semester": "3-II",
       "code": "EC32204",
-      "title": "Entrepreneurship",
+      "title": "Organizational Behavior",
       "credits": 2,
       "gpa": true
     },
