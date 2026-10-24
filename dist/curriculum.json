@@ -611,6 +611,13 @@
         },
         {
           "semester": "2-I",
+          "code": "BL22202",
+          "title": "Plant Pathology",
+          "credits": 2,
+          "gpa": true
+        },
+        {
+          "semester": "2-I",
           "code": "CS21201",
           "title": "Agroecology",
           "credits": 2,
@@ -662,13 +669,6 @@
           "semester": "2-II",
           "code": "BL22201",
           "title": "Molecular Biology, Biotechnology and Bioinformatics",
-          "credits": 2,
-          "gpa": true
-        },
-        {
-          "semester": "2-II",
-          "code": "BL22202",
-          "title": "Plant Pathology",
           "credits": 2,
           "gpa": true
         },

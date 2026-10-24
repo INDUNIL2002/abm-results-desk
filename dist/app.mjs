@@ -283,7 +283,8 @@ async function syncFromCloudIfAvailable(reg, options = { silent: false, force: f
     cloud.semesters.forEach(sem => {
       if (Array.isArray(sem.courses)) {
         sem.courses.forEach(c => {
-          const courseId = `${sem.semester}:${c.code}`;
+          const semName = (c.code === 'BL22202' && sem.semester === '2-II') ? '2-I' : sem.semester;
+          const courseId = `${semName}:${c.code}`;
           if (c.grade && c.grade !== 'Pending' && !state.results[courseId]?.grade) {
             state.results[courseId] = { grade: c.grade, repeat: false, confirmed: true, note: '' };
             restoredCount++;
@@ -1050,6 +1051,10 @@ function validateState(input) {
   }
   if (input.results && typeof input.results === 'object') {
     result.results = input.results;
+    if (result.results['2-II:BL22202'] && !result.results['2-I:BL22202']) {
+      result.results['2-I:BL22202'] = result.results['2-II:BL22202'];
+      delete result.results['2-II:BL22202'];
+    }
   }
   return result;
 }
