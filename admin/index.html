@@ -694,6 +694,42 @@ const SEM_SHORT = {
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmt = (n, d = 2) => n == null || n === '' ? '—' : Number(n).toFixed(d);
 
+function getDegreeTitle(r) {
+  const b = String(r?.batch || '');
+  const reg = String(r?.registration || '').toUpperCase();
+  if (b.includes('ARMT') || reg.includes('/AT/') || reg.includes('/ARMT/')) {
+    return 'BSc. Hons Agricultural Resource Management & Technology';
+  }
+  if (b.includes('GT') || reg.includes('/GT/')) {
+    return 'BSc. Hons Green Technology';
+  }
+  return 'BSc. Hons Agribusiness Management';
+}
+
+function normalizeSubmissionSemesters(r) {
+  if (!r || !Array.isArray(r.semesters)) return r;
+  const s22 = r.semesters.find(s => s.semester === '2-II');
+  if (s22 && Array.isArray(s22.courses)) {
+    const pIdx = s22.courses.findIndex(c => c.code === 'BL22202');
+    if (pIdx !== -1) {
+      const [plantPath] = s22.courses.splice(pIdx, 1);
+      let s21 = r.semesters.find(s => s.semester === '2-I');
+      if (!s21) {
+        s21 = { semester: '2-I', courses: [], credits: 0, gradedCount: 0, gpa: null };
+        r.semesters.push(s21);
+      }
+      if (!Array.isArray(s21.courses)) s21.courses = [];
+      if (!s21.courses.some(c => c.code === 'BL22202')) {
+        s21.courses.push(plantPath);
+      }
+      s21.courses.sort((a, b) => String(a.code).localeCompare(String(b.code)));
+      s22.courses.sort((a, b) => String(a.code).localeCompare(String(b.code)));
+      r.semesters.sort((a, b) => SEMESTERS_ORDERED.indexOf(a.semester) - SEMESTERS_ORDERED.indexOf(b.semester));
+    }
+  }
+  return r;
+}
+
 let allRows = [];
 let editingReg = null;
 let currentViewStudent = null;
@@ -708,6 +744,8 @@ async function loadDashboard() {
       if (res.ok) allRows = await res.json();
     } catch {}
   }
+
+  allRows = (allRows || []).map(normalizeSubmissionSemesters);
 
   // Sort by CGPA desc
   allRows.sort((a, b) => {
@@ -942,7 +980,7 @@ function openViewStudentModal(reg) {
         <h2>RESULT SHEET</h2>
         <h3>UNIVERSITY OF RUHUNA</h3>
         <h3>FACULTY OF AGRICULTURE</h3>
-        <p>BSc. Hons Agribusiness Management</p>
+        <p>${esc(getDegreeTitle(r))}</p>
       </div>
 
       <table class="rsp-meta">
