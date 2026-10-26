@@ -49,7 +49,7 @@ const SEMESTER_SHORT = {
 const DEGREE_CLASSES = [
   { label: 'First Class',           min: 3.70, cls: 'class-first' },
   { label: 'Second Class (Upper)',   min: 3.30, cls: 'class-upper' },
-  { label: 'Second Class (Lower)',   min: 2.70, cls: 'class-lower' },
+  { label: 'Second Class (Lower)',   min: 3.00, cls: 'class-lower' },
   { label: 'Pass',                   min: 2.00, cls: 'class-pass'  },
   { label: 'Fail / Incomplete',      min: 0,    cls: 'class-fail'  },
 ];

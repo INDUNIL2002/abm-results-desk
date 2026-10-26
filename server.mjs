@@ -22,7 +22,7 @@ const PORT           = process.env.PORT || 4173;
 const CLASSES = [
   { label: 'First Class',           short: '1st',    min: 3.70, color: '#1d6b3e', bg: '#e8f5e9', border: '#66bb6a' },
   { label: 'Second Class (Upper)',   short: '2U',     min: 3.30, color: '#5c6b1a', bg: '#f9fbe7', border: '#aed581' },
-  { label: 'Second Class (Lower)',   short: '2L',     min: 2.70, color: '#7b5a0f', bg: '#fff8e1', border: '#ffca28' },
+  { label: 'Second Class (Lower)',   short: '2L',     min: 3.00, color: '#7b5a0f', bg: '#fff8e1', border: '#ffca28' },
   { label: 'Pass',                   short: 'Pass',   min: 2.00, color: '#6a4b7a', bg: '#f3e5f5', border: '#ce93d8' },
   { label: 'Fail / Incomplete',      short: 'Fail',   min: 0,    color: '#9a3d31', bg: '#fde8e8', border: '#ef9a9a' },
 ];

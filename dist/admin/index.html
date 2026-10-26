@@ -456,7 +456,7 @@
     <div class="stat">
       <div class="stat-label">SECOND CLASS+</div>
       <div class="stat-value" id="stat-second" style="color:#5c6b1a">0</div>
-      <div class="stat-sub">students (GPA ≥ 2.70)</div>
+      <div class="stat-sub">students (GPA ≥ 3.00)</div>
     </div>
   </div>
 
@@ -501,13 +501,21 @@
 
     <div class="table-controls">
       <input type="search" class="search-input" id="search-input" placeholder="Search by name or registration…">
+      <select class="filter-select" id="sort-filter" style="font-weight:600;min-width:180px">
+        <option value="cgpa_desc">🏆 Highest CGPA / Rank</option>
+        <option value="recent">⏱️ Most Recently Updated</option>
+        <option value="index_asc">🔢 Index Number (A → Z)</option>
+        <option value="index_desc">🔢 Index Number (Z → A)</option>
+        <option value="name_asc">👤 Student Name (A → Z)</option>
+        <option value="cgpa_asc">📉 Lowest CGPA</option>
+      </select>
       <select class="filter-select" id="class-filter">
         <option value="">All classes</option>
-        <option value="First Class">First Class</option>
-        <option value="Second Class (Upper)">Second Class (Upper)</option>
-        <option value="Second Class (Lower)">Second Class (Lower)</option>
-        <option value="Pass">Pass</option>
-        <option value="Fail / Incomplete">Fail / Incomplete</option>
+        <option value="First Class">First Class (≥ 3.70)</option>
+        <option value="Second Class (Upper)">Second Class Upper (≥ 3.30)</option>
+        <option value="Second Class (Lower)">Second Class Lower (≥ 3.00)</option>
+        <option value="Pass">Pass (≥ 2.00)</option>
+        <option value="Fail / Incomplete">Fail / Incomplete (&lt; 2.00)</option>
       </select>
       <span id="row-count" style="font-size:12px;color:var(--muted)"></span>
     </div>
@@ -570,7 +578,7 @@
       <div class="form-grid-2">
         <div class="form-group">
           <label for="m-cgpa">Cumulative GPA (CGPA) (0.00 - 4.00)</label>
-          <input type="number" id="m-cgpa" step="0.01" min="0" max="4.00" placeholder="e.g. 3.84">
+          <input type="number" id="m-cgpa" step="any" min="0" max="4.00" placeholder="e.g. 3.84">
         </div>
         <div class="form-group">
           <label for="m-credits">Total Credits</label>
@@ -582,35 +590,35 @@
       <div class="sems-input-grid">
         <div class="sem-input-box">
           <label for="m-sem-1-I">Y1·S1 GPA</label>
-          <input type="number" id="m-sem-1-I" step="0.01" min="0" max="4.00" placeholder="3.80">
+          <input type="number" id="m-sem-1-I" step="any" min="0" max="4.00" placeholder="3.80">
         </div>
         <div class="sem-input-box">
           <label for="m-sem-1-II">Y1·S2 GPA</label>
-          <input type="number" id="m-sem-1-II" step="0.01" min="0" max="4.00" placeholder="3.91">
+          <input type="number" id="m-sem-1-II" step="any" min="0" max="4.00" placeholder="3.91">
         </div>
         <div class="sem-input-box">
           <label for="m-sem-2-I">Y2·S1 GPA</label>
-          <input type="number" id="m-sem-2-I" step="0.01" min="0" max="4.00" placeholder="—">
+          <input type="number" id="m-sem-2-I" step="any" min="0" max="4.00" placeholder="—">
         </div>
         <div class="sem-input-box">
           <label for="m-sem-2-II">Y2·S2 GPA</label>
-          <input type="number" id="m-sem-2-II" step="0.01" min="0" max="4.00" placeholder="—">
+          <input type="number" id="m-sem-2-II" step="any" min="0" max="4.00" placeholder="—">
         </div>
         <div class="sem-input-box">
           <label for="m-sem-3-I">Y3·S1 GPA</label>
-          <input type="number" id="m-sem-3-I" step="0.01" min="0" max="4.00" placeholder="—">
+          <input type="number" id="m-sem-3-I" step="any" min="0" max="4.00" placeholder="—">
         </div>
         <div class="sem-input-box">
           <label for="m-sem-3-II">Y3·S2 GPA</label>
-          <input type="number" id="m-sem-3-II" step="0.01" min="0" max="4.00" placeholder="—">
+          <input type="number" id="m-sem-3-II" step="any" min="0" max="4.00" placeholder="—">
         </div>
         <div class="sem-input-box">
           <label for="m-sem-4-I">Y4·S1 GPA</label>
-          <input type="number" id="m-sem-4-I" step="0.01" min="0" max="4.00" placeholder="—">
+          <input type="number" id="m-sem-4-I" step="any" min="0" max="4.00" placeholder="—">
         </div>
         <div class="sem-input-box">
           <label for="m-sem-4-II">Y4·S2 GPA</label>
-          <input type="number" id="m-sem-4-II" step="0.01" min="0" max="4.00" placeholder="—">
+          <input type="number" id="m-sem-4-II" step="any" min="0" max="4.00" placeholder="—">
         </div>
       </div>
 
@@ -663,7 +671,7 @@ const ADMIN_PASSWORD = 'abm2021';
 const CLASSES = [
   { label: 'First Class',           min: 3.70, color: '#1d6b3e', bg: '#e8f5e9', border: '#66bb6a' },
   { label: 'Second Class (Upper)',   min: 3.30, color: '#5c6b1a', bg: '#f9fbe7', border: '#aed581' },
-  { label: 'Second Class (Lower)',   min: 2.70, color: '#7b5a0f', bg: '#fff8e1', border: '#ffca28' },
+  { label: 'Second Class (Lower)',   min: 3.00, color: '#7b5a0f', bg: '#fff8e1', border: '#ffca28' },
   { label: 'Pass',                   min: 2.00, color: '#6a4b7a', bg: '#f3e5f5', border: '#ce93d8' },
   { label: 'Fail / Incomplete',      min: 0,    color: '#9a3d31', bg: '#fde8e8', border: '#ef9a9a' },
 ];
@@ -733,6 +741,63 @@ function normalizeSubmissionSemesters(r) {
 let allRows = [];
 let editingReg = null;
 let currentViewStudent = null;
+let currentDegreeFilter = 'all';
+let currentBatchFilter = 'all';
+let currentSort = 'cgpa_desc';
+
+function getStudentDegree(r) {
+  const b = String(r?.batch || '').toUpperCase();
+  const reg = String(r?.registration || '').toUpperCase();
+  if (b.includes('ARMT') || b.includes('RESOURCE') || reg.includes('/AT/') || reg.includes('/ARMT/') || reg.includes('AGAT')) {
+    return 'ARMT';
+  }
+  if (b.includes('GT') || b.includes('GREEN') || reg.includes('/GT/') || reg.includes('AGGT')) {
+    return 'GT';
+  }
+  return 'ABM';
+}
+
+function getStudentBatch(r) {
+  const b = String(r?.batch || '').toLowerCase();
+  const reg = String(r?.registration || '').toLowerCase();
+  if (b.includes('48') || b.includes('2024/2025') || reg.includes('/2025/') || reg.includes('2025')) return '48';
+  if (b.includes('47') || b.includes('2023/2024') || reg.includes('/2024/') || reg.includes('2024')) return '47';
+  if (b.includes('46') || b.includes('2022/2023') || reg.includes('/2023/') || reg.includes('2023')) return '46';
+  if (b.includes('45') || b.includes('2021/2022') || reg.includes('/2022/') || reg.includes('2022') || reg.includes('2021')) return '45';
+  return 'other';
+}
+
+function sortRows(rows, sortKey) {
+  const sorted = [...rows];
+  if (sortKey === 'cgpa_desc') {
+    sorted.sort((a, b) => {
+      if (a.cgpa == null && b.cgpa == null) return 0;
+      if (a.cgpa == null) return 1;
+      if (b.cgpa == null) return -1;
+      return Number(b.cgpa) - Number(a.cgpa);
+    });
+  } else if (sortKey === 'cgpa_asc') {
+    sorted.sort((a, b) => {
+      if (a.cgpa == null && b.cgpa == null) return 0;
+      if (a.cgpa == null) return 1;
+      if (b.cgpa == null) return -1;
+      return Number(a.cgpa) - Number(b.cgpa);
+    });
+  } else if (sortKey === 'recent') {
+    sorted.sort((a, b) => {
+      const da = new Date(a.submitted_at || a.submittedAt || 0).getTime();
+      const db = new Date(b.submitted_at || b.submittedAt || 0).getTime();
+      return db - da;
+    });
+  } else if (sortKey === 'index_asc') {
+    sorted.sort((a, b) => String(a.registration || '').localeCompare(String(b.registration || ''), undefined, { numeric: true }));
+  } else if (sortKey === 'index_desc') {
+    sorted.sort((a, b) => String(b.registration || '').localeCompare(String(a.registration || ''), undefined, { numeric: true }));
+  } else if (sortKey === 'name_asc') {
+    sorted.sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
+  }
+  return sorted;
+}
 
 async function loadDashboard() {
   try {
@@ -746,20 +811,12 @@ async function loadDashboard() {
   }
 
   allRows = (allRows || []).map(normalizeSubmissionSemesters);
-
-  // Sort by CGPA desc
-  allRows.sort((a, b) => {
-    if (a.cgpa == null && b.cgpa == null) return 0;
-    if (a.cgpa == null) return 1;
-    if (b.cgpa == null) return -1;
-    return b.cgpa - a.cgpa;
-  });
-
   renderDashboardView();
 }
 
 function renderDashboardView() {
-  const withGpa = allRows.filter(r => r.cgpa != null && r.cgpa !== '');
+  const rankedAll = sortRows(allRows, 'cgpa_desc');
+  const withGpa = rankedAll.filter(r => r.cgpa != null && r.cgpa !== '');
   const avg = withGpa.length ? (withGpa.reduce((s, r) => s + Number(r.cgpa), 0) / withGpa.length) : null;
   const top = withGpa[0]?.cgpa ?? null;
 
@@ -772,8 +829,8 @@ function renderDashboardView() {
   document.getElementById('stat-first').textContent = classCounts['First Class'];
   document.getElementById('stat-second').textContent = classCounts['Second Class (Upper)'] + classCounts['Second Class (Lower)'];
 
-  // Podium
-  const podium = allRows.slice(0, Math.min(3, allRows.length));
+  // Podium (Top 3 overall performers)
+  const podium = rankedAll.slice(0, Math.min(3, rankedAll.length));
   const medal = i => ['🥇', '🥈', '🥉'][i] || '';
   const podiumSec = document.getElementById('podium-section');
   if (podium.length && podium[0].cgpa != null) {
@@ -814,7 +871,7 @@ function renderDashboardView() {
     `;
   }).join('');
 
-  // Active sems
+  // Active sems across all students
   const activeSems = SEMESTERS_ORDERED.filter(s =>
     allRows.some(r => (r.semesters || []).some(x => x.semester === s && x.gpa != null))
   );
@@ -834,20 +891,27 @@ function renderDashboardView() {
     </tr>
   `;
 
+  // Sort rows based on current selected sort option
+  const displayRows = sortRows(allRows, currentSort);
+
   // Table rows
   const tbody = document.getElementById('table-body');
-  if (!allRows.length) {
+  if (!displayRows.length) {
     tbody.innerHTML = `<tr><td colspan="15" style="text-align:center;padding:40px;color:var(--muted)">No student submissions found in database yet.</td></tr>`;
     return;
   }
 
-  tbody.innerHTML = allRows.map((r, i) => {
+  tbody.innerHTML = displayRows.map((r, i) => {
     const semMap = Object.fromEntries((r.semesters || []).map(s => [s.semester, s]));
     const cls = classify(r.cgpa);
     const date = r.submitted_at || r.submittedAt ? new Date(r.submitted_at || r.submittedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '—';
+    const deg = getStudentDegree(r);
+    const batch = getStudentBatch(r);
+    const displayRank = (currentSort === 'cgpa_desc') ? (medal(i) || (i + 1)) : (i + 1);
+
     return `
-      <tr class="data-row">
-        <td class="rank-cell">${medal(i) || (i + 1)}</td>
+      <tr class="data-row" data-deg="${deg}" data-batch="${batch}" data-orig-rank="${i + 1}">
+        <td class="rank-cell">${displayRank}</td>
         <td class="name-cell" data-action="view" data-reg="${esc(r.registration)}" title="Click to view full results">
           <div class="name">${esc(r.name)}</div>
           <div class="reg">${esc(r.registration)}</div>
@@ -875,20 +939,18 @@ function renderDashboardView() {
   filterTable();
 }
 
-let currentDegreeFilter = 'all';
-let currentBatchFilter = 'all';
-
 function filterTable() {
   const q = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
   const cls = document.getElementById('class-filter')?.value || '';
   const rows = document.querySelectorAll('#table-body tr.data-row');
   let visible = 0;
+  const medal = i => ['🥇', '🥈', '🥉'][i] || '';
 
   rows.forEach(row => {
     const text = row.textContent.toLowerCase();
     const badge = row.querySelector('.badge')?.textContent || '';
-    const regText = (row.querySelector('.reg')?.textContent || '').toUpperCase();
-    const batchText = (row.querySelector('.batch-col')?.textContent || row.textContent).toUpperCase();
+    const rowDeg = row.dataset.deg;
+    const rowBatch = row.dataset.batch;
 
     // Match search
     const matchQ = !q || text.includes(q);
@@ -897,30 +959,30 @@ function filterTable() {
     const matchCls = !cls || badge.includes(cls);
 
     // Match Degree
-    let matchDeg = true;
-    if (currentDegreeFilter !== 'all') {
-      const deg = currentDegreeFilter.toUpperCase();
-      const inBatch = batchText.includes(deg);
-      const inReg = (deg === 'ABM' && regText.includes('/AB/')) ||
-                    (deg === 'ARMT' && (regText.includes('/AT/') || regText.includes('/AR/') || regText.includes('/RM/'))) ||
-                    (deg === 'GT' && regText.includes('/GT/'));
-      matchDeg = inBatch || inReg;
-    }
+    const matchDeg = (currentDegreeFilter === 'all') || (rowDeg === currentDegreeFilter);
 
     // Match Batch
-    let matchBatch = true;
-    if (currentBatchFilter !== 'all') {
-      const aliases = {
-        '45': ['45', '2021', '21/22'],
-        '46': ['46', '2022', '22/23'],
-        '47': ['47', '2023', '23/24'],
-        '48': ['48', '2024', '24/25'],
-      }[currentBatchFilter] || [currentBatchFilter];
-      matchBatch = aliases.some(a => batchText.toLowerCase().includes(a) || regText.toLowerCase().includes(a));
-    }
+    const matchBatch = (currentBatchFilter === 'all') || (rowBatch === currentBatchFilter);
 
-    row.hidden = !(matchQ && matchCls && matchDeg && matchBatch);
-    if (!row.hidden) visible++;
+    const isVisible = matchQ && matchCls && matchDeg && matchBatch;
+    row.hidden = !isVisible;
+    if (isVisible) {
+      visible++;
+      const rankCell = row.querySelector('.rank-cell');
+      if (rankCell) {
+        if (currentSort === 'cgpa_desc') {
+          const isFiltered = currentDegreeFilter !== 'all' || currentBatchFilter !== 'all' || cls || q;
+          if (isFiltered) {
+            rankCell.textContent = medal(visible - 1) || visible;
+          } else {
+            const orig = parseInt(row.dataset.origRank, 10);
+            rankCell.textContent = medal(orig - 1) || orig;
+          }
+        } else {
+          rankCell.textContent = visible;
+        }
+      }
+    }
   });
 
   const countEl = document.getElementById('row-count');
@@ -1295,6 +1357,10 @@ document.getElementById('btn-signout').addEventListener('click', () => {
 
 document.getElementById('search-input').addEventListener('input', filterTable);
 document.getElementById('class-filter').addEventListener('change', filterTable);
+document.getElementById('sort-filter')?.addEventListener('change', (e) => {
+  currentSort = e.target.value;
+  renderDashboardView();
+});
 
 // Degree and Batch chip filters
 document.querySelectorAll('.fdeg').forEach(btn => {

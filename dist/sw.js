@@ -1,4 +1,4 @@
-const CACHE_NAME = 'foa-results-desk-v7';
+const CACHE_NAME = 'foa-results-desk-v8';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
