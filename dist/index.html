@@ -49,6 +49,10 @@
         <span class="tab-icon">📄</span>
         <span class="tab-title">3. Official Result Sheet</span>
       </button>
+      <button type="button" class="nav-tab-btn" data-tab="predictor">
+        <span class="tab-icon">🎯</span>
+        <span class="tab-title">4. Degree Predictor</span>
+      </button>
     </nav>
 
     <!-- Main Container -->
@@ -170,6 +174,18 @@
           </div>
         </div>
 
+        <!-- Predictor Teaser Card -->
+        <div class="predictor-teaser-strip" data-goto="predictor">
+          <div class="teaser-left">
+            <span class="teaser-icon">🎯</span>
+            <div class="teaser-info">
+              <strong>Degree Class Predictor &amp; What-If Simulator</strong>
+              <span>Forecast your max GPA ceiling, target class feasibility &amp; repeat grade boost</span>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" data-goto="predictor">Forecast Degree ➔</button>
+        </div>
+
         <!-- Semester Tabs & Course Editor -->
         <div class="courses-workspace">
           <!-- Horizontal scrollable semester selector -->
@@ -285,6 +301,158 @@
         </div>
       </section>
 
+      <!-- ══════════════════════════════════════════════════════════════════════ -->
+      <!-- TAB 4: DEGREE PREDICTOR & WHAT-IF SIMULATOR                            -->
+      <!-- ══════════════════════════════════════════════════════════════════════ -->
+      <section id="tab-predictor-pane" class="tab-pane">
+        <!-- Top Status Bar Card -->
+        <div class="glass-card pred-header-card">
+          <div class="card-title-row flex-between" style="flex-wrap:wrap;gap:12px">
+            <div>
+              <h2>🎯 Degree Class Predictor &amp; What-If Simulator</h2>
+              <p class="card-caption">Simulate future grades, calculate your maximum possible GPA ceiling, and check feasibility for First Class or Second Upper under Faculty of Agriculture regulations.</p>
+            </div>
+            <div class="pred-prog-badge-wrap">
+              <span id="pred-prog-pill" class="pred-prog-pill">ABM</span>
+            </div>
+          </div>
+
+          <!-- Quick Metrics Grid -->
+          <div class="pred-metrics-grid">
+            <div class="pred-stat-box">
+              <span class="stat-lbl">CURRENT CGPA</span>
+              <div class="stat-val-row">
+                <strong id="pred-cur-gpa">—</strong>
+                <span id="pred-cur-class" class="class-pill">—</span>
+              </div>
+            </div>
+            <div class="pred-stat-box">
+              <span class="stat-lbl">COMPLETED GPA CREDITS</span>
+              <div class="stat-val-row">
+                <strong id="pred-cur-credits">0</strong>
+                <span class="stat-sub">credits</span>
+              </div>
+            </div>
+            <div class="pred-stat-box">
+              <span class="stat-lbl">REMAINING DEGREE CREDITS</span>
+              <div class="stat-val-row">
+                <input type="number" id="pred-rem-credits-input" class="pred-credits-input" min="0" max="150" step="1" title="Adjust remaining credits if needed" />
+                <button type="button" id="btn-pred-reset-credits" class="btn-pred-reset" title="Reset to auto-calculated handbook remaining credits">↺</button>
+              </div>
+              <span id="pred-rem-credits-hint" class="stat-sub">Auto-calculated</span>
+            </div>
+            <div class="pred-stat-box">
+              <span class="stat-lbl">TOTAL TARGET CREDITS</span>
+              <div class="stat-val-row">
+                <strong id="pred-tot-credits">125</strong>
+                <span class="stat-sub">degree total</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-Column Dashboard Grid -->
+        <div class="pred-dashboard-grid">
+
+          <!-- Card 1: Max Ceiling & Target Feasibility -->
+          <div class="glass-card pred-card">
+            <div class="pred-card-header">
+              <span class="pred-header-icon">🏆</span>
+              <div>
+                <h3>Degree Class Feasibility &amp; Ceiling</h3>
+                <p class="card-caption">Highest reachable CGPA and required future average for each degree class.</p>
+              </div>
+            </div>
+
+            <!-- Absolute Ceiling Display -->
+            <div class="ceiling-hero-banner">
+              <div class="ceiling-text-side">
+                <span class="ceiling-sub">ABSOLUTE MAXIMUM CEILING</span>
+                <div class="ceiling-val-wrap">
+                  <strong id="pred-ceiling-gpa">—</strong>
+                  <span class="ceiling-denom">/ 4.00</span>
+                </div>
+                <p class="ceiling-desc">Achievable if you score straight A / A+ (4.00) in all remaining credits.</p>
+              </div>
+              <div class="ceiling-badge-side">
+                <span class="ceiling-label-sm">BEST REACHABLE CLASS</span>
+                <span id="pred-ceiling-class" class="class-pill class-upper">—</span>
+              </div>
+            </div>
+
+            <!-- Target Class Matrix -->
+            <div class="target-matrix-wrap">
+              <h4 class="matrix-heading">Requirements by Degree Class</h4>
+              <div id="pred-target-cards" class="target-cards-grid">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Interactive What-If Average Simulator -->
+          <div class="glass-card pred-card">
+            <div class="pred-card-header">
+              <span class="pred-header-icon">🔮</span>
+              <div>
+                <h3>Interactive What-If Simulator</h3>
+                <p class="card-caption">Test different future semester GPA averages to see your final projected degree CGPA.</p>
+              </div>
+            </div>
+
+            <div class="slider-interactive-wrap">
+              <div class="slider-label-row">
+                <span>Estimated Future Average GPA:</span>
+                <strong id="pred-slider-val-text">3.50 (B+ / A-)</strong>
+              </div>
+              <input type="range" id="pred-slider" class="pred-slider" min="2.00" max="4.00" step="0.05" value="3.50" />
+              <div class="slider-ticks">
+                <span>2.00 (C)</span>
+                <span>2.70 (B-)</span>
+                <span>3.00 (B)</span>
+                <span>3.30 (B+)</span>
+                <span>3.70 (A-)</span>
+                <span>4.00 (A+)</span>
+              </div>
+
+              <!-- Live Projection Result Box -->
+              <div class="projection-outcome-card">
+                <span class="projection-label">PROJECTED FINAL GRADUATING CGPA</span>
+                <div class="projection-value-row">
+                  <strong id="pred-projected-gpa">—</strong>
+                  <span id="pred-projected-class" class="class-pill">—</span>
+                </div>
+                <div id="pred-projected-delta-wrap" class="projection-delta-wrap">
+                  <span id="pred-projected-delta" class="delta-tag neutral">—</span>
+                  <span id="pred-projected-msg" class="projection-msg">Based on your simulated future average</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Card 3: Repeat ROI & Grade Upgrade Analyzer -->
+        <div class="glass-card pred-card pred-repeat-card">
+          <div class="pred-card-header flex-between" style="flex-wrap:wrap;gap:8px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="pred-header-icon">🔄</span>
+              <div>
+                <h3>Repeat Grade Upgrade Analyzer (C Cap Rule)</h3>
+                <p class="card-caption">Faculty regulations cap repeats at C (Grade Point: 2.00). Upgrading low-grade courses (C-, D+, D, E) increases your quality points without adding to completed credits, boosting your CGPA immediately.</p>
+              </div>
+            </div>
+            <div id="pred-repeat-badge-summary">
+              <!-- Summary pill -->
+            </div>
+          </div>
+
+          <!-- Dynamic Repeat Container -->
+          <div id="pred-repeat-content">
+            <!-- Table or Empty state rendered here -->
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <!-- Sleek Desktop & Tablet Footer -->
@@ -309,6 +477,10 @@
       <button type="button" class="mobile-tab-btn" data-tab="transcript">
         <span class="m-icon">📄</span>
         <span>Result Sheet</span>
+      </button>
+      <button type="button" class="mobile-tab-btn" data-tab="predictor">
+        <span class="m-icon">🎯</span>
+        <span>Predictor</span>
       </button>
     </footer>
   </div>

@@ -342,6 +342,9 @@ function switchTab(tabId) {
       renderOfficialResultSheet();
     }
   }
+  if (tabId === 'predictor') {
+    renderPredictor();
+  }
 }
 
 // ── Grade Options HTML ────────────────────────────────────────────────────────
@@ -573,6 +576,7 @@ function render() {
   renderSemesterNav(s);
   renderCompletedSemesters();
   renderCourses(s);
+  renderPredictor(s);
 }
 
 // ── Course Dialog (Add/Edit Elective) ──────────────────────────────────────────
@@ -765,6 +769,443 @@ function renderOfficialResultSheet() {
   if (container) {
     container.innerHTML = generateOfficialResultSheetHTML(summary());
   }
+}
+
+// ── Degree Class Predictor & What-If Simulator ────────────────────────────────
+let userRemainingCreditsOverride = null;
+
+function getDegreeTargetCredits(degKey) {
+  const prog = catalogue?.programmes?.[degKey] || catalogue?.programmes?.ABM;
+  return {
+    degreeTitle: prog?.degreeTitle || 'BSc. Hons Degree',
+    minimumDegreeCredits: Number(prog?.minimumDegreeCredits) || 125,
+    compulsoryGpaCredits: Number(prog?.compulsoryGpaCredits) || 109,
+    minimumElectiveCredits: Number(prog?.minimumElectiveCredits) || 16,
+  };
+}
+
+function calculateRemainingCreditsInfo(degKey, s) {
+  const targets = getDegreeTargetCredits(degKey);
+  const prog = catalogue?.programmes?.[degKey] || catalogue?.programmes?.ABM;
+  const compulsoryCourses = (prog?.courses || []).filter(c => c.gpa && Number.isFinite(c.credits) && c.credits > 0);
+
+  // Graded course codes from summary rows
+  const gradedCodeSet = new Set(
+    (s.rows || []).filter(r => r.included).map(r => cleanCode(r.code))
+  );
+
+  // Remaining compulsory courses (where no included grade exists)
+  let uncompletedCompCredits = 0;
+  for (const c of compulsoryCourses) {
+    if (!gradedCodeSet.has(cleanCode(c.code))) {
+      uncompletedCompCredits += Number(c.credits) || 0;
+    }
+  }
+
+  // Graded custom/elective credits
+  let gradedElectiveCredits = 0;
+  (s.rows || []).forEach(r => {
+    if (r.included && r.custom && Number.isFinite(r.credits)) {
+      gradedElectiveCredits += Number(r.credits);
+    }
+  });
+
+  const remainingElectiveCredits = Math.max(0, targets.minimumElectiveCredits - gradedElectiveCredits);
+  const autoRemainingCredits = uncompletedCompCredits + remainingElectiveCredits;
+
+  return {
+    uncompletedCompCredits,
+    remainingElectiveCredits,
+    autoRemainingCredits,
+    minimumDegreeCredits: targets.minimumDegreeCredits,
+  };
+}
+
+function renderPredictor(summaryData = null) {
+  const s = summaryData || summary();
+  const degKey = state.profile.degree || 'ABM';
+  const remInfo = calculateRemainingCreditsInfo(degKey, s);
+
+  // Remaining credits: use user override if entered, else auto
+  const remCreditsInput = $('#pred-rem-credits-input');
+  const effectiveRemCredits = userRemainingCreditsOverride !== null 
+    ? userRemainingCreditsOverride 
+    : remInfo.autoRemainingCredits;
+
+  if (remCreditsInput && document.activeElement !== remCreditsInput) {
+    remCreditsInput.value = effectiveRemCredits;
+  }
+
+  const curCredits = s.credits || 0;
+  const curPoints = s.points || 0;
+  const curGpa = s.gpa;
+  const totalCredits = curCredits + effectiveRemCredits;
+
+  // Header badges & metrics
+  const progPill = $('#pred-prog-pill');
+  if (progPill) progPill.textContent = degKey;
+
+  const curGpaEl = $('#pred-cur-gpa');
+  if (curGpaEl) curGpaEl.textContent = curGpa != null ? fmt(curGpa) : '—';
+
+  const curClassEl = $('#pred-cur-class');
+  if (curClassEl) {
+    const curCls = classify(curGpa);
+    if (curCls && curCredits > 0) {
+      curClassEl.className = `class-pill ${curCls.cls}`;
+      curClassEl.textContent = curCls.label;
+    } else {
+      curClassEl.className = 'class-pill';
+      curClassEl.textContent = curCredits > 0 ? 'Calculating…' : '—';
+    }
+  }
+
+  const curCreditsEl = $('#pred-cur-credits');
+  if (curCreditsEl) curCreditsEl.textContent = curCredits;
+
+  const totCreditsEl = $('#pred-tot-credits');
+  if (totCreditsEl) totCreditsEl.textContent = totalCredits;
+
+  const remHintEl = $('#pred-rem-credits-hint');
+  if (remHintEl) {
+    remHintEl.textContent = `Auto: ${remInfo.uncompletedCompCredits} compulsory + ${remInfo.remainingElectiveCredits} elective`;
+  }
+
+  // 1. Max Possible CGPA Ceiling
+  const maxPossiblePoints = curPoints + (effectiveRemCredits * 4.0);
+  const maxPossibleGpa = totalCredits > 0 ? (maxPossiblePoints / totalCredits) : (curGpa || 4.0);
+  const maxClass = classify(maxPossibleGpa);
+
+  const ceilingGpaEl = $('#pred-ceiling-gpa');
+  if (ceilingGpaEl) ceilingGpaEl.textContent = fmt(maxPossibleGpa);
+
+  const ceilingClassEl = $('#pred-ceiling-class');
+  if (ceilingClassEl) {
+    if (maxClass) {
+      ceilingClassEl.className = `class-pill ${maxClass.cls}`;
+      ceilingClassEl.textContent = maxClass.label;
+    } else {
+      ceilingClassEl.className = 'class-pill';
+      ceilingClassEl.textContent = '—';
+    }
+  }
+
+  // 2. Target Class Feasibility Matrix
+  renderTargetMatrix(curGpa, curCredits, curPoints, effectiveRemCredits, totalCredits);
+
+  // 3. Interactive What-If Average Slider
+  renderWhatIfSlider(curGpa, curCredits, curPoints, effectiveRemCredits, totalCredits);
+
+  // 4. Repeat ROI Analyzer
+  renderRepeatAnalyzer(s, curGpa, curCredits, curPoints);
+}
+
+function renderTargetMatrix(curGpa, curCredits, curPoints, remCredits, totalCredits) {
+  const container = $('#pred-target-cards');
+  if (!container) return;
+
+  const targets = [
+    { label: 'First Class',           min: 3.70, cls: 'class-first', icon: '🥇' },
+    { label: 'Second Class (Upper)',   min: 3.30, cls: 'class-upper', icon: '🥈' },
+    { label: 'Second Class (Lower)',   min: 3.00, cls: 'class-lower', icon: '🥉' },
+    { label: 'General Pass',           min: 2.00, cls: 'class-pass',  icon: '📜' },
+  ];
+
+  container.innerHTML = targets.map(t => {
+    let statusClass = '';
+    let statusLabel = '';
+    let reqText = '';
+    let adviceText = '';
+
+    if (totalCredits <= 0) {
+      statusClass = 'target-status-neutral';
+      statusLabel = 'Pending Data';
+      reqText = `Cutoff: ${t.min.toFixed(2)}`;
+      adviceText = 'Enter your semester results in Tab 2 to view feasibility.';
+    } else if (remCredits === 0) {
+      // Degree completed
+      if (curGpa != null && curGpa >= t.min) {
+        statusClass = 'target-status-secured';
+        statusLabel = 'Achieved';
+        reqText = `Final CGPA: ${fmt(curGpa)}`;
+        adviceText = 'Congratulations! You have achieved this degree standing.';
+      } else {
+        statusClass = 'target-status-impossible';
+        statusLabel = 'Not Achieved';
+        reqText = `Cutoff: ${t.min.toFixed(2)}`;
+        adviceText = 'Degree credits completed without meeting this threshold.';
+      }
+    } else {
+      // In progress
+      const neededPoints = (t.min * totalCredits) - curPoints;
+      const reqAvg = neededPoints / remCredits;
+
+      if (curCredits > 0 && reqAvg <= 0) {
+        statusClass = 'target-status-secured';
+        statusLabel = 'Guaranteed';
+        reqText = 'Already Secured!';
+        adviceText = `Even with 0.00 GPA across your remaining ${remCredits} credits, your final CGPA remains ≥ ${t.min.toFixed(2)}.`;
+      } else if (reqAvg <= 4.00) {
+        statusClass = 'target-status-achievable';
+        statusLabel = 'Achievable';
+        reqText = `Required Future Avg: ${fmt(Math.max(0, reqAvg))}`;
+        
+        if (reqAvg >= 3.85) {
+          adviceText = `Demanding goal: requires almost straight A / A+ (4.00) across all remaining ${remCredits} credits.`;
+        } else if (reqAvg >= 3.65) {
+          adviceText = `Needs a strong A / A- average across your remaining ${remCredits} credits.`;
+        } else if (reqAvg >= 3.25) {
+          adviceText = `Needs a solid B+ / A- average across your remaining ${remCredits} credits.`;
+        } else if (reqAvg >= 2.95) {
+          adviceText = `Needs a consistent B / B+ average across your remaining ${remCredits} credits.`;
+        } else if (reqAvg >= 2.00) {
+          adviceText = `Needs a passing C / C+ average across your remaining ${remCredits} credits.`;
+        } else {
+          adviceText = `Easily attainable: maintain passing grades across remaining ${remCredits} credits.`;
+        }
+      } else {
+        statusClass = 'target-status-impossible';
+        statusLabel = 'Not Reachable';
+        reqText = `Exceeds 4.00 scale (Needs ${fmt(reqAvg)})`;
+        const ceiling = fmt((curPoints + remCredits * 4.0) / totalCredits);
+        adviceText = `Mathematically unreachable. Your absolute ceiling is capped at ${ceiling}.`;
+      }
+    }
+
+    return `
+      <div class="target-card ${statusClass}">
+        <div class="target-card-top">
+          <div class="target-title-wrap">
+            <span class="target-icon">${t.icon}</span>
+            <div>
+              <strong class="target-name">${t.label}</strong>
+              <span class="target-min">Minimum CGPA: ${t.min.toFixed(2)}</span>
+            </div>
+          </div>
+          <span class="target-status-badge ${statusClass}">${statusLabel}</span>
+        </div>
+        <div class="target-card-body">
+          <div class="target-req-num">${reqText}</div>
+          <p class="target-advice">${adviceText}</p>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderWhatIfSlider(curGpa, curCredits, curPoints, remCredits, totalCredits) {
+  const slider = $('#pred-slider');
+  const valText = $('#pred-slider-val-text');
+  const projGpaEl = $('#pred-projected-gpa');
+  const projClassEl = $('#pred-projected-class');
+  const deltaEl = $('#pred-projected-delta');
+  const msgEl = $('#pred-projected-msg');
+
+  if (!slider) return;
+
+  const val = Number(slider.value) || 3.50;
+  let gradeEquivalent = 'B';
+  if (val >= 3.9) gradeEquivalent = 'A+ / A';
+  else if (val >= 3.7) gradeEquivalent = 'A-';
+  else if (val >= 3.3) gradeEquivalent = 'B+';
+  else if (val >= 3.0) gradeEquivalent = 'B';
+  else if (val >= 2.7) gradeEquivalent = 'B-';
+  else if (val >= 2.3) gradeEquivalent = 'C+';
+  else gradeEquivalent = 'C';
+
+  if (valText) {
+    valText.textContent = `${val.toFixed(2)} (~${gradeEquivalent} average)`;
+  }
+
+  if (totalCredits <= 0) {
+    if (projGpaEl) projGpaEl.textContent = '—';
+    if (projClassEl) projClassEl.textContent = '—';
+    if (deltaEl) { deltaEl.className = 'delta-tag neutral'; deltaEl.textContent = '—'; }
+    return;
+  }
+
+  const simFuturePoints = remCredits * val;
+  const simTotalPoints = curPoints + simFuturePoints;
+  const projectedGpa = simTotalPoints / totalCredits;
+  const projectedClass = classify(projectedGpa);
+
+  if (projGpaEl) projGpaEl.textContent = fmt(projectedGpa);
+  if (projClassEl && projectedClass) {
+    projClassEl.className = `class-pill ${projectedClass.cls}`;
+    projClassEl.textContent = projectedClass.label;
+  }
+
+  if (deltaEl) {
+    if (curGpa != null && curCredits > 0) {
+      const delta = projectedGpa - curGpa;
+      if (delta > 0.005) {
+        deltaEl.className = 'delta-tag positive';
+        deltaEl.textContent = `+${delta.toFixed(2)} boost over current`;
+      } else if (delta < -0.005) {
+        deltaEl.className = 'delta-tag negative';
+        deltaEl.textContent = `${delta.toFixed(2)} drop from current`;
+      } else {
+        deltaEl.className = 'delta-tag neutral';
+        deltaEl.textContent = '±0.00 (same as current)';
+      }
+    } else {
+      deltaEl.className = 'delta-tag neutral';
+      deltaEl.textContent = 'Starting CGPA projection';
+    }
+  }
+
+  if (msgEl) {
+    msgEl.textContent = remCredits > 0 
+      ? `Forecast based on earning an average of ${val.toFixed(2)} across your upcoming ${remCredits} credits.`
+      : `All degree credits already completed. Final CGPA is fixed at ${fmt(curGpa)}.`;
+  }
+}
+
+function renderRepeatAnalyzer(s, curGpa, curCredits, curPoints) {
+  const container = $('#pred-repeat-content');
+  const badgeContainer = $('#pred-repeat-badge-summary');
+  if (!container) return;
+
+  if (curCredits <= 0 || !s.rows || s.rows.length === 0) {
+    if (badgeContainer) badgeContainer.innerHTML = '';
+    container.innerHTML = `
+      <div class="repeat-empty-state">
+        <span class="empty-icon">📝</span>
+        <h4>No Academic Results Entered Yet</h4>
+        <p>Enter your completed semester results in Tab 2 (Academic Results) to see repeat upgrade analysis.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Eligible courses: included GPA course with gradePoint < 2.0 (C-, D+, D, E)
+  const repeatableRows = s.rows.filter(r => r.included && r.gradePoint !== null && r.gradePoint < 2.0);
+
+  if (repeatableRows.length === 0) {
+    if (badgeContainer) {
+      badgeContainer.innerHTML = `<span class="repeat-badge-clean">🌟 No Repeats Needed</span>`;
+    }
+    container.innerHTML = `
+      <div class="repeat-clean-state">
+        <span class="clean-icon">🎉</span>
+        <div class="clean-text">
+          <h4>Excellent Academic Record!</h4>
+          <p>You have no repeatable grades (C-, D+, D, or E). All your completed GPA courses are C or above (Grade Point ≥ 2.00).</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // Calculate impact for each course upgraded to C (2.0)
+  const analyzed = repeatableRows.map(r => {
+    const ptDiff = 2.0 - r.gradePoint;
+    const gainedPoints = ptDiff * (Number(r.credits) || 0);
+    const newGpa = (curPoints + gainedPoints) / curCredits;
+    const gpaGain = newGpa - curGpa;
+    return {
+      id: r.id,
+      code: r.code,
+      title: r.title,
+      credits: r.credits,
+      semester: r.semester,
+      grade: r.grade,
+      gradePoint: r.gradePoint,
+      gainedPoints,
+      newGpa,
+      gpaGain,
+    };
+  });
+
+  // Sort descending by highest GPA gain
+  analyzed.sort((a, b) => b.gpaGain - a.gpaGain);
+
+  // Overall impact if all repeatable courses are upgraded to C
+  const totalGainedPoints = analyzed.reduce((acc, a) => acc + a.gainedPoints, 0);
+  const allUpgradedGpa = (curPoints + totalGainedPoints) / curCredits;
+  const allGpaGain = allUpgradedGpa - curGpa;
+  const allUpgradedClass = classify(allUpgradedGpa);
+  const curClass = classify(curGpa);
+
+  if (badgeContainer) {
+    badgeContainer.innerHTML = `
+      <span class="repeat-count-pill">${analyzed.length} Repeatable Course${analyzed.length > 1 ? 's' : ''} (Grade &lt; C)</span>
+    `;
+  }
+
+  let classPromotionNotice = '';
+  if (allUpgradedClass && curClass && allUpgradedClass.label !== curClass.label) {
+    classPromotionNotice = `
+      <div class="class-promotion-alert">
+        🚀 <strong>Class Upgrade Potential:</strong> Upgrading all repeats to C pushes your degree standing from 
+        <strong>${curClass.label}</strong> up to <strong>${allUpgradedClass.label}</strong>!
+      </div>
+    `;
+  }
+
+  container.innerHTML = `
+    <!-- Top Overall Upgrade Banner -->
+    <div class="repeat-total-gain-box">
+      <div class="total-gain-metric">
+        <span class="gain-lbl">MAX POTENTIAL CGPA BOOST (IF ALL REPEATS ➔ C)</span>
+        <div class="gain-val-row">
+          <strong class="gain-diff">+${allGpaGain.toFixed(2)}</strong>
+          <span class="gain-arrow">➔</span>
+          <strong class="gain-new-gpa">${fmt(allUpgradedGpa)}</strong>
+          <span class="class-pill ${allUpgradedClass?.cls || ''}">${allUpgradedClass?.label || ''}</span>
+        </div>
+      </div>
+      <p class="gain-desc">
+        Upgrading all ${analyzed.length} low-grade courses to a C (2.00) will add <strong>+${totalGainedPoints.toFixed(1)}</strong> quality points to your degree total.
+      </p>
+      ${classPromotionNotice}
+    </div>
+
+    <!-- Prioritized List of Courses -->
+    <div class="repeat-table-wrap">
+      <table class="repeat-impact-table">
+        <thead>
+          <tr>
+            <th>Course</th>
+            <th>Sem</th>
+            <th>Credits</th>
+            <th>Current Grade</th>
+            <th>If Upgraded to C</th>
+            <th>CGPA Gain</th>
+            <th>Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${analyzed.map(item => {
+            let impactClass = 'impact-low';
+            let impactLabel = 'Minor';
+            if (item.gpaGain >= 0.05) {
+              impactClass = 'impact-high';
+              impactLabel = '⚡ High Impact';
+            } else if (item.gpaGain >= 0.02) {
+              impactClass = 'impact-mid';
+              impactLabel = '🔹 Moderate';
+            }
+
+            return `
+              <tr>
+                <td>
+                  <strong>${item.code}</strong>
+                  <div class="course-sub-title">${item.title}</div>
+                </td>
+                <td><span class="sem-badge-sm">${item.semester}</span></td>
+                <td><strong>${item.credits}</strong></td>
+                <td><span class="grade-pill-sm ${gradeStyleClass(item.grade)}">${item.grade} (${item.gradePoint.toFixed(1)})</span></td>
+                <td><span class="grade-pill-sm pass">C (2.0)</span></td>
+                <td><strong class="gain-highlight">+${item.gpaGain.toFixed(2)}</strong></td>
+                <td><span class="impact-badge ${impactClass}">${impactLabel}</span></td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
 }
 
 // ── Multi-Format Export Functions ─────────────────────────────────────────────
@@ -1383,6 +1824,36 @@ function wire() {
   $('#btn-pwa-dismiss')?.addEventListener('click', () => {
     if (pwaBanner) pwaBanner.hidden = true;
     localStorage.setItem('foa_pwa_dismissed', 'true');
+  });
+
+  // ── Degree Predictor Events ──────────────────────────────────────────────────
+  $('#pred-slider')?.addEventListener('input', () => {
+    const s = summary();
+    const degKey = state.profile.degree || 'ABM';
+    const remInfo = calculateRemainingCreditsInfo(degKey, s);
+    const effectiveRemCredits = userRemainingCreditsOverride !== null 
+      ? userRemainingCreditsOverride 
+      : remInfo.autoRemainingCredits;
+    const curCredits = s.credits || 0;
+    const curPoints = s.points || 0;
+    const totalCredits = curCredits + effectiveRemCredits;
+    renderWhatIfSlider(s.gpa, curCredits, curPoints, effectiveRemCredits, totalCredits);
+  });
+
+  $('#pred-rem-credits-input')?.addEventListener('input', e => {
+    const val = Number(e.target.value);
+    if (Number.isFinite(val) && val >= 0) {
+      userRemainingCreditsOverride = val;
+    } else {
+      userRemainingCreditsOverride = null;
+    }
+    renderPredictor();
+  });
+
+  $('#btn-pred-reset-credits')?.addEventListener('click', () => {
+    userRemainingCreditsOverride = null;
+    renderPredictor();
+    toast('Remaining credits reset to handbook standard ✓');
   });
 }
 
