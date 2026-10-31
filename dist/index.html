@@ -401,17 +401,34 @@
 
             <div class="slider-interactive-wrap">
               <div class="slider-label-row">
-                <span>Estimated Future Average GPA:</span>
-                <strong id="pred-slider-val-text">3.50 (B+ / A-)</strong>
+                <span class="slider-lead-label">Simulated Future Average GPA:</span>
+                <div class="slider-val-bubble">
+                  <span id="pred-slider-val-num">3.50</span>
+                  <span id="pred-slider-val-badge" class="slider-grade-badge badge-high">B+ / A-</span>
+                </div>
               </div>
-              <input type="range" id="pred-slider" class="pred-slider" min="2.00" max="4.00" step="0.05" value="3.50" />
+
+              <!-- Quick Presets -->
+              <div class="slider-presets-row">
+                <button type="button" class="slider-preset-chip" data-preset="2.00">2.00 (C)</button>
+                <button type="button" class="slider-preset-chip" data-preset="3.00">3.00 (B)</button>
+                <button type="button" class="slider-preset-chip" data-preset="3.30">3.30 (B+)</button>
+                <button type="button" class="slider-preset-chip active" data-preset="3.50">3.50 (B+/A-)</button>
+                <button type="button" class="slider-preset-chip" data-preset="3.70">3.70 (A-)</button>
+                <button type="button" class="slider-preset-chip" data-preset="4.00">4.00 (A+)</button>
+              </div>
+
+              <div class="slider-input-container">
+                <input type="range" id="pred-slider" class="pred-slider" min="2.00" max="4.00" step="0.05" value="3.50" aria-label="Future GPA Slider" />
+              </div>
+
               <div class="slider-ticks">
-                <span>2.00 (C)</span>
-                <span>2.70 (B-)</span>
-                <span>3.00 (B)</span>
-                <span>3.30 (B+)</span>
-                <span>3.70 (A-)</span>
-                <span>4.00 (A+)</span>
+                <span class="slider-tick-btn" data-tick="2.00">2.00 (C)</span>
+                <span class="slider-tick-btn" data-tick="2.70">2.70 (B-)</span>
+                <span class="slider-tick-btn" data-tick="3.00">3.00 (B)</span>
+                <span class="slider-tick-btn" data-tick="3.30">3.30 (B+)</span>
+                <span class="slider-tick-btn" data-tick="3.70">3.70 (A-)</span>
+                <span class="slider-tick-btn" data-tick="4.00">4.00 (A+)</span>
               </div>
 
               <!-- Live Projection Result Box -->

@@ -995,7 +995,6 @@ function renderTargetMatrix(curGpa, curCredits, curPoints, remCredits, totalCred
 
 function renderWhatIfSlider(curGpa, curCredits, curPoints, remCredits, totalCredits) {
   const slider = $('#pred-slider');
-  const valText = $('#pred-slider-val-text');
   const projGpaEl = $('#pred-projected-gpa');
   const projClassEl = $('#pred-projected-class');
   const deltaEl = $('#pred-projected-delta');
@@ -1005,17 +1004,32 @@ function renderWhatIfSlider(curGpa, curCredits, curPoints, remCredits, totalCred
 
   const val = Number(slider.value) || 3.50;
   let gradeEquivalent = 'B';
-  if (val >= 3.9) gradeEquivalent = 'A+ / A';
-  else if (val >= 3.7) gradeEquivalent = 'A-';
-  else if (val >= 3.3) gradeEquivalent = 'B+';
-  else if (val >= 3.0) gradeEquivalent = 'B';
-  else if (val >= 2.7) gradeEquivalent = 'B-';
-  else if (val >= 2.3) gradeEquivalent = 'C+';
-  else gradeEquivalent = 'C';
+  let badgeCls = 'badge-mid';
+  if (val >= 3.9) { gradeEquivalent = 'A+ / A'; badgeCls = 'badge-high'; }
+  else if (val >= 3.7) { gradeEquivalent = 'A-'; badgeCls = 'badge-high'; }
+  else if (val >= 3.3) { gradeEquivalent = 'B+'; badgeCls = 'badge-mid'; }
+  else if (val >= 3.0) { gradeEquivalent = 'B'; badgeCls = 'badge-mid'; }
+  else if (val >= 2.7) { gradeEquivalent = 'B-'; badgeCls = 'badge-pass'; }
+  else if (val >= 2.3) { gradeEquivalent = 'C+'; badgeCls = 'badge-pass'; }
+  else { gradeEquivalent = 'C'; badgeCls = 'badge-pass'; }
 
-  if (valText) {
-    valText.textContent = `${val.toFixed(2)} (~${gradeEquivalent} average)`;
+  const valNumEl = $('#pred-slider-val-num');
+  if (valNumEl) valNumEl.textContent = val.toFixed(2);
+  const valBadgeEl = $('#pred-slider-val-badge');
+  if (valBadgeEl) {
+    valBadgeEl.textContent = `${gradeEquivalent} avg`;
+    valBadgeEl.className = `slider-grade-badge ${badgeCls}`;
   }
+
+  // Update dynamic gradient progress fill (2.00 to 4.00 range)
+  const pct = Math.max(0, Math.min(100, ((val - 2.0) / (4.0 - 2.0)) * 100));
+  slider.style.setProperty('--slider-fill', `${pct}%`);
+
+  // Update active preset chip
+  document.querySelectorAll('.slider-preset-chip').forEach(btn => {
+    const pVal = Number(btn.dataset.preset);
+    btn.classList.toggle('active', Math.abs(pVal - val) < 0.03);
+  });
 
   if (totalCredits <= 0) {
     if (projGpaEl) projGpaEl.textContent = '—';
@@ -1854,6 +1868,18 @@ function wire() {
     userRemainingCreditsOverride = null;
     renderPredictor();
     toast('Remaining credits reset to handbook standard ✓');
+  });
+
+  // Slider Preset Chips & Tick Clicks
+  document.querySelectorAll('.slider-preset-chip, .slider-tick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetVal = Number(btn.dataset.preset || btn.dataset.tick);
+      const slider = $('#pred-slider');
+      if (slider && Number.isFinite(targetVal)) {
+        slider.value = targetVal;
+        slider.dispatchEvent(new Event('input'));
+      }
+    });
   });
 }
 
